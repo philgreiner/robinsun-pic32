@@ -1,0 +1,122 @@
+~inc:header.inc~
+<div id="content">
+
+<title>Live data from minibot!</title>
+
+<h1>Data from Minibot:</h1>
+	<div id="leftB">
+		<img src="../images/button0.png" id="buttonL">
+		<p> Left switch: <span id="buttonleft" style="font-weight:normal">-</span> </p>
+	</div>
+	<div id="rightB">
+		<img src="../images/button1.png" id="buttonR">
+		<p> Right switch: <span id="buttonright" style="font-weight:normal">-</span> </p>
+	</div>
+<div id="charts">
+<div id="left">
+	<p> Left wheel speed: <span id="l_wheel_speed" style="font-weight:normal">-</span> [rad/s] - Reference Value: <span id="lref" style="font-weight:normal">-</span> [rad/s]</p>
+	<canvas id="leftwheel" width="600" height="200"></canvas>
+</div>
+<div id="right">
+	<p> Right wheel speed: <span id="r_wheel_speed" style="font-weight:normal">-</span> [rad/s] - Reference Value: <span id="rref" style="font-weight:normal">-</span> [rad/s]</p>
+	<canvas id="rightwheel" width="600" height="200"></canvas>
+</div>
+</div>
+<div id="charts">
+<div id="left">
+	<p> Angle: <span id="angleDisp" style="font-weight:normal">-</span>&deg;</p>
+	<canvas id="angle" width="600" height="200"></canvas>
+</div>
+<div id="right">
+	<p> Distance: <span id="distanceDisp" style="font-weight:normal">-</span> [cm]</p>
+	<canvas id="distance" width="600" height="200"></canvas>
+</div>
+</div>
+
+</div>
+
+<script type="text/javascript">
+<!--
+var rightwheelspeed = new TimeSeries();
+var leftwheelspeed = new TimeSeries();
+var angle = new TimeSeries();
+var distance = new TimeSeries();
+var rref = new TimeSeries();
+var lref = new TimeSeries();
+
+setInterval(function() {
+        rightwheelspeed.append(new Date().getTime(), document.getElementById('r_wheel_speed').innerHTML);
+        leftwheelspeed.append(new Date().getTime(), document.getElementById('l_wheel_speed').innerHTML);
+		rref.append(new Date().getTime(), document.getElementById('rref').innerHTML);
+        lref.append(new Date().getTime(), document.getElementById('lref').innerHTML);
+		angle.append(new Date().getTime(), document.getElementById('angleDisp').innerHTML);
+        distance.append(new Date().getTime(), document.getElementById('distanceDisp').innerHTML);
+      }, 250);
+	  
+	// Light blue: 153, 204, 204
+	// Robinsun: 79, 124, 164
+	var rightwheel = new SmoothieChart();
+	rightwheel.addTimeSeries(rightwheelspeed, { strokeStyle: 'rgb(79, 124, 164)', fillStyle: 'rgba(79, 124, 164, 0.4)', lineWidth: 3 });
+	rightwheel.addTimeSeries(rref, { strokeStyle: 'rgb(153, 204, 204)', fillStyle: 'rgba(153, 204, 204, 0.4)', lineWidth: 3 });
+	rightwheel.streamTo(document.getElementById("rightwheel"), 250);
+
+	var leftwheel = new SmoothieChart();
+	leftwheel.addTimeSeries(leftwheelspeed, { strokeStyle: 'rgb(79, 124, 164)', fillStyle: 'rgba(79, 124, 164, 0.4)', lineWidth: 3 });
+	leftwheel.addTimeSeries(lref, { strokeStyle: 'rgb(153, 204, 204)', fillStyle: 'rgba(153, 204, 204, 0.4)', lineWidth: 3 });
+	leftwheel.streamTo(document.getElementById("leftwheel"), 250);
+
+	var angleChart = new SmoothieChart({maxValue:185,minValue:-185});
+	angleChart.addTimeSeries(angle, { strokeStyle: 'rgb(79, 124, 164)', fillStyle: 'rgba(79, 124, 164, 0.4)', lineWidth: 3 });
+	angleChart.streamTo(document.getElementById("angle"), 250);
+
+	var distanceChart = new SmoothieChart();
+	distanceChart.addTimeSeries(distance, { strokeStyle: 'rgb(79, 124, 164)', fillStyle: 'rgba(79, 124, 164, 0.4)', lineWidth: 3 });
+	distanceChart.streamTo(document.getElementById("distance"), 250);
+//-->
+</script>
+
+<script type="text/javascript">
+<!--
+// Parses the xmlResponse from status.xml and updates the status box
+function updateStatus(xmlData) {
+	// Update r_wheel_speed value
+	document.getElementById('r_wheel_speed').innerHTML = getXMLValue(xmlData, 'r_wheel_speed');
+    // Update l_wheel_speed value
+	document.getElementById('l_wheel_speed').innerHTML = getXMLValue(xmlData, 'l_wheel_speed');
+	// Update beacontime value
+	document.getElementById('angleDisp').innerHTML = getXMLValue(xmlData, 'angle');
+	// Update timetobeacon value
+	document.getElementById('distanceDisp').innerHTML = getXMLValue(xmlData, 'distance');
+	// Update rref value
+	document.getElementById('rref').innerHTML = getXMLValue(xmlData, 'rref');
+    // Update lref value
+	document.getElementById('lref').innerHTML = getXMLValue(xmlData, 'lref');
+}
+setTimeout("newAJAXCommand('status.xml', updateStatus, true)",250);
+//-->
+</script>
+
+
+<script type="text/javascript">
+<!-- 
+// Updates the switch values and images displayed accordingly
+var buttonL = 0;
+var buttonR = 0;
+function updateSwitches(xmlData){
+		buttonL = getXMLValue(xmlData, 'buttonL');
+		if(parseInt(buttonL) == 0)
+			document.getElementById('buttonL').src = "../images/button0.png";
+		else document.getElementById('buttonL').src = "../images/button1.png";
+		
+		document.getElementById('buttonleft').innerHTML = buttonL;//getXMLValue(xmlData, 'buttonL');
+	
+		buttonR = getXMLValue(xmlData, 'buttonR');
+		if(parseInt(buttonR) == 0)
+			document.getElementById('buttonR').src = "../images/button0.png";
+		else document.getElementById('buttonR').src = "../images/button1.png";
+		
+		document.getElementById('buttonright').innerHTML = buttonR;//getXMLValue(xmlData, 'buttonR');
+}
+setTimeout("newAJAXCommand('status.xml', updateSwitches, true)",250);
+</script>
+~inc:footer.inc~

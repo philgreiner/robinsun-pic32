@@ -1,0 +1,14 @@
+<response>
+<r_wheel_speed>~r_wheel_speed~</r_wheel_speed>
+<l_wheel_speed>~l_wheel_speed~</l_wheel_speed>
+<angle>~angle~</angle>
+<distance>~distance~</distance>
+<rref>~rref~</rref>
+<lref>~lref~</lref>
+<kp>~kp~</kp>
+<ki>~ki~</ki>
+<maxspeed>~maxspeed~</maxspeed>
+<refspeed>~refspeed~</refspeed>
+<buttonL>~buttonL~</buttonL>
+<buttonR>~buttonR~</buttonR>
+</response>
