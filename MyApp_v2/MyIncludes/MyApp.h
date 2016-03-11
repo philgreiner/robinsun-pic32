@@ -136,7 +136,7 @@ MyAPP_EXT  int      MyVideo_Counter MyAPP_INIT;
 * Minibot global variables and constants                                       *
 *******************************************************************************/
 
-#define MotorSID 0x508
+#define MotorSID 0x708
 #define TowerSID 0x508
 
 CtrlIn dataIN;
