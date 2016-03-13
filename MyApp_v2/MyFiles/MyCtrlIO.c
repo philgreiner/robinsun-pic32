@@ -40,10 +40,15 @@ void MyCtrlUpdate(void)
     omegaRef(&omegaref);  // [rad/s]
     double rspeed = dataIN.r_wheel_speed;
     double lspeed = dataIN.l_wheel_speed;
-
+    
+    double t = (ReadCoreTimer()/(SYS_FREQ/2000.0));
+    char msg[1024];
+    sprintf(msg, "time = %.3f \n",t);
+    MyConsole_SendMsg(msg);
+    
     // Integrate the error
-    erreurIntR += (omegaref[R_ID]-rspeed)*Ki; //T_DISCRETISATION;
-    erreurIntL += (omegaref[L_ID]-lspeed)*Ki; //*T_DISCRETISATION;
+    erreurIntR += (omegaref[R_ID]-rspeed)*(t - prevT)*0.001; 
+    erreurIntL += (omegaref[L_ID]-lspeed)*(t - prevT)*0.001;
     
     // Limit the integral error (anti-windup)
     erreurIntR = (erreurIntR*Ki>Valim) ? ( Valim/(Ki)) : (erreurIntR);
@@ -59,7 +64,13 @@ void MyCtrlUpdate(void)
     UconsigneR = (UconsigneR<-Valim)? (-Valim) : (UconsigneR);
     UconsigneL = (UconsigneL>Valim) ? ( Valim) : (UconsigneL);
     UconsigneL = (UconsigneL<-Valim)? (-Valim) : (UconsigneL);
-
+    
+//    char msg[1024];
+//    sprintf(msg, "Right speed: %.3f; omegaref: %.3f; P = %.3f, I = %.3f, UconsigneR: %.3f;\n",rspeed, omegaref[R_ID], (omegaref[R_ID]-rspeed), erreurIntR, UconsigneR);
+//    MyConsole_SendMsg(msg);
+//    sprintf(msg, "Left speed: %.3f; omegaref: %.3f; P = %.3f, I = %.3f, UconsigneR: %.3f;\n",lspeed, omegaref[L_ID], (omegaref[L_ID]-lspeed), erreurIntL, UconsigneL);
+//    MyConsole_SendMsg(msg);
+    
     #ifdef DEBUG
         char msg[1024];
         sprintf(msg, "Right speed: %.3f; omegaref: %.3f; UconsigneR: %.3f\n",rspeed,omegaref[R_ID], UconsigneR);
@@ -67,9 +78,10 @@ void MyCtrlUpdate(void)
     #endif
 
     // Update command values
-    dataOUT.wheel_commands[R_ID] = 100.0*UconsigneR/Valim;
-    dataOUT.wheel_commands[L_ID] = 100.0*UconsigneL/Valim;
+    dataOUT.wheel_commands[R_ID] = 100.0*UconsigneR/26.0;
+    dataOUT.wheel_commands[L_ID] = 100.0*UconsigneL/26.0;
     i++;
+    prevT = (ReadCoreTimer()/(SYS_FREQ/2000.0));
 }
 
 // Apply command values

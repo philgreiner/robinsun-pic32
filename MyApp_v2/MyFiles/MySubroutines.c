@@ -53,14 +53,15 @@ void    omegaRef(double *omegaref)
 //    omegaref[0] = (omegaref[0]<-maxspeed)? (-maxspeed) : (omegaref[0]);
 //    omegaref[1] = (omegaref[1]<-maxspeed)? (-maxspeed) : (omegaref[1]);
     
-     if(sin(i*1.0/100.0) < 0)
+     if(sin(i*1.0/50.0) < 0)
      {
-        omegaref[R_ID] = 2*6.14;
-        omegaref[L_ID] = 2*6.14;
+        omegaref[R_ID] = 6.3;
+        omegaref[L_ID] = 6.3;
      }
      else
      {
-        omegaref[R_ID] = -2*6.14;
-        omegaref[L_ID] = -2*6.14;
+        omegaref[R_ID] = -6.3;
+        omegaref[L_ID] = -6.3;
      }
+    
 }

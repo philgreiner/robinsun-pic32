@@ -78,7 +78,7 @@ int main(void)
     MyFlash_Init();
     MyTemperature_Init();
     //MyMIWI_Init();
-    MyWIFI_Init();
+    //MyWIFI_Init();
     MyMiniProject_Init();
     
     // Configure for multi-vectored mode
@@ -104,7 +104,7 @@ int main(void)
         MyConsole_Task();
         MyCAN_Task();
         //MyMIWI_Task();
-        MyWIFI_Task();
+        //MyWIFI_Task();
         if(ReadCoreTimer() - tStart > tWait)
         {
             MyMiniProject_Task();

@@ -57,8 +57,8 @@ void MyMiniProject_Init(void)
 //    MyCAN_TxMsg(TowerSID, LSBt);
 //    MyCAN_TxMsg(TowerSID, MSBt);
 //    
-    Kp = .0495;//0.095;
-    Ki = .50223;//14.25;
+    Kp = 0.09;//0.095;
+    Ki = 19.71;//14.25;
     speedREF = 10;
     maxspeed = 20.0;
     erreurIntR = 0.0;

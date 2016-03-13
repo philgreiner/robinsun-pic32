@@ -148,6 +148,7 @@ MyAPP_EXT   float   speedREF    MyAPP_INIT;
 MyAPP_EXT   float   maxspeed    MyAPP_INIT;
 MyAPP_EXT   float   erreurIntR  MyAPP_INIT;
 MyAPP_EXT   float   erreurIntL  MyAPP_INIT;
+MyAPP_EXT   double  prevT       MyAPP_INIT;
 #define     T_DISCRETISATION    10;  //msec
 //#define     DEBUG
 
