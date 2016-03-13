@@ -150,7 +150,7 @@ MyAPP_EXT   float   erreurIntR  MyAPP_INIT;
 MyAPP_EXT   float   erreurIntL  MyAPP_INIT;
 MyAPP_EXT   double  prevT       MyAPP_INIT;
 #define     T_DISCRETISATION    10;  //msec
-//#define     DEBUG
+//#define     ROBOTCONSOLE
 
 int i;
 #endif /* MyAPP_H_ */

@@ -34,6 +34,7 @@ typedef struct CtrlIn
 	 */
 	int u_switch[NB_U_SWITCH]; ///< 1 if corresponding u_switch (R_ID or L_ID) is activated, 0 otherwise
 
+    #ifdef TOWER
 	/*! \brief tower
 	 *
 	 * The tower saves the position of rising and falling edges detected with the laser as a position
@@ -72,7 +73,8 @@ typedef struct CtrlIn
 
 	int nb_rising;  ///< number of rising edges detected during the last laser revolution
 	int nb_falling; ///< number of falling edges detected during the last laser revolution
-
+    #endif
+    
 	/*! \brief number of opponents taking part in this game
 	 */
 	int nb_opponents; ///< number of opponents

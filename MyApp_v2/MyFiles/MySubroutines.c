@@ -26,7 +26,7 @@ void    DutyToInf(double duty, unsigned *MSB, unsigned *LSB)
             *LSB = 1;
         else
             *LSB = 3;
-    #ifdef DEBUG
+    #ifdef ROBOTCONSOLE
         char msg[1024];
         sprintf(msg, "Real duty: %d; MSB: %d; LSB: %d\n",realduty,*MSB,*LSB);
         MyConsole_SendMsg(msg);

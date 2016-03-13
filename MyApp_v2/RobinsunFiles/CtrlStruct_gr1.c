@@ -1,0 +1,30 @@
+#include "CtrlStruct_gr1.h"
+
+/*! \brief initialize the controller structure
+ *
+ * \param[in] inputs inputs of the controller
+ * \param[in] outputs outputs of the controller
+ * \return controller main structure
+ */
+CtrlStruct* init_CtrlStruct(CtrlIn *inputs, CtrlOut *outputs)
+{
+	CtrlStruct *cvs;
+
+	//cvs = (CtrlStruct*) malloc(sizeof(CtrlStruct));
+
+	cvs->inputs  = inputs;
+	cvs->outputs = outputs;
+	CtrlState *state; // = (CtrlState*) malloc(sizeof(CtrlState));
+	cvs->state = state;
+
+	return cvs;
+}
+
+/*! \brief release controller main structure memory
+ *
+ * \param[in] cvs controller main structure
+ */
+void free_CtrlStruct(CtrlStruct *cvs)
+{
+	//free(cvs);
+}

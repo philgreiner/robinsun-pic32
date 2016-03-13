@@ -38,6 +38,18 @@
         <itemPath>MyIncludes/MyMiniProject.h</itemPath>
         <itemPath>MyIncludes/MyCtrlIO.h</itemPath>
       </logicalFolder>
+      <logicalFolder name="RobinsunFiles"
+                     displayName="RobinsunFiles"
+                     projectFiles="true">
+        <itemPath>RobinsunFiles/Astar_gr1.h</itemPath>
+        <itemPath>RobinsunFiles/CtrlStruct_gr1.h</itemPath>
+        <itemPath>RobinsunFiles/ctrl_main_gr1.h</itemPath>
+        <itemPath>RobinsunFiles/map_design_gr1.h</itemPath>
+        <itemPath>RobinsunFiles/odometry_gr1.h</itemPath>
+        <itemPath>RobinsunFiles/potentialfield_gr1.h</itemPath>
+        <itemPath>RobinsunFiles/robot_detect_gr1.h</itemPath>
+        <itemPath>RobinsunFiles/triangulation_gr1.h</itemPath>
+      </logicalFolder>
       <itemPath>MyIncludes/MyApp.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LibraryFiles"
@@ -135,7 +147,6 @@
         <itemPath>MyFiles/MyCyclone.c</itemPath>
         <itemPath>MyFiles/MyFlash.c</itemPath>
         <itemPath>MyFiles/MyHTTP.c</itemPath>
-        <itemPath>MyFiles/MyIO.c</itemPath>
         <itemPath>MyFiles/MyLED.c</itemPath>
         <itemPath>MyFiles/MyMDDFS.c</itemPath>
         <itemPath>MyFiles/MyMIWI.c</itemPath>
@@ -144,9 +155,22 @@
         <itemPath>MyFiles/MyTemperature.c</itemPath>
         <itemPath>MyFiles/MyWIFI.c</itemPath>
         <itemPath>MyFiles/MyCamera.c</itemPath>
+        <itemPath>MyFiles/MyIO.c</itemPath>
+        <itemPath>MyFiles/MyCtrlIO.c</itemPath>
         <itemPath>MyFiles/MyMiniProject.c</itemPath>
         <itemPath>MyFiles/MySubroutines.c</itemPath>
-        <itemPath>MyFiles/MyCtrlIO.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="RobinsunFiles"
+                     displayName="RobinsunFiles"
+                     projectFiles="true">
+        <itemPath>RobinsunFiles/Astar_gr1.c</itemPath>
+        <itemPath>RobinsunFiles/CtrlStruct_gr1.c</itemPath>
+        <itemPath>RobinsunFiles/ctrl_main_gr1.c</itemPath>
+        <itemPath>RobinsunFiles/map_design_gr1.c</itemPath>
+        <itemPath>RobinsunFiles/odometry_gr1.c</itemPath>
+        <itemPath>RobinsunFiles/potentialfield_gr1.c</itemPath>
+        <itemPath>RobinsunFiles/robot_detect_gr1.c</itemPath>
+        <itemPath>RobinsunFiles/triangulation_gr1.c</itemPath>
       </logicalFolder>
       <itemPath>MyFiles/MyApp.c</itemPath>
     </logicalFolder>
@@ -159,6 +183,7 @@
   <sourceRootList>
     <Elem>MyIncludes</Elem>
     <Elem>MyFiles</Elem>
+    <Elem>RobinsunFiles</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>

@@ -134,9 +134,7 @@ void MyDelayMs(unsigned int msec)
 
 void _general_exception_handler(unsigned cause, unsigned status)
 {
-    #ifdef DEBUG
-        MyConsole_SendMsg("Exception.\n");
-    #endif
+    MyConsole_SendMsg("Exception.\n");
     Nop();
     Nop();
 }

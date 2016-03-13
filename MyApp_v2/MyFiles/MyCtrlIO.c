@@ -42,9 +42,6 @@ void MyCtrlUpdate(void)
     double lspeed = dataIN.l_wheel_speed;
     
     double t = (ReadCoreTimer()/(SYS_FREQ/2000.0));
-    char msg[1024];
-    sprintf(msg, "time = %.3f \n",t);
-    MyConsole_SendMsg(msg);
     
     // Integrate the error
     erreurIntR += (omegaref[R_ID]-rspeed)*(t - prevT)*0.001; 
@@ -71,7 +68,7 @@ void MyCtrlUpdate(void)
 //    sprintf(msg, "Left speed: %.3f; omegaref: %.3f; P = %.3f, I = %.3f, UconsigneR: %.3f;\n",lspeed, omegaref[L_ID], (omegaref[L_ID]-lspeed), erreurIntL, UconsigneL);
 //    MyConsole_SendMsg(msg);
     
-    #ifdef DEBUG
+    #ifdef ROBOTCONSOLE
         char msg[1024];
         sprintf(msg, "Right speed: %.3f; omegaref: %.3f; UconsigneR: %.3f\n",rspeed,omegaref[R_ID], UconsigneR);
         MyConsole_SendMsg(msg);
@@ -95,7 +92,7 @@ void SendCtrls(void)
     MyCAN_TxMsg(MotorSID,MSBR);
     MyCAN_TxMsg(MotorSID,LSBR);
 
-    #ifdef DEBUG
+    #ifdef ROBOTCONSOLE
         char msg[1024];
         sprintf(msg, "Right command: MSB: %d LSB: %d\n",MSB0*4,LSB0);
         MyConsole_SendMsg(msg);
@@ -107,7 +104,7 @@ void SendCtrls(void)
     MyCAN_TxMsg(MotorSID,MSBL);
     MyCAN_TxMsg(MotorSID,LSBL);
 
-    #ifdef DEBUG
+    #ifdef ROBOTCONSOLE
         sprintf(msg, "Left command: MSB: %d LSB: %d\n\n",MSB0*4,LSB0);
         MyConsole_SendMsg(msg);
     #endif
