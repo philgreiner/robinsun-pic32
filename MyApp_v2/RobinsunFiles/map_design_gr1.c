@@ -3,9 +3,15 @@
 * \brief drawing the map in a table representation with value 1 for clean space ; 0 for obstacles
 */
 
+#ifndef _SIMU_GAME_GR1_H_
+#define _SIMU_GAME_GR1_H_
+
 #include "map_design_gr1.h"
+#include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
 
+NAMESPACE_INIT(ctrlGr1);
 
  /*
  * Drawing the map, hardcoded from the picture received of the game table
@@ -29,15 +35,15 @@ void game_map_drawing(CtrlStruct *cvs)
 				
 				// Close to violet cabin
 				if (y >= (862 - radius_robot) && y <= (884 + radius_robot)) {	
-						cvs->state->game_map[x][y] = 0;	
+						cvs->param->game_map[x][y] = 0;
 					}// end if 
 				
 				// Close to green cabin
 				else if (y >= (2240 - radius_robot) && y <= (2262 + radius_robot)) {
-						cvs->state->game_map[x][y] = 0;
+						cvs->param->game_map[x][y] = 0;
 					}// end else if 
 
-				else cvs->state->game_map[x][y] = 1;
+				else cvs->param->game_map[x][y] = 1;
 
 			} // end if  *** 1/ Block bar ***
 
@@ -46,10 +52,10 @@ void game_map_drawing(CtrlStruct *cvs)
 			else if (x >= (812 - radius_robot) && x <= (834 + radius_robot) ) {
 
 				if (y >= (962 - radius_robot) && y <= (2162 + radius_robot)) {
-						cvs->state->game_map[x][y] = 0;
+						cvs->param->game_map[x][y] = 0;
 					}// if y
 				
-				else cvs->state->game_map[x][y] = 1;
+				else cvs->param->game_map[x][y] = 1;
 
 			} // end else if *** 2/ central bar vertical ***
 
@@ -58,10 +64,10 @@ void game_map_drawing(CtrlStruct *cvs)
 			else if (x >= (812 - radius_robot) && x <= (1412 + radius_robot)) {
 
 				if (y >= (1538 - radius_robot) && y <= (1586 + radius_robot)) {
-					cvs->state->game_map[x][y] = 0;
+					cvs->param->game_map[x][y] = 0;
 				}// end if y
 
-				else cvs->state->game_map[x][y] = 1;
+				else cvs->param->game_map[x][y] = 1;
 
 			} // end else if *** 3/ central bar horizontal ***
 
@@ -71,10 +77,10 @@ void game_map_drawing(CtrlStruct *cvs)
 			else if (x >= (1874 - radius_robot) && x <= 2124) {
 
 				if (y >= (2874 - radius_robot) && y <= 3124) {
-					cvs->state->game_map[x][y] = 0;
+					cvs->param->game_map[x][y] = 0;
 				}// end if y
 
-				else cvs->state->game_map[x][y] = 1;
+				else cvs->param->game_map[x][y] = 1;
 
 			} // end else if *** 4/ Upper right corner steps ***
 
@@ -83,10 +89,10 @@ void game_map_drawing(CtrlStruct *cvs)
 			else if (x >= (1874 - radius_robot) && x <= 2124) {
 
 				if (y <= (250 + radius_robot) ) {
-					cvs->state->game_map[x][y] = 0;
+					cvs->param->game_map[x][y] = 0;
 				}// end if y
 
-				else cvs->state->game_map[x][y] = 1;
+				else cvs->param->game_map[x][y] = 1;
 
 			} // end else if *** 5/ Lower right corner steps  ***
 
@@ -98,3 +104,9 @@ void game_map_drawing(CtrlStruct *cvs)
 
 
 } //end function
+
+						
+
+NAMESPACE_CLOSE();
+
+#endif

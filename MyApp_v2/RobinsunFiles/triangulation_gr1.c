@@ -3,9 +3,14 @@
 * \brief File description
 */
 
+#include "namespace_ctrl.h"
 #include "CtrlStruct_gr1.h"
+#include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
 #include "triangulation_gr1.h"
+
+NAMESPACE_INIT(ctrlGr1);
 
 /*! \brief computation of position via triangulation (called every timestep)
 *
@@ -14,17 +19,16 @@
 */
 void triangulation(CtrlStruct *cvs)
 {
-#ifdef TOWER
     CtrlIn *ivs;
     ivs = cvs->inputs;
-	double *beacons = cvs->state->beacons;
-	double *position_odo = cvs->state->position_odo;
+	double *beacons = cvs->param->beacons;
+	double *position = cvs->state->position;
 
 	/* Algorithm based on power center computation */
 	double x1, y1, x2, y2, x3, y3;                                              // Beacon coordinates
 	double x1_prime, y1_prime, x3_prime, y3_prime;                              // Modified beacon coordinates wrt to beacon 2
 	double T12, T23, T31;                                                       // Cotangent of measured angles
-	double x12_prime, y12_prime, x23_prime, y23_prime, x31_prime, y31_prime;    // Modified circle cebter coordinates
+	double x12_prime, y12_prime, x23_prime, y23_prime, x31_prime, y31_prime;    // Modified circle center coordinates
 	double k31_prime;                                                           // Constant in power center equation
 	double D;                                                                   // Denominator of the final expression
 	double xR_iter, yR_iter;
@@ -41,7 +45,6 @@ void triangulation(CtrlStruct *cvs)
 	the angles that we should look at are therefore the angles before the last rising edge (to look only at 'complete' beacons). */
 	int rising_index = ivs->rising_index_fixed;
 	int falling_index = ivs->falling_index_fixed;
-
 	if (rising_index > falling_index) rising_index--;
 
 	/* Now look at the three last detected beacons to compute position. */
@@ -70,11 +73,12 @@ void triangulation(CtrlStruct *cvs)
 
 	/* Define the angle of each beacon as the mean between rising and falling edge */
 	double alpha[3];
-	alpha[0] = (rising[0] + falling[0]) / 2;
-	alpha[1] = (rising[1] + falling[1]) / 2;
-	alpha[2] = (rising[2] + falling[2]) / 2;
+	alpha[0] = (rising[0] + falling[0]) / 2.0;
+	alpha[1] = (rising[1] + falling[1]) / 2.0;
+	alpha[2] = (rising[2] + falling[2]) / 2.0;
 
-	for(int i=0;i<3;i=i+1)
+    int i;
+	for(i=0;i<3;i=i+1)
     {
         if(i == 0) {
             x1 = beacons[0]; y1 = beacons[1];
@@ -91,37 +95,6 @@ void triangulation(CtrlStruct *cvs)
             x2 = beacons[0]; y2 = beacons[1];
             x3 = beacons[2]; y3 = beacons[3];
         }
-
-//	/* The smallest angle difference will indicate which beacons are the two beacons on the same side */
-//	double abs[3];
-//	abs[0] = (fabs(alpha[0] - alpha[1]) > M_PI) ? (2*M_PI - fabs(alpha[0] - alpha[1])) : (fabs(alpha[0] - alpha[1]));
-//	abs[1] = (fabs(alpha[1] - alpha[2]) > M_PI) ? (2*M_PI - fabs(alpha[1] - alpha[2])) : (fabs(alpha[1] - alpha[2]));
-//	abs[2] = (fabs(alpha[2] - alpha[0]) > M_PI) ? (2*M_PI - fabs(alpha[2] - alpha[0])) : (fabs(alpha[2] - alpha[0]));
-//
-//	if (abs[0] < abs[1]) {
-//		if (abs[0] < abs[2]){ // beacons closest to each other are 0 and 1
-//		    x1 = beacons[2]; y1 = beacons[3];
-//            x2 = beacons[4]; y2 = beacons[5];
-//            x3 = beacons[0]; y3 = beacons[1];
-//		}
-//		else { // beacons closest to each other are 2 and 0
-//		    x1 = beacons[4]; y1 = beacons[5];
-//		    x2 = beacons[0]; y2 = beacons[1];
-//            x3 = beacons[2]; y3 = beacons[3];
-//		}
-//	}
-//	else {
-//		if (abs[1] < abs[2]){ // beacons closest to each other are 1 and 2
-//            x1 = beacons[0]; y1 = beacons[1];
-//            x2 = beacons[2]; y2 = beacons[3];
-//            x3 = beacons[4]; y3 = beacons[5];
-//		}
-//		else { // beacons closest to each other are 2 and 0
-//            x1 = beacons[4]; y1 = beacons[5];
-//		    x2 = beacons[0]; y2 = beacons[1];
-//            x3 = beacons[2]; y3 = beacons[3];
-//		}
-//	}
 
         /* Step 1 : Compute modified beacon coordinates */
         x1_prime = x1 - x2;
@@ -152,8 +125,8 @@ void triangulation(CtrlStruct *cvs)
         xR_iter = x2 + ((k31_prime*(y12_prime-y23_prime))/D);
         yR_iter = y2 + ((k31_prime*(x23_prime-x12_prime))/D);
 
-        current_dist = sqrt((xR_iter - position_odo[0])*(xR_iter - position_odo[0]) + (yR_iter - position_odo[1])*(yR_iter - position_odo[1]));
-        prev_dist = sqrt((xR - position_odo[0])*(xR - position_odo[0]) + (yR - position_odo[1])*(yR - position_odo[1]));
+        current_dist = sqrt((xR_iter - position[0])*(xR_iter - position[0]) + (yR_iter - position[1])*(yR_iter - position[1]));
+        prev_dist    = sqrt((xR - position[0])*(xR - position[0]) + (yR - position[1])*(yR - position[1]));
 
         if(i == 0) {
             xR = xR_iter;
@@ -167,35 +140,31 @@ void triangulation(CtrlStruct *cvs)
             x2_final = x2;
             y2_final = y2;
         }
-
-
     }
 
-        /* Step 7 : Compute the robot orientation, wrt to beacon 2 */
-        delta_x = x2_final - xR;
-        delta_y = y2_final - yR;
+    /* Step 7 : Compute the robot orientation, wrt to beacon 2 */
+    delta_x = x2_final - xR;
+    delta_y = y2_final - yR;
 
-        if((delta_x < 0)&&(delta_y > 0)) { // 2nd quadrant
-            alpha2_abs = atan(delta_y/delta_x) + M_PI;
-        }
-        else if ((delta_x < 0)&&(delta_y < 0)) { // 3rd quadrant
-            alpha2_abs = atan(delta_y/delta_x) - M_PI;
-        }
-        else {
-            alpha2_abs = atan(delta_y/delta_x);
-        }
+    if((delta_x < 0)&&(delta_y > 0)) { // 2nd quadrant
+        alpha2_abs = atan(delta_y/delta_x) + M_PI;
+    }
+    else if ((delta_x < 0)&&(delta_y < 0)) { // 3rd quadrant
+        alpha2_abs = atan(delta_y/delta_x) - M_PI;
+    }
+    else {
+        alpha2_abs = atan(delta_y/delta_x);
+    }
 
-        thetaR = alpha[1] - alpha2_abs;
-        if (thetaR > M_PI)          thetaR = thetaR - (2*M_PI);
-        else if (thetaR < -M_PI)    thetaR = thetaR + (2*M_PI);
+    thetaR = alpha[1] - alpha2_abs;
+    if (thetaR > M_PI)          thetaR = thetaR - (2.0*M_PI);
+    else if (thetaR < -M_PI)    thetaR = thetaR + (2.0*M_PI);
 
-        /* Step 8 : Copy the computed values in the position vector */
-        cvs->state->position_triang[0] = xR;
-		cvs->state->position_triang[1] = yR;
-		cvs->state->position_triang[2] = -thetaR;
-#else
-        cvs->state->position_triang[0] = cvs->state->position[0];
-        cvs->state->position_triang[1] = cvs->state->position[1];
-        cvs->state->position_triang[2] = cvs->state->position[2];
-#endif
+    /* Step 8 : Copy the computed values in the position vector */
+    cvs->state->position_triang[0] = xR;
+	cvs->state->position_triang[1] = yR;
+	cvs->state->position_triang[2] = -thetaR;
+
 }
+
+NAMESPACE_CLOSE();

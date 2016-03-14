@@ -1,4 +1,7 @@
 #include "CtrlStruct_gr1.h"
+#include <stdlib.h>
+
+NAMESPACE_INIT(ctrlGr1);
 
 /*! \brief initialize the controller structure
  *
@@ -10,12 +13,14 @@ CtrlStruct* init_CtrlStruct(CtrlIn *inputs, CtrlOut *outputs)
 {
 	CtrlStruct *cvs;
 
-	//cvs = (CtrlStruct*) malloc(sizeof(CtrlStruct));
+	cvs = (CtrlStruct*) malloc(sizeof(CtrlStruct));
 
 	cvs->inputs  = inputs;
 	cvs->outputs = outputs;
-	CtrlState *state; // = (CtrlState*) malloc(sizeof(CtrlState));
+	CtrlState *state = (CtrlState*) malloc(sizeof(CtrlState));
 	cvs->state = state;
+	CtrlParam *param = (CtrlParam*) malloc(sizeof(CtrlParam));
+	cvs->param = param;
 
 	return cvs;
 }
@@ -26,5 +31,7 @@ CtrlStruct* init_CtrlStruct(CtrlIn *inputs, CtrlOut *outputs)
  */
 void free_CtrlStruct(CtrlStruct *cvs)
 {
-	//free(cvs);
+	free(cvs);
 }
+
+NAMESPACE_CLOSE();

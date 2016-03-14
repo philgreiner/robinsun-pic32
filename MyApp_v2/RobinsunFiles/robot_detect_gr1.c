@@ -3,12 +3,16 @@
 * \brief File description
 */
 
+#include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
+#include "namespace_ctrl.h"
 #include "ctrl_main_gr1.h"
+
+NAMESPACE_INIT(ctrlGr1); // where X should be replaced by your group number
 
 void robot_Detect(CtrlStruct *cvs)
 {
-#ifdef TOWER
     CtrlIn *ivs;
     ivs = cvs->inputs;
     int n_robots = ivs->nb_opponents;
@@ -17,14 +21,16 @@ void robot_Detect(CtrlStruct *cvs)
     int rising_index[2];
     int falling_index;
 
-#ifdef SIMU_PROJECT
-    printf("n_robots = %d \n", n_robots);
-#endif
+    /* If rising_index > falling_index the laser is currently ON a beacon. */
+
+    #ifdef DEBUG
+        printf("n_robots = %d \n", n_robots);
+    #endif
 
     /* If rising_index_fixed > falling_index_fixed, the laser is currently ON a beacon.
 	the angles that we should look at are therefore the angles before the last rising edge (to look only at 'complete' beacons). */
-	rising_index[0] = ivs->rising_index_fixed;
-	falling_index = ivs->falling_index_fixed;
+	rising_index[0] = ivs->rising_index;
+	falling_index = ivs->falling_index;
 	if (rising_index[0] > falling_index) rising_index[0] = rising_index[0] - 1;
 
     /* Now look at the three last detected beacons to compute position. */
@@ -61,7 +67,7 @@ void robot_Detect(CtrlStruct *cvs)
 
         /* Calculation of the distance */
         double R = 0.1; // Radius of the beacon
-        double d = R/sin(falling[i] - rising[i]);
+        double d = R/tan(falling[i] - rising[i]);
 
 
         /* Calculation of the opponent position */
@@ -72,9 +78,6 @@ void robot_Detect(CtrlStruct *cvs)
         if ((robot_pos[index + 1] < 1.5) && (robot_pos[index + 1] > -1.5))    cvs->state->opponent_position[index + 1] = robot_pos[index + 1];
         index += 2;
     }
-#else
-    
-    // Detect opponent based on sonars
-    
-#endif
 }
+
+NAMESPACE_CLOSE();
