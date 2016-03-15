@@ -140,8 +140,11 @@ MyAPP_EXT  int      MyVideo_Counter MyAPP_INIT;
 #define MotorSID 0x708
 #define TowerSID 0x508
 
+
 CtrlIn dataIN;
 CtrlOut dataOUT;
+
+MyAPP_EXT   CtrlParam param;
 
 MyAPP_EXT   float   Ki          MyAPP_INIT;
 MyAPP_EXT   float   Kp          MyAPP_INIT;

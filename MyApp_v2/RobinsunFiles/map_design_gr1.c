@@ -21,6 +21,7 @@ NAMESPACE_INIT(ctrlGr1);
 
 void game_map_drawing(CtrlStruct *cvs)
 {
+#ifdef ASTAR
 	// All values are in [mm]
 	int x;
 	int y;
@@ -101,8 +102,7 @@ void game_map_drawing(CtrlStruct *cvs)
 		}// end for y
 
 	}// end for x
-
-
+#endif
 } //end function
 
 						

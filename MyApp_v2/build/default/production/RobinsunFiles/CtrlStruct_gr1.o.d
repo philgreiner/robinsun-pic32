@@ -2,4 +2,21 @@ build/default/production/RobinsunFiles/CtrlStruct_gr1.o:  \
  RobinsunFiles/CtrlStruct_gr1.c  \
 RobinsunFiles/CtrlStruct_gr1.h  \
  RobinsunFiles/ctrl_io.h  \
-RobinsunFiles/namespace_ctrl.h 
+RobinsunFiles/namespace_ctrl.h  \
+ MyIncludes/MyApp.h  \
+MyIncludes/MySPI.h  \
+MyIncludes/MyLED.h  \
+ MyIncludes/MyCyclone.h  \
+MyIncludes/MyConsole.h  \
+MyIncludes/MyCAN.h  \
+ MyIncludes/MyRTCC.h  \
+MyIncludes/MyIO.h  \
+MyIncludes/MyFlash.h  \
+ MyIncludes/MyMIWI.h  \
+MyIncludes/MyWIFI.h  \
+MyIncludes/MyTemperature.h  \
+ MyIncludes/MyMDDFS.h  \
+MyIncludes/MyCamera.h  \
+MyIncludes/MyMiniProject.h  \
+ RobinsunFiles/CtrlStruct_gr1.h  \
+MyIncludes/MyCtrlIO.h 

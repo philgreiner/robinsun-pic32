@@ -46,38 +46,50 @@ void controller_init(CtrlStruct *cvs)
 	for(i=0;i<3;i=i+1)
 		for(j=0;j<3;j=j+1)
 			cvs->state->covariance[i][j] = 0.0;
-	cvs->param->R_beacon = 0.04;
+
 	cvs->param->kr = 1;									// FIND APPROPRIATE VALUES !
 	cvs->param->kl = 1;									// FIND APPROPRIATE VALUES !
-
-	#ifdef SIMU_GAME
+	cvs->param->R_beacon = 0.04;
+    
+#ifdef SIMU_GAME
 	cvs->param->Kp = 0.1043;
 	cvs->param->Ki = 28.98;
-	#endif
+#else 
+    cvs->param->Kp = 0.09;
+	cvs->param->Ki = 19.71;
+#endif
+    
 	cvs->state->lastT = cvs->inputs->t;
 
 	/* Sets the beacon position, beginning by the one which is alone on its side, for both robot starting configurations */
-	#ifdef SIMU_GAME
-        if((cvs->inputs->robot_id == ROBOT_B)||(cvs->inputs->robot_id == ROBOT_R)){
-            cvs->param->beacons[0] = 0;         cvs->param->beacons[1] = -1.562;
-            cvs->param->beacons[2] = 1.062;     cvs->param->beacons[3] = 1.562;
-            cvs->param->beacons[4] = -1.062;    cvs->param->beacons[5] = 1.562;
-        }
-        else {
-            cvs->param->beacons[0] = 0;         cvs->param->beacons[1] = 1.562;
-            cvs->param->beacons[2] = -1.062;    cvs->param->beacons[3] = -1.562;
-            cvs->param->beacons[4] = 1.062;     cvs->param->beacons[5] = -1.562;
-        }
+#ifdef SIMU_GAME
+    if((cvs->inputs->robot_id == ROBOT_B)||(cvs->inputs->robot_id == ROBOT_R)){
+        cvs->param->beacons[0] = 0;         cvs->param->beacons[1] = -1.562;
+        cvs->param->beacons[2] = 1.062;     cvs->param->beacons[3] = 1.562;
+        cvs->param->beacons[4] = -1.062;    cvs->param->beacons[5] = 1.562;
+    }
+    else {
+        cvs->param->beacons[0] = 0;         cvs->param->beacons[1] = 1.562;
+        cvs->param->beacons[2] = -1.062;    cvs->param->beacons[3] = -1.562;
+        cvs->param->beacons[4] = 1.062;     cvs->param->beacons[5] = -1.562;
+    }
 
-        if(cvs->inputs->robot_id == ROBOT_B){
-            cvs->state->position[0] = -0.225;
-            cvs->state->position[1] = -1.15;
-            cvs->state->position[2] = M_PI_2;
-			cvs->state->position_odo[0] = -0.225;
-			cvs->state->position_odo[1] = -1.15;
-			cvs->state->position_odo[2] = M_PI_2;
-        }
-	#endif
+    if(cvs->inputs->robot_id == ROBOT_B){
+        cvs->state->position[0] = -0.225;
+        cvs->state->position[1] = -1.15;
+        cvs->state->position[2] = M_PI_2;
+        cvs->state->position_odo[0] = -0.225;
+        cvs->state->position_odo[1] = -1.15;
+        cvs->state->position_odo[2] = M_PI_2;
+    }
+#else 
+    cvs->state->position[0] = -0.225;
+    cvs->state->position[1] = -1.15;
+    cvs->state->position[2] = M_PI_2;
+    cvs->state->position_odo[0] = -0.225;
+    cvs->state->position_odo[1] = -1.15;
+    cvs->state->position_odo[2] = M_PI_2;
+#endif
 
 	potential_Field_Init(cvs);
 
@@ -133,7 +145,7 @@ void controller_loop(CtrlStruct *cvs)
 
 	/* Computation of the motor voltages */
 	double wheels[2];
-	motors_control(cvs, cvs->state->position_triang, wheels);
+	motors_control(cvs, cvs->state->position_odo, wheels);
 
 	ovs->wheel_commands[R_ID] = wheels[R_ID];
 	ovs->wheel_commands[L_ID] = wheels[L_ID];
@@ -165,6 +177,8 @@ void controller_finish(CtrlStruct *cvs)
 */
 void motors_control(CtrlStruct *cvs, double * position, double * wheels)
 {
+    double UconsigneR, UconsigneL;
+    double Valim = 24.0;
 	CtrlIn *ivs = cvs->inputs;
 	double *omegaref = cvs->state->omegaref;
 
@@ -176,6 +190,7 @@ void motors_control(CtrlStruct *cvs, double * position, double * wheels)
 	cvs->state->errorIntR += (omegaref[R_ID] - rspeed)*(ivs->t - cvs->state->lastT);
 	cvs->state->errorIntL += (omegaref[L_ID] - lspeed)*(ivs->t - cvs->state->lastT);
 
+#ifdef SIMU_PROJECT
 	// Limit the integral error (anti-windup)
 	cvs->state->errorIntR = (14 * cvs->state->errorIntR*cvs->param->Ki>24.0) ? (24.0 / (14 * cvs->param->Ki)) : (cvs->state->errorIntR);
 	cvs->state->errorIntL = (14 * cvs->state->errorIntL*cvs->param->Ki>24.0) ? (24.0 / (14 * cvs->param->Ki)) : (cvs->state->errorIntL);
@@ -183,14 +198,34 @@ void motors_control(CtrlStruct *cvs, double * position, double * wheels)
 	cvs->state->errorIntL = (14 * cvs->state->errorIntL*cvs->param->Ki<-24.0) ? (-24.0 / (14 * cvs->param->Ki)) : (cvs->state->errorIntL);
 
 	// PI controller
-	double UconsigneR = (omegaref[R_ID] - rspeed) * 14 * cvs->param->Kp + cvs->state->errorIntR * 14 * cvs->param->Ki;
-	double UconsigneL = (omegaref[L_ID] - lspeed) * 14 * cvs->param->Kp + cvs->state->errorIntL * 14 * cvs->param->Ki;
+	UconsigneR = (omegaref[R_ID] - rspeed) * 14 * cvs->param->Kp + cvs->state->errorIntR * 14 * cvs->param->Ki;
+	UconsigneL = (omegaref[L_ID] - lspeed) * 14 * cvs->param->Kp + cvs->state->errorIntL * 14 * cvs->param->Ki;
 
 	UconsigneR = (UconsigneR>0.9*24) ? (0.9*24) : (UconsigneR);
 	UconsigneL = (UconsigneL>0.9*24) ? (0.9*24) : (UconsigneL);
 
 	wheels[R_ID] = UconsigneR*(100/(0.9*24));
 	wheels[L_ID] = UconsigneL*(100/(0.9*24));
+#else
+        // PI controller
+    UconsigneR = (omegaref[R_ID]-rspeed)*cvs->param->Kp + cvs->state->errorIntR*cvs->param->Ki;
+    UconsigneL = (omegaref[L_ID]-lspeed)*cvs->param->Kp + cvs->state->errorIntL*cvs->param->Ki;
+
+    UconsigneR = (UconsigneR>Valim) ? ( Valim) : (UconsigneR);
+    UconsigneR = (UconsigneR<-Valim)? (-Valim) : (UconsigneR);
+    UconsigneL = (UconsigneL>Valim) ? ( Valim) : (UconsigneL);
+    UconsigneL = (UconsigneL<-Valim)? (-Valim) : (UconsigneL);
+    
+    #ifdef ROBOTCONSOLE
+        char msg[1024];
+        sprintf(msg, "Right speed: %.3f; omegaref: %.3f; UconsigneR: %.3f\n",rspeed,omegaref[R_ID], UconsigneR);
+        MyConsole_SendMsg(msg);
+    #endif
+
+    // Update command values
+    wheels[R_ID] = 100.0*UconsigneR/26.0;
+    wheels[L_ID] = 100.0*UconsigneL/26.0;
+#endif
 }
 
 NAMESPACE_CLOSE();

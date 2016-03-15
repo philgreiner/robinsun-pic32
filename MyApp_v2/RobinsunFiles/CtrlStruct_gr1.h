@@ -8,6 +8,7 @@
 
 #include "ctrl_io.h"
 #include "namespace_ctrl.h"
+#define POTENTIAL
 
 NAMESPACE_INIT(ctrlGr1);
 
@@ -55,15 +56,16 @@ typedef struct CtrlParam
 
 	// Wheel controller parameters
 	double Ki, Kp;
-
+#ifdef POTENTIAL
 	double obstacle_center[722];    // Coordinates of the central obstacle
+#endif
 	int nb_center;                  // Number of points in center
 	double k_center;
 	double rho_center;
-
 	double k_att;
-
+#ifdef POTENTIAL
 	double obstacle_edges[2210];    // Coordinates of the table edges, under the format (x,y). Precision of 1 cm
+#endif
 	int nb_edges;                   // Number of points in edges
 	double k_edge;
 	double rho_edge;
@@ -75,7 +77,7 @@ typedef struct CtrlParam
 	double k_att_quad;
 	double rho_att;
 
-	int game_map[2124][3124];		 // Game map draws as a table. game_map[x=0][y=0] = bottom left corner near to violet cabin
+	//int game_map[2124][3124];		 // Game map draws as a table. game_map[x=0][y=0] = bottom left corner near to violet cabin
 } CtrlParam;
 
 /// Main controller structure

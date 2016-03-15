@@ -1,4 +1,5 @@
 #include "CtrlStruct_gr1.h"
+#include "MyApp.h"
 #include <stdlib.h>
 
 NAMESPACE_INIT(ctrlGr1);
@@ -13,18 +14,18 @@ CtrlStruct* init_CtrlStruct(CtrlIn *inputs, CtrlOut *outputs)
 {
 	CtrlStruct *cvs;
     CtrlState *state;
-    CtrlParam *param;
+    //CtrlParam *param;
 
-#ifdef SIMU_PROJECT
 	cvs = (CtrlStruct*) malloc(sizeof(CtrlStruct));
     state = (CtrlState*) malloc(sizeof(CtrlState));
-    param = (CtrlParam*) malloc(sizeof(CtrlParam));
-#endif
-
+    //param = (CtrlParam*) malloc(sizeof(CtrlParam));
+//    if(param == NULL)
+//        MyConsole_SendMsg("param is NULL.\n");
+    
 	cvs->inputs  = inputs;
 	cvs->outputs = outputs;
 	cvs->state = state;
-	cvs->param = param;
+	cvs->param = &param;
 
 	return cvs;
 }
@@ -35,9 +36,7 @@ CtrlStruct* init_CtrlStruct(CtrlIn *inputs, CtrlOut *outputs)
  */
 void free_CtrlStruct(CtrlStruct *cvs)
 {
-#ifdef SIMU_PROJECT
 	free(cvs);
-#endif
 }
 
 NAMESPACE_CLOSE();

@@ -82,7 +82,9 @@ void strategy_objective(CtrlStruct *cvs)
 		break;
 
 	default:
-		printf("Error: unknown state : %d !\n", cvs->state->strategy_state);
+#ifdef SIMU_GAME
+        printf("Error: unknown state : %d !\n", cvs->state->strategy_state);
+#endif
 		exit(EXIT_FAILURE);
 	}
 }
@@ -91,6 +93,8 @@ void objective_selection(CtrlStruct *cvs)
 {
 #ifdef SIMU_PROJECT
 	printf("Selecting next objective. Objectives on robot: %d\n", cvs->state->objectives_on_robot);
+#else
+    MyConsole_SendMsg("Selecting Objective.\n");
 #endif
 	if (cvs->state->objectives_on_robot > 1)
 	{

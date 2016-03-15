@@ -80,9 +80,14 @@ int main(void)
     //MyMIWI_Init();
     //MyWIFI_Init();
     MyMiniProject_Init();
-    
-    CtrlIn *inputs; CtrlOut *outputs;
-    init_CtrlStruct(inputs, outputs);
+
+    CtrlIn *inputs = (CtrlIn*) malloc(sizeof(CtrlIn));
+    CtrlOut *outputs = (CtrlOut*) malloc(sizeof(CtrlOut));
+    CtrlStruct *cvs = init_CtrlStruct(inputs, outputs);
+
+    MyMiniProject_Update(cvs);
+    controller_init(cvs);
+
     // Configure for multi-vectored mode
     INTConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
 
@@ -109,7 +114,9 @@ int main(void)
         //MyWIFI_Task();
         if(ReadCoreTimer() - tStart > tWait)
         {
-            MyMiniProject_Task();
+            MyMiniProject_Update(cvs);
+            controller_loop(cvs);
+            MyMiniProject_Send(cvs);
             tStart = ReadCoreTimer();
         }
     }
@@ -136,7 +143,7 @@ void MyDelayMs(unsigned int msec)
 
 void _general_exception_handler(unsigned cause, unsigned status)
 {
-    MyConsole_SendMsg("Exception.\n");
+    //MyConsole_SendMsg("Exception.\n");
     Nop();
     Nop();
 }

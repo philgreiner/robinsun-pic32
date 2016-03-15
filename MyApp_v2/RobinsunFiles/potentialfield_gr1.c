@@ -74,6 +74,7 @@ int diag_allocate(double *obstacle, double qstartx, double qendx, double qstarty
 
 void potential_Field_Init(CtrlStruct *cvs)
 {
+#ifdef POTENTIAL
     /* Allocation of the obstacles coordinates */
 	cvs->param->nb_edges = 1105;
 	double* edges = cvs->param->obstacle_edges;
@@ -160,6 +161,7 @@ void potential_Field_Init(CtrlStruct *cvs)
 	cvs->param->k_att_quad = 150.0 / 0.3;
 	cvs->param->K_SpeedX = 0.1;
 	cvs->param->K_SpeedRot = 10.0;
+#endif
 }
 
 /*! \brief Calculate the minimal distance between the robot and an obstacle
@@ -252,11 +254,12 @@ void potential_Field(CtrlStruct *cvs)
 	double d_center;
 	double coord_center[2];
 	double angle_center;
-
+#ifdef POTENTIAL
 	d_edge = min_Distance(cvs->state->position_odo, cvs->param->obstacle_edges, coord_edge, cvs->param->nb_edges);
 	d_center = min_Distance(cvs->state->position_odo, cvs->param->obstacle_center, coord_center, cvs->param->nb_center);
 	angle_edge = angle_Obstacle(cvs->state->position_odo, coord_edge);
 	angle_center = angle_Obstacle(cvs->state->position_odo, coord_center);
+#endif
 
 	/* Calculate the forces using the gradient of the potential field */
 	double F_x_att, F_x_edge, F_x_center;

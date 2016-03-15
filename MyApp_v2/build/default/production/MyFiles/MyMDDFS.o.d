@@ -15,10 +15,10 @@ MyIncludes/MyTemperature.h  \
  MyIncludes/MyMDDFS.h  \
 MyIncludes/MyCamera.h  \
 MyIncludes/MyMiniProject.h  \
- MyIncludes/MyCtrlIO.h  \
-RobinsunFiles/CtrlStruct_gr1.h  \
- RobinsunFiles/ctrl_io.h  \
-RobinsunFiles/namespace_ctrl.h  \
+ RobinsunFiles/CtrlStruct_gr1.h  \
+RobinsunFiles/ctrl_io.h  \
+ RobinsunFiles/namespace_ctrl.h  \
+MyIncludes/MyCtrlIO.h  \
  Microchip/Include/MDD\ File\ System/FSIO.h  \
  MyConfig/MyConfig_MDDFS/FSconfig.h  \
 Microchip/Include/Compiler.h  \
