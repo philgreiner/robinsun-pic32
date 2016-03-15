@@ -5,6 +5,7 @@
 #ifndef MyAPP_H_
 #define MyAPP_H_
 
+#define ROBOT
 // Adds support for PIC32 Peripheral library functions and macros
 #include <plib.h>
 
@@ -24,7 +25,7 @@
 #include "MyCamera.h"
 #include "MyMiniProject.h"
 #include "MyCtrlIO.h"
-#include "ctrlstruct.h"
+#include "CtrlStruct_gr1.h"
 
 /*******************************************************************************
 * Constants                                                                    *

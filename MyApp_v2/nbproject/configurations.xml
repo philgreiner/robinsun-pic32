@@ -43,8 +43,12 @@
                      projectFiles="true">
         <itemPath>RobinsunFiles/Astar_gr1.h</itemPath>
         <itemPath>RobinsunFiles/CtrlStruct_gr1.h</itemPath>
+        <itemPath>RobinsunFiles/ctrl_io.h</itemPath>
         <itemPath>RobinsunFiles/ctrl_main_gr1.h</itemPath>
+        <itemPath>RobinsunFiles/ctrl_strategy_gr1.h</itemPath>
+        <itemPath>RobinsunFiles/kalman_gr1.h</itemPath>
         <itemPath>RobinsunFiles/map_design_gr1.h</itemPath>
+        <itemPath>RobinsunFiles/namespace_ctrl.h</itemPath>
         <itemPath>RobinsunFiles/odometry_gr1.h</itemPath>
         <itemPath>RobinsunFiles/potentialfield_gr1.h</itemPath>
         <itemPath>RobinsunFiles/robot_detect_gr1.h</itemPath>
@@ -166,6 +170,8 @@
         <itemPath>RobinsunFiles/Astar_gr1.c</itemPath>
         <itemPath>RobinsunFiles/CtrlStruct_gr1.c</itemPath>
         <itemPath>RobinsunFiles/ctrl_main_gr1.c</itemPath>
+        <itemPath>RobinsunFiles/ctrl_strategy_gr1.c</itemPath>
+        <itemPath>RobinsunFiles/kalman_gr1.c</itemPath>
         <itemPath>RobinsunFiles/map_design_gr1.c</itemPath>
         <itemPath>RobinsunFiles/odometry_gr1.c</itemPath>
         <itemPath>RobinsunFiles/potentialfield_gr1.c</itemPath>
@@ -181,9 +187,7 @@
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
-    <Elem>MyIncludes</Elem>
-    <Elem>MyFiles</Elem>
-    <Elem>RobinsunFiles</Elem>
+    <Elem>.</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -249,6 +253,7 @@
       </C32-AR>
       <C32-AS>
         <property key="assembler-symbols" value=""/>
+        <property key="enable-symbols" value="true"/>
         <property key="exclude-floating-point-library" value="false"/>
         <property key="expand-macros" value="false"/>
         <property key="extra-include-directories-for-assembler" value=""/>
@@ -256,10 +261,9 @@
         <property key="false-conditionals" value="false"/>
         <property key="keep-locals" value="false"/>
         <property key="list-assembly" value="false"/>
-        <property key="list-file" value=""/>
-        <property key="list-section-info" value="false"/>
         <property key="list-source" value="false"/>
         <property key="list-symbols" value="false"/>
+        <property key="oXC32asm-list-to-file" value="false"/>
         <property key="omit-debug-dirs" value="false"/>
         <property key="omit-forms" value="false"/>
         <property key="preprocessor-macros" value=""/>
@@ -323,7 +327,7 @@
         <property key="use-indirect-calls" value="false"/>
       </C32CPP>
       <C32Global>
-        <property key="common-include-directories" value=""/>
+        <property key="common-include-directories" value="MyIncludes;RobinsunFiles"/>
         <property key="gp-relative-option" value=""/>
         <property key="legacy-libc" value="false"/>
         <property key="relaxed-math" value="false"/>
@@ -456,7 +460,6 @@
         <property key="UART5" value="true"/>
         <property key="UART6" value="true"/>
         <property key="USB" value="true"/>
-        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>

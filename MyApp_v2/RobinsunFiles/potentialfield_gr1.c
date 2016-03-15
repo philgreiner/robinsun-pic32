@@ -5,6 +5,8 @@
 
 #include "namespace_ctrl.h"
 #include "CtrlStruct_gr1.h"
+#include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
 #include "potentialfield_gr1.h"
 
@@ -19,7 +21,7 @@ NAMESPACE_INIT(ctrlGr1); // where X should be replaced by your group number
 */
 int edge_allocate(double *obstacle, double qstart, double qend, double step, double qconst, int XY, int start_index)
 {
-	int n_iter = (int) (fabs(qstart - qend) / step);     // Number of iterations to perform
+	int n_iter = (int) floor(fabs(qstart - qend) / step);     // Number of iterations to perform
 	int index = start_index;
 
 	if (qstart > qend) {
@@ -51,7 +53,7 @@ int edge_allocate(double *obstacle, double qstart, double qend, double step, dou
 int diag_allocate(double *obstacle, double qstartx, double qendx, double qstarty, double qendy, double step, int start_index)
 {
     double stepx, stepy;
-    int n_iter = (int) (fabs(qstartx - qendx) / step);     // Number of iterations to perform
+    int n_iter = (int) floor(fabs(qstartx - qendx) / step);     // Number of iterations to perform
 	int index = start_index;
 
 	if (qstartx > qendx)    stepx = -step;
@@ -125,36 +127,34 @@ void potential_Field_Init(CtrlStruct *cvs)
 	start_ind = last_ind;
 	last_ind = edge_allocate(edges, 0.75, 1.0, 0.01, -1.25, 0, start_ind);
 
-    cvs->param->nb_center = 421;
+    cvs->param->nb_center = 361;
     double* center = cvs->param->obstacle_center;
 
 	start_ind = 0;
 	last_ind = 0;
-	last_ind = edge_allocate(center, 0.65, -0.65, 0.01, -0.3, 1, start_ind);
+	last_ind = edge_allocate(center, 0.6, -0.6, 0.01, -0.35, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = diag_allocate(center, -0.3, -0.25, -0.65, -0.7, 0.01, start_ind);
+	last_ind = diag_allocate(center, -0.35, -0.25, -0.6, -0.7, 0.01, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.25, -0.15, 0.01, -0.7, 0, start_ind);
+	last_ind = edge_allocate(center, -0.25, -0.17, 0.01, -0.7, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.7, -0.15, 0.01, -0.15, 1, start_ind);
+	last_ind = edge_allocate(center, -0.7, -0.15, 0.01, -0.17, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.15, 0.45, 0.01, -0.15, 0, start_ind);
+	last_ind = edge_allocate(center, -0.17, 0.45, 0.01, -0.15, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.15, 0.15, 0.01, 0.45, 1, start_ind);
+	last_ind = edge_allocate(center, -0.15, 0.1, 0.01, 0.45, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, 0.45, -0.15, 0.01, 0.15, 0, start_ind);
-	start_ind = last_ind;
-	last_ind = edge_allocate(center, 0.15, 0.7, 0.01, -0.15, 1, start_ind);
+	last_ind = diag_allocate(center, 0.45, -0.15, 0.1, 0.7, 0.01, start_ind);
 	start_ind = last_ind;
 	last_ind = edge_allocate(center, -0.15, -0.25, 0.01, 0.7, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = diag_allocate(center, -0.25, -0.3, 0.65, 0.7, 0.01, start_ind);
+	last_ind = diag_allocate(center, -0.25, -0.35, 0.6, 0.7, 0.01, start_ind);
 
 	/* Initialization of the parameters of the potential field path planning */
 	cvs->param->k_edge = 250.0;
 	cvs->param->rho_edge = 0.15;
-	cvs->param->k_center = 225.0;
-	cvs->param->rho_center = 0.125;
+	cvs->param->k_center = 200.0;
+	cvs->param->rho_center = 0.08;
 	cvs->param->rho_att = 0.3;
 	cvs->param->k_att_conic = 150.0;
 	cvs->param->k_att_quad = 150.0 / 0.3;

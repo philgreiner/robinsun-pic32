@@ -8,7 +8,9 @@
 #include <stdio.h>
 #include <math.h>
 
+#ifdef SIMU_PROJECT
 #include "robot_id.h"
+#endif
 
 NAMESPACE_INIT(ctrlGr1);
 
@@ -28,7 +30,9 @@ void strategy_objective(CtrlStruct *cvs)
 		cvs->state->goal_position[1] = cvs->state->position_odo[1];
 		cvs->state->goal_position[2] = cvs->state->position_odo[2];
 
+#ifdef SIMU_PROJECT
 		cvs->outputs->flag_release = 0;
+#endif
 
 		if (cvs->inputs->t > 0)
 		{
@@ -39,7 +43,9 @@ void strategy_objective(CtrlStruct *cvs)
 	case GOTO_OBJ: // Select next_objective depending on done_objectives and objectives_on_robot
 		objective_selection(cvs);
 
+#ifdef SIMU_PROJECT
 		cvs->outputs->flag_release = 0;
+#endif
 		cvs->state->strategy_state = WAIT_FOR_DESTINATION;
 		break;
 
@@ -67,7 +73,9 @@ void strategy_objective(CtrlStruct *cvs)
 		}
 		else if (d < 0.02 && cvs->state->next_objective == BASE)
 		{
+#ifdef SIMU_PROJECT
 			cvs->outputs->flag_release = 1;
+#endif
 			cvs->state->objectives_on_robot = 0;
 			cvs->state->strategy_state = GOTO_OBJ;
 		}
@@ -81,11 +89,16 @@ void strategy_objective(CtrlStruct *cvs)
 
 void objective_selection(CtrlStruct *cvs)
 {
+#ifdef SIMU_PROJECT
 	printf("Selecting next objective. Objectives on robot: %d\n", cvs->state->objectives_on_robot);
+#endif
 	if (cvs->state->objectives_on_robot > 1)
 	{
+#ifdef SIMU_PROJECT
 		printf("Robot is full, going back to base.\n");
+#endif
 		cvs->state->next_objective = BASE;
+#ifdef SIMU_PROJECT
 		// Set goal position depending on team
 		if (cvs->inputs->robot_id == ROBOT_Y || cvs->inputs->robot_id == ROBOT_W)// Team B (green zone)
 		{
@@ -99,16 +112,25 @@ void objective_selection(CtrlStruct *cvs)
 			cvs->state->goal_position[1] = -0.25;
 			cvs->state->goal_position[2] = -M_PI;
 		}
+#else
+			cvs->state->goal_position[0] = 0.1;
+			cvs->state->goal_position[1] = -0.25;
+			cvs->state->goal_position[2] = -M_PI;
+#endif
 	}
 	else
 	{
 		int i;
 		for (i = OBJ0; i <= OBJ6; i++)
 		{
+#ifdef SIMU_PROJECT
 			printf("Objective %d is %d. \n", i, cvs->state->done_objectives[i]);
+#endif
 			if (cvs->state->done_objectives[i] == NOTDONE)
 			{
+#ifdef SIMU_PROJECT
 				printf("Going to objective %d. \n", i);
+#endif
 				cvs->state->next_objective = (objectives) i;
 				switch (i)
 				{

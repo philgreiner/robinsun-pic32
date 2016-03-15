@@ -7,8 +7,14 @@
             <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyFiles/MyApp.c</file>
             <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyFiles/MySubroutines.c</file>
             <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyIncludes/MyApp.h</file>
+            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyIncludes/MyConsole.h</file>
+            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyFiles/MyCAN.c</file>
             <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyFiles/MyCtrlIO.c</file>
+            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/nbproject/Makefile-default.mk</file>
+            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyIncludes/MyMiniProject.h</file>
             <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyFiles/MyMiniProject.c</file>
+            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyIncludes/namespace_ctrl.h</file>
+            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyFiles/MyConsole.c</file>
         </group>
     </open-files>
 </project-private>

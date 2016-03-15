@@ -3,6 +3,8 @@
 * \brief File description
 */
 
+#include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
 #include "namespace_ctrl.h"
 #include "ctrl_main_gr1.h"
@@ -11,7 +13,6 @@ NAMESPACE_INIT(ctrlGr1); // where X should be replaced by your group number
 
 void robot_Detect(CtrlStruct *cvs)
 {
-#ifdef TOWER
     CtrlIn *ivs;
     ivs = cvs->inputs;
     int n_robots = ivs->nb_opponents;
@@ -45,7 +46,8 @@ void robot_Detect(CtrlStruct *cvs)
 
 	if (n_robots > 1)   rising_index[1] = rising_index_1;
 
-	for(int i=0; i<n_robots; i++)
+    int i;
+	for(i=0; i<n_robots; i++)
     {
         rising[i] = ivs->last_rising[rising_index[i]];
         falling[i] = ivs->last_falling[rising_index[i]];
@@ -53,7 +55,7 @@ void robot_Detect(CtrlStruct *cvs)
 
 
     int index = 0;
-    for(int i=0; i< n_robots; i++)
+    for(i=0; i< n_robots; i++)
     {
         /* Calculation of the orientation */
         double angle = position[2] + ((rising[i] + falling[i])/2.0);
@@ -77,7 +79,6 @@ void robot_Detect(CtrlStruct *cvs)
         if ((robot_pos[index + 1] < 1.5) && (robot_pos[index + 1] > -1.5))    cvs->state->opponent_position[index + 1] = robot_pos[index + 1];
         index += 2;
     }
-#endif
 }
 
 NAMESPACE_CLOSE();

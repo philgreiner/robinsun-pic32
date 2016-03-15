@@ -81,6 +81,8 @@ int main(void)
     //MyWIFI_Init();
     MyMiniProject_Init();
     
+    CtrlIn *inputs; CtrlOut *outputs;
+    init_CtrlStruct(inputs, outputs);
     // Configure for multi-vectored mode
     INTConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
 

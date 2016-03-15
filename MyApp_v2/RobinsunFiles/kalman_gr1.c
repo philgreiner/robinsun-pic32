@@ -111,6 +111,7 @@ void measurement_update(CtrlStruct * cvs)
 
 void acquire_triang_measurements(CtrlStruct * cvs) 															
 {
+#ifdef SIMU_PROJECT
 	CtrlIn *ivs;
     ivs = cvs->inputs;
 
@@ -161,6 +162,7 @@ void acquire_triang_measurements(CtrlStruct * cvs)
     cvs->state->r[0] = cvs->param->R_beacon / sin(coveredAngle[0]/2.0);
     cvs->state->r[1] = cvs->param->R_beacon / sin(coveredAngle[1]/2.0);
     cvs->state->r[2] = cvs->param->R_beacon / sin(coveredAngle[2]/2.0);
+#endif
 }
 
 void measure_covariance_compute(CtrlStruct * cvs, kalmanStruct * kal)

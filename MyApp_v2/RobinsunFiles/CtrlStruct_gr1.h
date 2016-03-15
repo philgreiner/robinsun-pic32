@@ -6,7 +6,7 @@
 #ifndef _CTRL_STRUCT_GR1_H_
 #define _CTRL_STRUCT_GR1_H_
 
-#include "MyCtrlIO.h"
+#include "ctrl_io.h"
 #include "namespace_ctrl.h"
 
 NAMESPACE_INIT(ctrlGr1);
@@ -56,7 +56,7 @@ typedef struct CtrlParam
 	// Wheel controller parameters
 	double Ki, Kp;
 
-	double obstacle_center[842];    // Coordinates of the central obstacle
+	double obstacle_center[722];    // Coordinates of the central obstacle
 	int nb_center;                  // Number of points in center
 	double k_center;
 	double rho_center;

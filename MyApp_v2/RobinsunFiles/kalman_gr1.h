@@ -42,7 +42,7 @@ void acquire_triang_measurements(CtrlStruct * cvs);
 void measure_covariance_compute(CtrlStruct * cvs, kalmanStruct * kal);
 void innovation_covariance_compute(CtrlStruct * cvs, kalmanStruct * kal);
 void kalman_gain_compute(CtrlStruct * cvs, kalmanStruct * kal);
-void inverse(kalmanStruct * kal);
+void inverse(double matrix [6][6], kalmanStruct * kal);
 
 NAMESPACE_CLOSE();
 

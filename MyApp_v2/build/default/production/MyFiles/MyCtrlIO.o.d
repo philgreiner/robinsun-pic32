@@ -16,5 +16,7 @@ MyIncludes/MyTemperature.h  \
 MyIncludes/MyCamera.h  \
 MyIncludes/MyMiniProject.h  \
  MyIncludes/MyCtrlIO.h  \
-MyIncludes/ctrlstruct.h  \
-MyIncludes/MyCtrlIO.h 
+RobinsunFiles/CtrlStruct_gr1.h  \
+ RobinsunFiles/ctrl_io.h  \
+RobinsunFiles/namespace_ctrl.h  \
+ MyIncludes/MyCtrlIO.h 
