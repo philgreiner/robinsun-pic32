@@ -6,7 +6,7 @@
 #ifndef _CTRL_STRUCT_GR1_H_
 #define _CTRL_STRUCT_GR1_H_
 
-#include "ctrl_io.h"
+#include "MyCtrlIO.h"
 #include "namespace_ctrl.h"
 
 NAMESPACE_INIT(ctrlGr1);

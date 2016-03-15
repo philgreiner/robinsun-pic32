@@ -3,8 +3,6 @@
 * \brief File description
 */
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
 #include "namespace_ctrl.h"
 #include "ctrl_main_gr1.h"
@@ -13,6 +11,7 @@ NAMESPACE_INIT(ctrlGr1); // where X should be replaced by your group number
 
 void robot_Detect(CtrlStruct *cvs)
 {
+#ifdef TOWER
     CtrlIn *ivs;
     ivs = cvs->inputs;
     int n_robots = ivs->nb_opponents;
@@ -78,6 +77,7 @@ void robot_Detect(CtrlStruct *cvs)
         if ((robot_pos[index + 1] < 1.5) && (robot_pos[index + 1] > -1.5))    cvs->state->opponent_position[index + 1] = robot_pos[index + 1];
         index += 2;
     }
+#endif
 }
 
 NAMESPACE_CLOSE();

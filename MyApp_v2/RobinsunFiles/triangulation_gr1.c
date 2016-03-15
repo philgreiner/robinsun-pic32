@@ -5,8 +5,6 @@
 
 #include "namespace_ctrl.h"
 #include "CtrlStruct_gr1.h"
-#include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
 #include "triangulation_gr1.h"
 
@@ -19,6 +17,7 @@ NAMESPACE_INIT(ctrlGr1);
 */
 void triangulation(CtrlStruct *cvs)
 {
+#ifdef TOWER
     CtrlIn *ivs;
     ivs = cvs->inputs;
 	double *beacons = cvs->param->beacons;
@@ -164,7 +163,7 @@ void triangulation(CtrlStruct *cvs)
     cvs->state->position_triang[0] = xR;
 	cvs->state->position_triang[1] = yR;
 	cvs->state->position_triang[2] = -thetaR;
-
+#endif
 }
 
 NAMESPACE_CLOSE();

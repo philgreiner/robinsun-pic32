@@ -4,14 +4,7 @@
  */
 
 #include "ctrl_main_gr1.h"
-#include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
-
-// Simulation and results
-#include "set_output.h"
-#include "user_realtime.h"
-#include "robot_id.h"
 
 // User defined files
 #include "potentialfield_gr1.h"
@@ -84,7 +77,9 @@ void controller_init(CtrlStruct *cvs)
 	cvs->state->done_objectives[0] = NOTDONE; cvs->state->done_objectives[1] = NOTDONE; cvs->state->done_objectives[2] = NOTDONE; cvs->state->done_objectives[3] = NOTDONE;
 	cvs->state->done_objectives[4] = NOTDONE; cvs->state->done_objectives[5] = NOTDONE; cvs->state->done_objectives[6] = NOTDONE;
 	cvs->state->objectives_on_robot = 0;
+#ifdef SIMU_GAME
 	cvs->outputs->flag_release = 0;
+#endif
 	cvs->state->strategy_state = WAIT_FOR_START;
 }
 
@@ -100,8 +95,10 @@ void controller_loop(CtrlStruct *cvs)
 	ivs = cvs->inputs;
 	ovs = cvs->outputs;
 
+#ifdef SAVE_OUTPUTS
 	set_plot(ivs->r_wheel_speed, "r_wheel_speed");
 	set_plot(ivs->l_wheel_speed, "l_wheel_speed");
+#endif
 
 	odometry_estimate(cvs);
 
@@ -123,8 +120,10 @@ void controller_loop(CtrlStruct *cvs)
 	cvs->state->omegaref[R_ID] = 0.0;
 	cvs->state->omegaref[L_ID] = 0.0;
 
-	strategy_objective(cvs);
-
+	//strategy_objective(cvs);
+					cvs->state->goal_position[0] = -0.6;
+					cvs->state->goal_position[1] = 0.0;
+					cvs->state->goal_position[2] = -M_PI;
     potential_Field(cvs);
 
 	/* Computation of the motor voltages */

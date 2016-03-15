@@ -5,8 +5,6 @@
 
 #include "namespace_ctrl.h"
 #include "CtrlStruct_gr1.h"
-#include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
 #include "potentialfield_gr1.h"
 
@@ -21,7 +19,7 @@ NAMESPACE_INIT(ctrlGr1); // where X should be replaced by your group number
 */
 int edge_allocate(double *obstacle, double qstart, double qend, double step, double qconst, int XY, int start_index)
 {
-	int n_iter = (int)round(fabs(qstart - qend) / step);     // Number of iterations to perform
+	int n_iter = (int) (fabs(qstart - qend) / step);     // Number of iterations to perform
 	int index = start_index;
 
 	if (qstart > qend) {
@@ -53,7 +51,7 @@ int edge_allocate(double *obstacle, double qstart, double qend, double step, dou
 int diag_allocate(double *obstacle, double qstartx, double qendx, double qstarty, double qendy, double step, int start_index)
 {
     double stepx, stepy;
-    int n_iter = (int)round(fabs(qstartx - qendx) / step);     // Number of iterations to perform
+    int n_iter = (int) (fabs(qstartx - qendx) / step);     // Number of iterations to perform
 	int index = start_index;
 
 	if (qstartx > qendx)    stepx = -step;
