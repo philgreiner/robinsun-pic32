@@ -25,7 +25,7 @@ void MySPI_Init(void)
 
     // Set SPI Clock to 1MHz
 
-    SpiChnOpen(SPI_CHANNEL1A, SPI_OPEN_MSTEN | SPI_OPEN_CKE_REV | SPI_OPEN_MODE8, GetPeripheralClock()/(80ul));
+    SpiChnOpen(SPI_CHANNEL1A, SPI_OPEN_MSTEN | SPI_OPEN_CKE_REV | SPI_OPEN_MODE16, GetPeripheralClock()/(80ul));
 
     /*
     PIC32 SPI clock speed:
