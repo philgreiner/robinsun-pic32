@@ -3,12 +3,12 @@
  * \file MyCtrlIO.c
  * \brief Functions to update the data collected by the FPGA to the PIC32.
  */
-
 #define MyCtrlIO
 
 #include "MyApp.h"
 #include "MyCtrlIO.h"
 #include <math.h>
+#ifndef ROBINSUN
 
 /* Function that updates all the data collected by the FPGA:
  *      --> both wheel speeds
@@ -114,3 +114,4 @@ void SendCtrls(void)
 //    MyCAN_TxMsg(TowerSID,MSBtow);
 //    MyCAN_TxMsg(TowerSID,LSBtow);
 }
+#endif

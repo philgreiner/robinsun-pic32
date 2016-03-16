@@ -220,8 +220,44 @@ HTTP_IO_RESULT HTTPExecuteGet(void)
 				LED7_IO ^= 1;
 				break;
 		}
-		
 	}
+    
+    else if(!memcmppgm2ram(filename, "manualcontroller.htm", 20))
+    {
+        ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"function");
+        
+        if(*ptr){
+            if(strcmppgm2ram((char*)ptr,(ROM char*)"stop") == 0) {
+                cvs->state->omegaref[R_ID] = 0.0;
+                cvs->state->omegaref[L_ID] = 0.0;
+                cvs->outputs->command_fish_vertical = 0.0;
+                cvs->outputs->command_fish_horizontal = 0.0;
+                cvs->outputs->command_blocks = 0.0;}
+            else if(strcmppgm2ram((char*)ptr,(ROM char*)"forward") == 0){
+                cvs->state->omegaref[R_ID] = 2*6.28;
+                cvs->state->omegaref[L_ID] = 2*6.28;
+            }
+            else if(strcmppgm2ram((char*)ptr,(ROM char*)"backward") == 0){
+                cvs->state->omegaref[R_ID] = -2*6.28;
+                cvs->state->omegaref[L_ID] = -2*6.28;
+            }
+            else if(strcmppgm2ram((char*)ptr,(ROM char*)"openblocks") == 0){
+                cvs->outputs->command_blocks = 10;
+            }
+            else if(strcmppgm2ram((char*)ptr,(ROM char*)"closeblocks") == 0){
+                cvs->outputs->command_blocks = -10;
+            }
+            else if(strcmppgm2ram((char*)ptr,(ROM char*)"fishlift") == 0){
+                cvs->outputs->command_fish_vertical = -20;
+                cvs->outputs->command_fish_horizontal = -20;
+            }
+            else if(strcmppgm2ram((char*)ptr,(ROM char*)"fishdrop") == 0){
+                cvs->outputs->command_fish_vertical = 20;
+                cvs->outputs->command_fish_horizontal = 20;
+            }
+        }
+        
+    }
 	
 	return HTTP_IO_DONE;
 }
@@ -1460,71 +1496,142 @@ void HTTPPrint_status_fail(void)
 void HTTPPrint_r_wheel_speed(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%f", dataIN.r_wheel_speed);
+    sprintf(theStr, "%f", cvs->inputs->r_wheel_speed);
     TCPPutString(sktHTTP, theStr);
 }
 
 void HTTPPrint_l_wheel_speed(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%f", dataIN.l_wheel_speed);
-    TCPPutString(sktHTTP, theStr);
-}
-
-void HTTPPrint_rref(void)
-{
-    BYTE theStr[64];
-    sprintf(theStr, "%f", dataOUT.wheel_commands[0]);
-    TCPPutString(sktHTTP, theStr);
-}
-
-void HTTPPrint_lref(void)
-{
-    BYTE theStr[64];
-    sprintf(theStr, "%f", dataOUT.wheel_commands[1]);
-    TCPPutString(sktHTTP, theStr);
-}
-
-void HTTPPrint_refspeed(void)
-{
-    BYTE theStr[64];
-    sprintf(theStr, "%f", speedREF);
-    TCPPutString(sktHTTP, theStr);
-}
-
-void HTTPPrint_maxspeed(void)
-{
-    BYTE theStr[64];
-    sprintf(theStr, "%f", maxspeed);
+    sprintf(theStr, "%f", cvs->inputs->l_wheel_speed);
     TCPPutString(sktHTTP, theStr);
 }
 
 void HTTPPrint_kp(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%f", Kp);
+    sprintf(theStr, "%f", cvs->param->Kp);
     TCPPutString(sktHTTP, theStr);
 }
 
 void HTTPPrint_ki(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%f", Ki);
+    sprintf(theStr, "%f", cvs->param->Ki);
     TCPPutString(sktHTTP, theStr);
 }
 
 void HTTPPrint_buttonL(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%d", dataIN.u_switch[1]);
+    sprintf(theStr, "%d", cvs->inputs->u_switch[1]);
     TCPPutString(sktHTTP, theStr);
 }
 
 void HTTPPrint_buttonR(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%d", dataIN.u_switch[0]);
+    sprintf(theStr, "%d", cvs->inputs->u_switch[0]);
     TCPPutString(sktHTTP, theStr);
 }
+
+void HTTPPrint_omegaref_R(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->state->omegaref[R_ID]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_omegaref_L(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->state->omegaref[L_ID]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_sonar1(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->inputs->sonars[0]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_sonar2(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->inputs->sonars[1]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_sonar3(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->inputs->sonars[2]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_sonar4(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->inputs->sonars[3]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_sonar5(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->inputs->sonars[4]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_sonar6(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->inputs->sonars[5]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_speed_blocks(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->inputs->speed_blocks);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_speed_fish_horizontal(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->inputs->speed_fish_horizontal);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_speed_fish_vertical(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->inputs->speed_fish_vertical);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_command_blocks(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->outputs->command_blocks);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_command_fish_horizontal(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->outputs->command_fish_horizontal);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_command_fish_vertical(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->outputs->command_fish_vertical);
+    TCPPutString(sktHTTP, theStr);
+}
+
 
 #endif

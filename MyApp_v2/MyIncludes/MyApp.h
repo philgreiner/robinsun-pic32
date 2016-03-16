@@ -137,15 +137,18 @@ MyAPP_EXT  int      MyVideo_Counter MyAPP_INIT;
 * Minibot global variables and constants                                       *
 *******************************************************************************/
 
-#define MotorSID 0x708
-#define TowerSID 0x508
-
+#define MotorSID  0x708
+#define FishSID   0x508
+#define BlockSID 0x408
+#define ROBINSUN
 
 CtrlIn dataIN;
 CtrlOut dataOUT;
 
 MyAPP_EXT   CtrlParam param;
+MyAPP_EXT   CtrlStruct *cvs;
 
+MyAPP_EXT   float   MyMiniProject_tStart MyAPP_INIT;
 MyAPP_EXT   float   Ki          MyAPP_INIT;
 MyAPP_EXT   float   Kp          MyAPP_INIT;
 MyAPP_EXT   float   speedREF    MyAPP_INIT;

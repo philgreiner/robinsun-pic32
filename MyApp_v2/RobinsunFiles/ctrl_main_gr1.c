@@ -14,6 +14,7 @@
     #include "user_realtime.h"
     #include "robot_id.h"
 #endif
+#define MANUAL
 
 // User defined files
 #include "potentialfield_gr1.h"
@@ -100,6 +101,7 @@ void controller_init(CtrlStruct *cvs)
 	cvs->outputs->flag_release = 0;
 #endif
 	cvs->state->strategy_state = WAIT_FOR_START;
+    MyConsole_SendMsg("Controller_init done");
 }
 
 /*! \brief controller loop (called eveiry timestep)
@@ -125,7 +127,7 @@ void controller_loop(CtrlStruct *cvs)
 		//printf("Odometry x:%f [m] ; y:%f [m] ; angle:%f [deg]\n", cvs->state->position_odo[0], cvs->state->position_odo[1], cvs->state->position_odo[2]*180.0/M_PI);
 	#endif
 
-	triangulation(cvs);
+	//triangulation(cvs);
 	//kalman(cvs);	// includes odometry and triangulation
 	//printf("Odometry x:%f [m] ; y:%f [m] ; angle:%f [deg]\n", cvs->state->position_odo[0], cvs->state->position_odo[1], cvs->state->position_odo[2]*180.0/M_PI);
 
@@ -136,12 +138,16 @@ void controller_loop(CtrlStruct *cvs)
 	#endif
 
 	/* Path planning through potential field computation */
-	cvs->state->omegaref[R_ID] = 0.0;
-	cvs->state->omegaref[L_ID] = 0.0;
+	//cvs->state->omegaref[R_ID] = 0.0;
+	//cvs->state->omegaref[L_ID] = 0.0;
 
 	strategy_objective(cvs);
 
+#ifndef MANUAL
     potential_Field(cvs);
+#else
+    
+#endif
 
 	/* Computation of the motor voltages */
 	double wheels[2];

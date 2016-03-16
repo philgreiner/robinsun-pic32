@@ -5,6 +5,7 @@
  */
 #ifndef _CTRL_IO_H_
 #define _CTRL_IO_H_
+#define ROBINSUN
 
 // number of micro-switches
 #define NB_U_SWITCH 2
@@ -117,6 +118,17 @@ typedef struct CtrlIn
 	int robot_id; ///< ID of the robot
 	#endif
 
+#ifdef ROBINSUN
+    double odo_r_speed;
+    double odo_l_speed;
+    
+    double sonars[6];
+    
+    double speed_blocks;
+    double speed_fish_horizontal;
+    double speed_fish_vertical;
+#endif
+
 } CtrlIn;
 
 /// Controller outputs
@@ -153,6 +165,11 @@ typedef struct CtrlOut
 	int flag_release;
 	#endif
 
+#ifdef ROBINSUN
+    double command_blocks;
+    double command_fish_horizontal;
+    double command_fish_vertical;
+#endif
 } CtrlOut;
 
 #endif

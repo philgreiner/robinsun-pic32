@@ -79,14 +79,6 @@ int main(void)
     MyTemperature_Init();
     //MyMIWI_Init();
     //MyWIFI_Init();
-    MyMiniProject_Init();
-
-    CtrlIn *inputs = (CtrlIn*) malloc(sizeof(CtrlIn));
-    CtrlOut *outputs = (CtrlOut*) malloc(sizeof(CtrlOut));
-    CtrlStruct *cvs = init_CtrlStruct(inputs, outputs);
-
-    MyMiniProject_Update(cvs);
-    controller_init(cvs);
 
     // Configure for multi-vectored mode
     INTConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
@@ -102,6 +94,15 @@ int main(void)
     MyWIFI_Start();
     //MyCamera_Start();
 
+    MyMiniProject_Init();
+
+    CtrlIn *inputs = (CtrlIn*) malloc(sizeof(CtrlIn));
+    CtrlOut *outputs = (CtrlOut*) malloc(sizeof(CtrlOut));
+    cvs = init_CtrlStruct(inputs, outputs);
+
+    MyMiniProject_tStart = (ReadCoreTimer()/(SYS_FREQ/2.0));
+    MyMiniProject_Update(cvs);
+    controller_init(cvs);
     // Execute forever
     unsigned int tWait=(SYS_FREQ/2000)*T_DISCRETISATION;
     unsigned int tStart = ReadCoreTimer();
@@ -111,7 +112,7 @@ int main(void)
         MyConsole_Task();
         MyCAN_Task();
         //MyMIWI_Task();
-        //MyWIFI_Task();
+        MyWIFI_Task();
         if(ReadCoreTimer() - tStart > tWait)
         {
             MyMiniProject_Update(cvs);

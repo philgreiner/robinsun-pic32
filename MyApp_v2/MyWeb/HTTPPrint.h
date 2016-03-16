@@ -20,16 +20,24 @@ extern BYTE curHTTPID;
 void HTTPPrint(DWORD callbackID);
 void HTTPPrint_r_wheel_speed(void);
 void HTTPPrint_l_wheel_speed(void);
-void HTTPPrint_angle(void);
-void HTTPPrint_distance(void);
-void HTTPPrint_rref(void);
-void HTTPPrint_lref(void);
-void HTTPPrint_refspeed(void);
-void HTTPPrint_maxspeed(void);
 void HTTPPrint_kp(void);
 void HTTPPrint_ki(void);
 void HTTPPrint_buttonL(void);
 void HTTPPrint_buttonR(void);
+void HTTPPrint_omegaref_R(void);
+void HTTPPrint_omegaref_L(void);
+void HTTPPrint_sonar1(void);
+void HTTPPrint_sonar2(void);
+void HTTPPrint_sonar3(void);
+void HTTPPrint_sonar4(void);
+void HTTPPrint_sonar5(void);
+void HTTPPrint_sonar6(void);
+void HTTPPrint_speed_blocks(void);
+void HTTPPrint_speed_fish_horizontal(void);
+void HTTPPrint_speed_fish_vertical(void);
+void HTTPPrint_command_blocks(void);
+void HTTPPrint_command_fish_horizontal(void);
+void HTTPPrint_command_fish_vertical(void);
 
 void HTTPPrint(DWORD callbackID)
 {
@@ -47,18 +55,6 @@ void HTTPPrint(DWORD callbackID)
         case 0x0000004c:
 			HTTPPrint_l_wheel_speed();
 			break;
-        case 0x00000052:
-			HTTPPrint_rref();
-			break;
-        case 0x00000053:
-			HTTPPrint_lref();
-			break;
-        case 0x00000061:
-			HTTPPrint_refspeed();
-			break;
-        case 0x00000062:
-			HTTPPrint_maxspeed();
-			break;
         case 0x00000063:
 			HTTPPrint_kp();
 			break;
@@ -70,6 +66,48 @@ void HTTPPrint(DWORD callbackID)
 			break;
         case 0x00000066:
 			HTTPPrint_buttonR();
+			break;
+        case 0x00000067:
+			HTTPPrint_omegaref_R();
+			break;
+        case 0x00000068:
+			HTTPPrint_omegaref_L();
+			break;
+        case 0x00000069:
+			HTTPPrint_sonar1();
+			break;
+        case 0x0000006a:
+			HTTPPrint_sonar2();
+			break;
+        case 0x0000006b:
+			HTTPPrint_sonar3();
+			break;
+        case 0x0000006c:
+			HTTPPrint_sonar4();
+			break;
+        case 0x0000006d:
+			HTTPPrint_sonar5();
+			break;
+        case 0x0000006e:
+			HTTPPrint_sonar6();
+			break;
+        case 0x0000006f:
+			HTTPPrint_speed_blocks();
+			break;
+        case 0x00000070:
+			HTTPPrint_speed_fish_horizontal();
+			break;
+        case 0x00000071:
+			HTTPPrint_speed_fish_vertical();
+			break;
+        case 0x00000072:
+			HTTPPrint_command_blocks();
+			break;
+        case 0x00000073:
+			HTTPPrint_command_fish_horizontal();
+			break;
+        case 0x00000074:
+			HTTPPrint_command_fish_vertical();
 			break;
 		default:
 			// Output notification for undefined values

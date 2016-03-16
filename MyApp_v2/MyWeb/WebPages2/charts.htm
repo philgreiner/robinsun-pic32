@@ -1,9 +1,9 @@
 ~inc:header.inc~
 <div id="content">
 
-<title>Live data from minibot!</title>
+<title>Live data from Robinsun!</title>
 
-<h1>Data from Minibot:</h1>
+<h1>Data from Robinsun:</h1>
 	<div id="leftB">
 		<img src="../images/button0.png" id="buttonL">
 		<p> Left switch: <span id="buttonleft" style="font-weight:normal">-</span> </p>
@@ -14,23 +14,24 @@
 	</div>
 <div id="charts">
 <div id="left">
-	<p> Left wheel speed: <span id="l_wheel_speed" style="font-weight:normal">-</span> [rad/s] - Reference Value: <span id="lref" style="font-weight:normal">-</span> [rad/s]</p>
+	<p> Left wheel speed: <span id="l_wheel_speed" style="font-weight:normal">-</span> [rad/s] - Reference Value: <span id="omegaref_L" style="font-weight:normal">-</span> [rad/s]</p>
+	<p> Left odometer: <span id="odometer_L" style="font-weight:normal">-</span> [rad/s] </p>
 	<canvas id="leftwheel" width="600" height="200"></canvas>
 </div>
 <div id="right">
-	<p> Right wheel speed: <span id="r_wheel_speed" style="font-weight:normal">-</span> [rad/s] - Reference Value: <span id="rref" style="font-weight:normal">-</span> [rad/s]</p>
+	<p> Right wheel speed: <span id="r_wheel_speed" style="font-weight:normal">-</span> [rad/s] - Reference Value: <span id="omegaref_R" style="font-weight:normal">-</span> [rad/s]</p>
+	<p> Right odometer: <span id="odometer_R" style="font-weight:normal">-</span> [rad/s] </p>
 	<canvas id="rightwheel" width="600" height="200"></canvas>
 </div>
 </div>
-<div id="charts">
-<div id="left">
-	<p> Angle: <span id="angleDisp" style="font-weight:normal">-</span>&deg;</p>
-	<canvas id="angle" width="600" height="200"></canvas>
-</div>
-<div id="right">
-	<p> Distance: <span id="distanceDisp" style="font-weight:normal">-</span> [cm]</p>
-	<canvas id="distance" width="600" height="200"></canvas>
-</div>
+
+<div>
+	<p> Sonars </p>
+	<p> 1) <span id="sonar1" style="font-weight:normal">-</span> [cm]; 2) <span id="sonar2" style="font-weight:normal">-</span> [cm]; 3) <span id="sonar3" style="font-weight:normal">-</span> [cm] </p>
+	<p> 4) <span id="sonar4" style="font-weight:normal">-</span> [cm]; 5) <span id="sonar5" style="font-weight:normal">-</span> [cm]; 6) <span id="sonar6" style="font-weight:normal">-</span> [cm] </p>
+	<p> Blocks: <span id="speed_blocks" style="font-weight:normal">-</span> [rad/s] - Command: <span id="command_blocks" style="font-weight:normal">-</span> [rad/s] </p>
+	<p> Fish horizontal: <span id="speed_fish_horizontal" style="font-weight:normal">-</span> [rad/s] - Command: <span id="command_fish_horizontal" style="font-weight:normal">-</span> [/100] </p>
+	<p> Fish vertical: <span id="speed_fish_vertical" style="font-weight:normal">-</span> [rad/s] - Command: <span id="command_fish_vertical" style="font-weight:normal">-</span> [/100] </p>
 </div>
 
 </div>
@@ -39,39 +40,27 @@
 <!--
 var rightwheelspeed = new TimeSeries();
 var leftwheelspeed = new TimeSeries();
-var angle = new TimeSeries();
-var distance = new TimeSeries();
-var rref = new TimeSeries();
-var lref = new TimeSeries();
+var omegaref_R = new TimeSeries();
+var omegaref_L = new TimeSeries();
 
 setInterval(function() {
         rightwheelspeed.append(new Date().getTime(), document.getElementById('r_wheel_speed').innerHTML);
         leftwheelspeed.append(new Date().getTime(), document.getElementById('l_wheel_speed').innerHTML);
-		rref.append(new Date().getTime(), document.getElementById('rref').innerHTML);
-        lref.append(new Date().getTime(), document.getElementById('lref').innerHTML);
-		angle.append(new Date().getTime(), document.getElementById('angleDisp').innerHTML);
-        distance.append(new Date().getTime(), document.getElementById('distanceDisp').innerHTML);
+		omegaref_R.append(new Date().getTime(), document.getElementById('omegaref_R').innerHTML);
+        omegaref_L.append(new Date().getTime(), document.getElementById('omegaref_L').innerHTML);
       }, 250);
 	  
 	// Light blue: 153, 204, 204
 	// Robinsun: 79, 124, 164
 	var rightwheel = new SmoothieChart();
 	rightwheel.addTimeSeries(rightwheelspeed, { strokeStyle: 'rgb(79, 124, 164)', fillStyle: 'rgba(79, 124, 164, 0.4)', lineWidth: 3 });
-	rightwheel.addTimeSeries(rref, { strokeStyle: 'rgb(153, 204, 204)', fillStyle: 'rgba(153, 204, 204, 0.4)', lineWidth: 3 });
+	rightwheel.addTimeSeries(omegaref_R, { strokeStyle: 'rgb(153, 204, 204)', fillStyle: 'rgba(153, 204, 204, 0.4)', lineWidth: 3 });
 	rightwheel.streamTo(document.getElementById("rightwheel"), 250);
 
 	var leftwheel = new SmoothieChart();
 	leftwheel.addTimeSeries(leftwheelspeed, { strokeStyle: 'rgb(79, 124, 164)', fillStyle: 'rgba(79, 124, 164, 0.4)', lineWidth: 3 });
-	leftwheel.addTimeSeries(lref, { strokeStyle: 'rgb(153, 204, 204)', fillStyle: 'rgba(153, 204, 204, 0.4)', lineWidth: 3 });
+	leftwheel.addTimeSeries(omegaref_L, { strokeStyle: 'rgb(153, 204, 204)', fillStyle: 'rgba(153, 204, 204, 0.4)', lineWidth: 3 });
 	leftwheel.streamTo(document.getElementById("leftwheel"), 250);
-
-	var angleChart = new SmoothieChart({maxValue:185,minValue:-185});
-	angleChart.addTimeSeries(angle, { strokeStyle: 'rgb(79, 124, 164)', fillStyle: 'rgba(79, 124, 164, 0.4)', lineWidth: 3 });
-	angleChart.streamTo(document.getElementById("angle"), 250);
-
-	var distanceChart = new SmoothieChart();
-	distanceChart.addTimeSeries(distance, { strokeStyle: 'rgb(79, 124, 164)', fillStyle: 'rgba(79, 124, 164, 0.4)', lineWidth: 3 });
-	distanceChart.streamTo(document.getElementById("distance"), 250);
 //-->
 </script>
 
@@ -83,14 +72,31 @@ function updateStatus(xmlData) {
 	document.getElementById('r_wheel_speed').innerHTML = getXMLValue(xmlData, 'r_wheel_speed');
     // Update l_wheel_speed value
 	document.getElementById('l_wheel_speed').innerHTML = getXMLValue(xmlData, 'l_wheel_speed');
-	// Update beacontime value
-	document.getElementById('angleDisp').innerHTML = getXMLValue(xmlData, 'angle');
-	// Update timetobeacon value
-	document.getElementById('distanceDisp').innerHTML = getXMLValue(xmlData, 'distance');
-	// Update rref value
-	document.getElementById('rref').innerHTML = getXMLValue(xmlData, 'rref');
-    // Update lref value
-	document.getElementById('lref').innerHTML = getXMLValue(xmlData, 'lref');
+	// Update omegaref_R value
+	document.getElementById('omegaref_R').innerHTML = getXMLValue(xmlData, 'omegaref_R');
+    // Update omegaref_L value
+	document.getElementById('omegaref_L').innerHTML = getXMLValue(xmlData, 'omegaref_L');
+	// Update odometer_R value
+	document.getElementById('odometer_R').innerHTML = getXMLValue(xmlData, 'odometer_R');
+    // Update odometer_L value
+	document.getElementById('odometer_L').innerHTML = getXMLValue(xmlData, 'odometer_L');
+	// Update sonar values
+	document.getElementById('sonar1').innerHTML = getXMLValue(xmlData, 'sonar1');
+	document.getElementById('sonar2').innerHTML = getXMLValue(xmlData, 'sonar2');
+	document.getElementById('sonar3').innerHTML = getXMLValue(xmlData, 'sonar3');
+	document.getElementById('sonar4').innerHTML = getXMLValue(xmlData, 'sonar4');
+	document.getElementById('sonar5').innerHTML = getXMLValue(xmlData, 'sonar5');
+	document.getElementById('sonar6').innerHTML = getXMLValue(xmlData, 'sonar6');
+	
+	// Block speeds
+	document.getElementById('speed_blocks').innerHTML = getXMLValue(xmlData, 'speed_blocks');
+	document.getElementById('command_blocks').innerHTML = getXMLValue(xmlData, 'command_blocks');
+	
+	// Fish
+	document.getElementById('speed_fish_horizontal').innerHTML = getXMLValue(xmlData, 'speed_fish_horizontal');
+	document.getElementById('speed_fish_vertical').innerHTML = getXMLValue(xmlData, 'speed_fish_vertical');
+	document.getElementById('command_fish_horizontal').innerHTML = getXMLValue(xmlData, 'command_fish_horizontal');
+	document.getElementById('command_fish_vertical').innerHTML = getXMLValue(xmlData, 'command_fish_vertical');
 }
 setTimeout("newAJAXCommand('status.xml', updateStatus, true)",250);
 //-->
