@@ -15,34 +15,28 @@
 
 typedef struct kalmanStruct{
 	/* This structure makes the code easier to implement */
- 	
- 	// Step 1
- 	double alpha_pred[3];
-    double r_pred[3];
 
     // Step 2
- 	double H[6][3];
- 	double H_transposed[3][6];
+ 	double H[3][3];
 
  	// Step 3
- 	double v[6][3];
- 	double measure_covariance[6][6];
- 	double innovation_covariance[6][6];
- 	double inverse_innovation_covariance[6][6];
+ 	double v[3];
+ 	double measure_covariance[3][3];
+ 	double innovation_covariance[3][3];
+ 	double inverse_innovation_covariance[3][3];
 
  	// Step 4
- 	double Kt[3][6];
- 	double Kt_transposed[6][3];
+ 	double Kt[3][3];
 
 } kalmanStruct;
 
 void kalman(CtrlStruct *cvs);
-void measurement_update(CtrlStruct *cvs);
-void acquire_triang_measurements(CtrlStruct * cvs);
-void measure_covariance_compute(CtrlStruct * cvs, kalmanStruct * kal);
+void measurement_update(CtrlStruct * cvs, kalmanStruct * kal);
 void innovation_covariance_compute(CtrlStruct * cvs, kalmanStruct * kal);
 void kalman_gain_compute(CtrlStruct * cvs, kalmanStruct * kal);
-void inverse(double matrix [6][6], kalmanStruct * kal);
+void inverse(double matrix [3][3], kalmanStruct * kal);
+void update_position(CtrlStruct * cvs, kalmanStruct * kal);
+void mult_matrix33_31(double A[3][3], double B[3], double result[3]);
 
 NAMESPACE_CLOSE();
 

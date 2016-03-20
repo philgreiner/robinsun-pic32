@@ -15,33 +15,38 @@ NAMESPACE_INIT(ctrlGr1);
 
  /*
  * Drawing the map, hardcoded from the picture received of the game table
- * value 1 for clean space ; 0 for obstacles
+ * value 1 for clean space ; 0 for obstacles 
+ * (called at initial position before starting the game)
  * \param[in] cvs controller main structure
+ * \param[out] game_map[][]
  */
+
+// To do : Check if not necessary to add the robot radius to the edge of the table as an obstacle zone
 
 void game_map_drawing(CtrlStruct *cvs)
 {
+
 #ifdef ASTAR
-	// All values are in [mm]
+	// All values are in [cm]
 	int x;
 	int y;
-	int radius_robot = 130;
+	int radius_robot = 13;
 
-	for (x = 0; x <= 2124; x++)
+	for (x = 0; x <= 212; x++)
 	{
-		for (y = 0; x <= 3124; y++)
+		for (y = 0; y <= 312; y++)
 		{
 		 // *** 1/ Block bar ***
-			if (x <= (200+radius_robot) ) {
-				
-				// Close to violet cabin
-				if (y >= (862 - radius_robot) && y <= (884 + radius_robot)) {	
-						cvs->param->game_map[x][y] = 0;
+			if (x <= (20+radius_robot) ) { // Close to violet cabin
+
+				if (y >= (86 - radius_robot) && y <= (88 + radius_robot)) {	
+						cvs->param->game_map[x][y] = 0;	
 					}// end if 
 				
 				// Close to green cabin
-				else if (y >= (2240 - radius_robot) && y <= (2262 + radius_robot)) {
+				else if (y >= (224 - radius_robot) && y <= (226 + radius_robot)) {
 						cvs->param->game_map[x][y] = 0;
+
 					}// end else if 
 
 				else cvs->param->game_map[x][y] = 1;
@@ -50,10 +55,12 @@ void game_map_drawing(CtrlStruct *cvs)
 
 
 	    // *** 2/ central bar vertical ***
-			else if (x >= (812 - radius_robot) && x <= (834 + radius_robot) ) {
+			else if (x >= (81 - radius_robot) && x <= (83 + radius_robot) ) {
 
-				if (y >= (962 - radius_robot) && y <= (2162 + radius_robot)) {
+
+				if (y >= (96 - radius_robot) && y <= (216 + radius_robot)) {
 						cvs->param->game_map[x][y] = 0;
+
 					}// if y
 				
 				else cvs->param->game_map[x][y] = 1;
@@ -62,10 +69,11 @@ void game_map_drawing(CtrlStruct *cvs)
 
 
 	   // *** 3/ central bar horizontal ***
-			else if (x >= (812 - radius_robot) && x <= (1412 + radius_robot)) {
+			else if (x >= (81 - radius_robot) && x <= (141 + radius_robot)) {
 
-				if (y >= (1538 - radius_robot) && y <= (1586 + radius_robot)) {
+				if (y >= (154 - radius_robot) && y <= (159 + radius_robot)) {
 					cvs->param->game_map[x][y] = 0;
+
 				}// end if y
 
 				else cvs->param->game_map[x][y] = 1;
@@ -74,34 +82,36 @@ void game_map_drawing(CtrlStruct *cvs)
 
 	 
 
-	   // *** 4/ Upper right corner steps ***
-			else if (x >= (1874 - radius_robot) && x <= 2124) {
-
-				if (y >= (2874 - radius_robot) && y <= 3124) {
+	   // *** 4/ Lower and Upper right corner steps ***
+			else if (x >= (187 - radius_robot) && x <= 212) {
+	
+				if (y >= (287 - radius_robot) && y <= 312) {  // upper right corner
 					cvs->param->game_map[x][y] = 0;
 				}// end if y
 
-				else cvs->param->game_map[x][y] = 1;
-
-			} // end else if *** 4/ Upper right corner steps ***
-
-
-	  // *** 5/ Lower right corner steps ***
-			else if (x >= (1874 - radius_robot) && x <= 2124) {
-
-				if (y <= (250 + radius_robot) ) {
+				else if (y <= (25 + radius_robot)) {		 // lower right corner
 					cvs->param->game_map[x][y] = 0;
-				}// end if y
+
+				}// end else if y
+
 
 				else cvs->param->game_map[x][y] = 1;
 
-			} // end else if *** 5/ Lower right corner steps  ***
+			} // end else if *** 4/ Lower and Upper right corner steps ***
 
 
+	 // *** 5/ Other places
+			else cvs->param->game_map[x][y] = 1;
 
 		}// end for y
 
 	}// end for x
+
+#ifdef SIMU_PROJECT
+	printf("The game_map is in the robot database\n");
+#endif // SIMU_PROJECT
+
+
 #endif
 } //end function
 

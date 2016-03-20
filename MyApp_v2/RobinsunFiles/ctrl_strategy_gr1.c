@@ -20,7 +20,7 @@ void strategy_objective(CtrlStruct *cvs)
 
 	/*	strategy_state features 4 differents states: WAIT_FOR_START, GOTO_OBJ, WAIT_TO_TAKE, WAIT_FOR_DESTINATION
 	* A second enum, next_objective, determines the next objective to go to. The table done_objectives determines which objectives have been achieved. (NOTDONE and DONE)
-	*	
+	*
 	*	objectives_on_beacon counts the amount of objectives currently on beacon to go to BASE when full.
 	*/
 	switch (cvs->state->strategy_state)
@@ -125,50 +125,65 @@ void objective_selection(CtrlStruct *cvs)
 	else
 	{
 		int i;
-		for (i = OBJ0; i <= OBJ6; i++)
+		for (i = 0; i <= 7; i++)
 		{
-#ifdef SIMU_PROJECT
-			printf("Objective %d is %d. \n", i, cvs->state->done_objectives[i]);
-#endif
 			if (cvs->state->done_objectives[i] == NOTDONE)
 			{
-#ifdef SIMU_PROJECT
-				printf("Going to objective %d. \n", i);
-#endif
 				cvs->state->next_objective = (objectives) i;
 				switch (i)
 				{
-				case OBJ0: 
+				case OBJ0:
+					#ifdef SIMU_PROJECT
+						printf("Going to objective 0. \n");
+					#endif
 					cvs->state->goal_position[0] = -0.6;
 					cvs->state->goal_position[1] = 0.0;
 					cvs->state->goal_position[2] = -M_PI;
 					break;
 				case OBJ1:
+					#ifdef SIMU_PROJECT
+						printf("Going to objective 1. \n");
+					#endif
 					cvs->state->goal_position[0] = 0.8;
 					cvs->state->goal_position[1] = -0.8;
 					cvs->state->goal_position[2] = -M_PI;
 					break;
-				case OBJ2: // OBJ2 and OBJ3 changed
-					cvs->state->goal_position[0] = 0.4;
-					cvs->state->goal_position[1] = -1.1;
-					cvs->state->goal_position[2] = -M_PI;
-					break;
-				case OBJ3:
+				case OBJ2:
+					#ifdef SIMU_PROJECT
+						printf("Going to objective 2. \n");
+					#endif
 					cvs->state->goal_position[0] = 0.8;
 					cvs->state->goal_position[1] = 0.8;
 					cvs->state->goal_position[2] = -M_PI;
 					break;
+				case OBJ3:
+					#ifdef SIMU_PROJECT
+						printf("Going to objective 3. \n");
+					#endif
+					cvs->state->goal_position[0] = 0.4;
+					cvs->state->goal_position[1] = -1.1;
+					cvs->state->goal_position[2] = -M_PI;
+					break;
 				case OBJ4:
+					#ifdef SIMU_PROJECT
+						printf("Going to objective 4. \n");
+					#endif
 					cvs->state->goal_position[0] = -0.6;
 					cvs->state->goal_position[1] = -1.2;
 					cvs->state->goal_position[2] = -M_PI;
 					break;
-				case OBJ5: 
+				case OBJ5:
+					#ifdef SIMU_PROJECT
+						printf("Going to objective 5. \n");
+					#endif
 					cvs->state->goal_position[0] = 0.4;
 					cvs->state->goal_position[1] = 1.1;
 					cvs->state->goal_position[2] = -M_PI;
 					break;
-				case OBJ6: 
+				case OBJ6:
+					#ifdef SIMU_PROJECT
+						printf("Going to objective 6. \n");
+					#endif
 					cvs->state->goal_position[0] = -0.6;
 					cvs->state->goal_position[1] = 1.2;
 					cvs->state->goal_position[2] = -M_PI;
@@ -187,37 +202,50 @@ NAMESPACE_CLOSE();
 
 3 points :
 OBJ0
-cvs->state->goal_position[0] = -0.6;
-cvs->state->goal_position[1] = 0.0;
-cvs->state->goal_position[2] = -M_PI;
 
 2 points :
 OBJ1 (purple side)
-cvs->state->goal_position[0] = 0.8;
-cvs->state->goal_position[1] = -0.8;
-cvs->state->goal_position[2] = -M_PI;
 OBJ2 (green side)
-cvs->state->goal_position[0] = 0.8;
-cvs->state->goal_position[1] = 0.8;
-cvs->state->goal_position[2] = -M_PI;
 
 1 point :
 OBJ3 (purple side, sea)
-cvs->state->goal_position[0] = 0.4;
-cvs->state->goal_position[1] = -1.1;
-cvs->state->goal_position[2] = -M_PI;
 OBJ4 (purple side, sand)
-cvs->state->goal_position[0] = -0.6;
-cvs->state->goal_position[1] = -1.2;
-cvs->state->goal_position[2] = -M_PI;
 
 OBJ5 (green side, sea)
-cvs->state->goal_position[0] = 0.4;
-cvs->state->goal_position[1] = 1.1;
-cvs->state->goal_position[2] = -M_PI;
 OBJ6 (green side, sand)
-cvs->state->goal_position[0] = -0.6;
-cvs->state->goal_position[1] = 1.2;
-cvs->state->goal_position[2] = -M_PI;
+
+
+________________________________________________________________________________________________________________________________________________________
+|                                  ||                                                                         ||                                       |
+|                                  ||                                                                         ||                                       |
+|                                  ||                                                                         ||                                       |
+|                                  ||                                                                         ||                                       |
+|        OBJ4                                                                                                                         OBJ6             |
+|                                                                                                                                                      |
+|                                                                       OBJ0                                                                           |
+|                                                                                                                                                      |
+|                                                                                                                                                      |
+|                                              _____________________________________________________                                                   |
+|____________                                 |_________________________  __________________________|                                      ____________|
+|            |                                                          | |                                                               |            |
+|            |                                                          | |                                                               |            |
+|            |                                                          | |                                                               |            |
+|  PURPLE    |                                           BASE           | |        BASE                                                   |   GREEN    |
+|            |                                                          | |                                                               |            |
+|            |                                                          | |                                                               |            |
+|            |                                                          | |                                                               |            |
+|____________|                                                          |_|                                                               |____________|
+|                                                                                                                                                      |
+|                                                                                                                                                      |
+|                                                                                                                                                      |
+|                                                                                                                                                      |
+|              OBJ3                                                                                                                    OBJ5            |
+|                                                                                                                                                      |
+|                                                                                                                                                      |
+|                                                                                                                                                      |
+|__                    OBJ1                                                                                                   OBJ2                   __|
+|  \__                                                                                                                                            __/  |
+|     \__                                                                                                                                      __/     |
+|________\____________________________________________________________________________________________________________________________________/________|
 
 */

@@ -10,8 +10,12 @@
 #include <math.h>
 #include "potentialfield_gr1.h"
 
-NAMESPACE_INIT(ctrlGr1); // where X should be replaced by your group number
+#ifdef SIMU_PROJECT
+// Simulation and results
+    #include "robot_id.h"
+#endif
 
+NAMESPACE_INIT(ctrlGr1); // where X should be replaced by your group number
 
 /*! \brief Allocates the coordinates of an obstacle edge
 *
@@ -69,14 +73,14 @@ int diag_allocate(double *obstacle, double qstartx, double qendx, double qstarty
         obstacle[index + 1] = qstarty + (i*stepy);
 		index = index + 2;
 	}
+
 	return index - 2;
 }
 
 void potential_Field_Init(CtrlStruct *cvs)
 {
-#ifdef POTENTIAL
     /* Allocation of the obstacles coordinates */
-	cvs->param->nb_edges = 1105;
+	cvs->param->nb_edges = 1041;
 	double* edges = cvs->param->obstacle_edges;
 	int start_ind = 0;
 	int last_ind = 0;
@@ -92,31 +96,7 @@ void potential_Field_Init(CtrlStruct *cvs)
 	start_ind = last_ind;
 	last_ind = edge_allocate(edges, -1.0, -0.8, 0.01, 0.7, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, 0.7, 0.68, 0.01, -0.8, 1, start_ind);
-	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -0.8, -1.0, 0.01, 0.68, 0, start_ind);
-	start_ind = last_ind;
-	last_ind = edge_allocate(edges, 0.68, 0.27, 0.01, -1.0, 1, start_ind);
-	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -1.0, -0.94, 0.01, 0.27, 0, start_ind);
-	start_ind = last_ind;
-	last_ind = edge_allocate(edges, 0.27, 0.09, 0.01, -0.94, 1, start_ind);
-	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -0.94, -0.88, 0.01, 0.09, 0, start_ind);
-	start_ind = last_ind;
-	last_ind = edge_allocate(edges, 0.09, -0.09, 0.01, -0.88, 1, start_ind);
-	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -0.88, -0.94, 0.01, -0.09, 0, start_ind);
-	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -0.09, -0.27, 0.01, -0.94, 1, start_ind);
-	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -0.94, -1.0, 0.01, -0.27, 0, start_ind);
-	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -0.27, -0.68, 0.01, -1.0, 1, start_ind);
-	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -1.0, -0.8, 0.01, -0.68, 0, start_ind);
-	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -0.68, -0.7, 0.01, -0.8, 1, start_ind);
+	last_ind = edge_allocate(edges, 0.7, -0.7, 0.01, -0.8, 1, start_ind);
 	start_ind = last_ind;
 	last_ind = edge_allocate(edges, -0.8, -1.0, 0.01, -0.7, 0, start_ind);
 	start_ind = last_ind;
@@ -128,40 +108,58 @@ void potential_Field_Init(CtrlStruct *cvs)
 	start_ind = last_ind;
 	last_ind = edge_allocate(edges, 0.75, 1.0, 0.01, -1.25, 0, start_ind);
 
-    cvs->param->nb_center = 361;
+    cvs->param->nb_center = 423;
     double* center = cvs->param->obstacle_center;
 
 	start_ind = 0;
 	last_ind = 0;
-	last_ind = edge_allocate(center, 0.6, -0.6, 0.01, -0.35, 1, start_ind);
+	last_ind = edge_allocate(center, 0.65, -0.65, 0.01, -0.3, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = diag_allocate(center, -0.35, -0.25, -0.6, -0.7, 0.01, start_ind);
+	last_ind = edge_allocate(center, -0.3, -0.2, 0.01, -0.65, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.25, -0.17, 0.01, -0.7, 0, start_ind);
+	last_ind = edge_allocate(center, -0.65, 0.65, 0.01, -0.2, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.7, -0.15, 0.01, -0.17, 1, start_ind);
+	last_ind = edge_allocate(center, -0.2, -0.3, 0.01, 0.65, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.17, 0.45, 0.01, -0.15, 0, start_ind);
+	last_ind = edge_allocate(center, -0.25, 0.45, 0.01, 0.05, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.15, 0.1, 0.01, 0.45, 1, start_ind);
+	last_ind = edge_allocate(center, -0.25, 0.45, 0.01, -0.05, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = diag_allocate(center, 0.45, -0.15, 0.1, 0.7, 0.01, start_ind);
-	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.15, -0.25, 0.01, 0.7, 0, start_ind);
-	start_ind = last_ind;
-	last_ind = diag_allocate(center, -0.25, -0.35, 0.6, 0.7, 0.01, start_ind);
+
+	cvs->param->nb_purple = 66;
+    double* purple = cvs->param->obstacle_purpleZone;
+    start_ind = 0;
+	last_ind = 0;
+	last_ind = diag_allocate(purple, -0.2, 0.45, -0.65, 0.0, 0.01, start_ind);
+
+	cvs->param->nb_green = 66;
+    double* green = cvs->param->obstacle_greenZone;
+    start_ind = 0;
+	last_ind = 0;
+	last_ind = diag_allocate(green, -0.2, 0.45, 0.65, 0.0, 0.01, start_ind);
 
 	/* Initialization of the parameters of the potential field path planning */
-	cvs->param->k_edge = 250.0;
-	cvs->param->rho_edge = 0.15;
-	cvs->param->k_center = 200.0;
-	cvs->param->rho_center = 0.08;
+	cvs->param->k_edge = 80.0;
+	cvs->param->rho_edge = 0.2;
+	cvs->param->k_center = 70.0;
+	cvs->param->rho_center = 0.175;
+	cvs->param->k_purple = 85.0;
+	cvs->param->rho_purple = 0.2;
+	cvs->param->k_green = 85.0;
+	cvs->param->rho_green = 0.2;
+
 	cvs->param->rho_att = 0.3;
-	cvs->param->k_att_conic = 150.0;
-	cvs->param->k_att_quad = 150.0 / 0.3;
-	cvs->param->K_SpeedX = 0.1;
-	cvs->param->K_SpeedRot = 10.0;
-#endif
+	cvs->param->k_att_conic = 170.0;
+	cvs->param->k_att_quad = 170.0 / 0.3;
+
+	cvs->param->K_SpeedX = 0.05;
+	cvs->param->K_SpeedRot = 6.0;
+
+	cvs->param->Ki_pot = 1.67;
+	cvs->param->Kp_pot = 5.0;
+
+	cvs->state->errorAngle = 0.0;
+	cvs->state->lastT_pot = 0.0;
 }
 
 /*! \brief Calculate the minimal distance between the robot and an obstacle
@@ -239,31 +237,37 @@ double angle_Obstacle(double *position, double *coord_obstacle)
 */
 void potential_Field(CtrlStruct *cvs)
 {
-	double x = cvs->state->position_odo[0];
-	double y = cvs->state->position_odo[1];
-	double orientation = cvs->state->position_odo[2];
+    CtrlIn *ivs = cvs->inputs;
+	double x = cvs->state->position[0];
+	double y = cvs->state->position[1];
+	double orientation = cvs->state->position[2];
 
 	double x_goal = cvs->state->goal_position[0];
 	double y_goal = cvs->state->goal_position[1];
 	double d = sqrt((x - x_goal)*(x - x_goal) + (y - y_goal)*(y - y_goal));
 
 	/* Compute the smallest distance and the coordinates of the closest point in the edge and the central obstacle */
-	double d_edge;
+	double d_edge, angle_edge;
 	double coord_edge[2];
-	double angle_edge;
-	double d_center;
+	double d_center, angle_center;
 	double coord_center[2];
-	double angle_center;
-#ifdef POTENTIAL
-	d_edge = min_Distance(cvs->state->position_odo, cvs->param->obstacle_edges, coord_edge, cvs->param->nb_edges);
-	d_center = min_Distance(cvs->state->position_odo, cvs->param->obstacle_center, coord_center, cvs->param->nb_center);
-	angle_edge = angle_Obstacle(cvs->state->position_odo, coord_edge);
-	angle_center = angle_Obstacle(cvs->state->position_odo, coord_center);
-#endif
+	double d_purple, angle_purple;
+	double coord_purple[2];
+	double d_green, angle_green;
+	double coord_green[2];
+
+	d_edge = min_Distance(cvs->state->position, cvs->param->obstacle_edges, coord_edge, cvs->param->nb_edges);
+	d_center = min_Distance(cvs->state->position, cvs->param->obstacle_center, coord_center, cvs->param->nb_center);
+	d_purple = min_Distance(cvs->state->position, cvs->param->obstacle_purpleZone, coord_purple, cvs->param->nb_purple);
+	d_green = min_Distance(cvs->state->position, cvs->param->obstacle_greenZone, coord_green, cvs->param->nb_green);
+	angle_edge = angle_Obstacle(cvs->state->position, coord_edge);
+	angle_center = angle_Obstacle(cvs->state->position, coord_center);
+	angle_purple = angle_Obstacle(cvs->state->position, coord_purple);
+	angle_green = angle_Obstacle(cvs->state->position, coord_green);
 
 	/* Calculate the forces using the gradient of the potential field */
-	double F_x_att, F_x_edge, F_x_center;
-	double F_y_att, F_y_edge, F_y_center;
+	double F_x_att, F_x_edge, F_x_center, F_x_purple, F_x_green;
+	double F_y_att, F_y_edge, F_y_center, F_y_purple, F_y_green;
 	double k_att_conic = cvs->param->k_att_conic;
 	double k_att_quad = cvs->param->k_att_quad;
 	double rho_att = cvs->param->rho_att;
@@ -271,6 +275,20 @@ void potential_Field(CtrlStruct *cvs)
 	double rho_edge = cvs->param->rho_edge;
 	double k_center = cvs->param->k_center;
 	double rho_center = cvs->param->rho_center;
+	double k_purple = cvs->param->k_purple;
+	double rho_purple = cvs->param->rho_purple;
+	double k_green = cvs->param->k_green;
+	double rho_green = cvs->param->rho_green;
+
+	#ifdef SIMU_PROJECT
+        int purple_team = ((cvs->inputs->robot_id == ROBOT_B)||(cvs->inputs->robot_id == ROBOT_R));
+        int green_team = ((cvs->inputs->robot_id == ROBOT_Y)||(cvs->inputs->robot_id == ROBOT_W));
+    #else
+        int purple_team = 1;
+        int green_team = 0;
+    #endif
+
+    int GoToBase = (cvs->state->next_objective == BASE) || (cvs->state->objectives_on_robot == 0);
 
 	if (d < rho_att) {
 		F_x_att = -k_att_quad * (x - x_goal);
@@ -282,8 +300,8 @@ void potential_Field(CtrlStruct *cvs)
 	}
 
 	if (d_edge < rho_edge) {
-		F_x_edge = k_edge*((1 / d_edge) - (1 / rho_edge))*((x - coord_edge[0]) / (d_edge*d_edge*d_edge));
-		F_y_edge = k_edge*((1 / d_edge) - (1 / rho_edge))*((y - coord_edge[1]) / (d_edge*d_edge*d_edge));
+		F_x_edge = k_edge*((1 / d_edge) - (1 / rho_edge))*(0.35+fabs(cos(angle_edge)))*((x - coord_edge[0]) / (d_edge*d_edge*d_edge));
+		F_y_edge = k_edge*((1 / d_edge) - (1 / rho_edge))*(0.35+fabs(cos(angle_edge)))*((y - coord_edge[1]) / (d_edge*d_edge*d_edge));
 	}
 	else {
 		F_x_edge = 0.0;
@@ -291,12 +309,32 @@ void potential_Field(CtrlStruct *cvs)
 	}
 
 	if (d_center < rho_center) {
-		F_x_center = k_center*((1 / d_center) - (1 / rho_center))*((x - coord_center[0]) / (d_center*d_center*d_center));
-		F_y_center = k_center*((1 / d_center) - (1 / rho_center))*((y - coord_center[1]) / (d_center*d_center*d_center));
+		F_x_center = k_center*((1 / d_center) - (1 / rho_center))*(0.3+fabs(cos(angle_center)))*((x - coord_center[0]) / (d_center*d_center*d_center));
+		F_y_center = k_center*((1 / d_center) - (1 / rho_center))*(0.3+fabs(cos(angle_center)))*((y - coord_center[1]) / (d_center*d_center*d_center));
 	}
 	else {
 		F_x_center = 0.0;
 		F_y_center = 0.0;
+	}
+
+	if ((d_purple < rho_purple) && (green_team || (purple_team && !GoToBase)))
+    {
+		F_x_purple = k_purple*((1 / d_purple) - (1 / rho_purple))*(0.25+fabs(cos(angle_purple)))*((x - coord_purple[0]) / (d_purple*d_purple*d_purple));
+		F_y_purple = k_purple*((1 / d_purple) - (1 / rho_purple))*(0.25+fabs(cos(angle_purple)))*((y - coord_purple[1]) / (d_purple*d_purple*d_purple));
+	}
+	else {
+		F_x_purple = 0.0;
+		F_y_purple = 0.0;
+	}
+
+	if ((d_green < rho_green) && (purple_team || (green_team && !GoToBase)))
+    {
+		F_x_green = k_green*((1 / d_green) - (1 / rho_green))*(0.25+fabs(cos(angle_green)))*((x - coord_green[0]) / (d_green*d_green*d_green));
+		F_y_green = k_green*((1 / d_green) - (1 / rho_green))*(0.25+fabs(cos(angle_green)))*((y - coord_green[1]) / (d_green*d_green*d_green));
+	}
+	else {
+		F_x_green = 0.0;
+		F_y_green = 0.0;
 	}
 
 	double Fx, Fy;      // Forces in the inertial frame
@@ -304,32 +342,51 @@ void potential_Field(CtrlStruct *cvs)
 	double K_SpeedX = cvs->param->K_SpeedX;
 	double K_SpeedRot = cvs->param->K_SpeedRot;
 	double angle;
-	double omega_R, omega_L;
+	double omega, vlin, omega_R, omega_L;
 
-	Fx = F_x_att + F_x_edge + F_x_center;
-	Fy = F_y_att + F_y_edge + F_y_center;
+	Fx = F_x_att + F_x_edge + F_x_center + F_x_purple + F_x_green;
+	Fy = F_y_att + F_y_edge + F_y_center + F_y_purple + F_y_green;
 
 	FxR = Fx*cos(orientation) + Fy*sin(orientation);
 	FyR = -Fx*sin(orientation) + Fy*cos(orientation);
 
-	angle = atan(FyR / fabs(FxR));              //Orientation in degrees
-
-	if (FxR < 0)
-	{
-		if (FyR < 0) {
-			omega_R = 0.02*K_SpeedX*FxR - 0.5*K_SpeedRot*(M_PI - fabs(angle));
-            omega_L = 0.02*K_SpeedX*FxR + 0.5*K_SpeedRot*(M_PI - fabs(angle));
-		}
-		else {
-			omega_R = 0.02*K_SpeedX*FxR + 0.5*K_SpeedRot*(M_PI - fabs(angle));
-            omega_L = 0.02*K_SpeedX*FxR - 0.5*K_SpeedRot*(M_PI - fabs(angle));
-		}
-	}
-	else
-	{
-		omega_R = K_SpeedX*FxR + K_SpeedRot*angle;
-		omega_L = K_SpeedX*FxR - K_SpeedRot*angle;
+	if((FxR < 0)&&(FyR > 0)) { // 2nd quadrant
+        angle = atan(FyR/FxR) + M_PI;
     }
+    else if ((FxR < 0)&&(FyR < 0)) { // 3rd quadrant
+        angle = atan(FyR/FxR) - M_PI;
+    }
+    else {
+        angle = atan(FyR/FxR);
+    }
+
+    //PI controller for the orientation
+    if (ivs->t < 0.0) {
+        cvs->state->errorAngle = 0.0;
+    }
+    cvs->state->errorAngle += -angle*(ivs->t - cvs->state->lastT_pot);
+
+    //printf("Additional term = %.3f \n", -angle*(ivs->t - cvs->state->lastT_pot));
+    cvs->state->lastT_pot = ivs->t;
+
+	//Limit the integral error (anti-windup)
+	cvs->state->errorAngle = (cvs->state->errorAngle*cvs->param->Ki_pot> 15.0) ? (15.0 / cvs->param->Ki) : (cvs->state->errorAngle);
+	cvs->state->errorAngle = (cvs->state->errorAngle*cvs->param->Ki_pot< -15.0) ? (-15.0 / cvs->param->Ki) : (cvs->state->errorAngle);
+
+	// PI control
+	omega = (-angle) * cvs->param->Kp_pot + cvs->state->errorAngle * cvs->param->Ki_pot;
+	omega = (omega > 12.5) ? (12.5) : (omega);
+	omega = (omega < -12.5) ? (-12.5) : (omega);
+
+	vlin = 7.5*(fabs(FxR)/200.0);
+	vlin = (vlin > 6.0) ? (6.0) : (vlin);
+	vlin = (vlin < -6.0) ? (-6.0) : (vlin);
+	if(fabs(vlin) < 2.5) {
+        vlin = (vlin/(fabs(vlin)))*2.5;
+	}
+
+	omega_R = vlin - omega;
+	omega_L = vlin + omega;
 
 	if (isnan(omega_R) || (d < 0.02))
 	{
@@ -347,6 +404,5 @@ void potential_Field(CtrlStruct *cvs)
 		cvs->state->omegaref[L_ID] = omega_L;
 	}
 }
-
 
 NAMESPACE_CLOSE();

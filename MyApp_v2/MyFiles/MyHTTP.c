@@ -1633,5 +1633,18 @@ void HTTPPrint_command_fish_vertical(void)
     TCPPutString(sktHTTP, theStr);
 }
 
+void HTTPPrint_odo_r_speed(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->inputs->odo_r_speed);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_odo_l_speed(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->inputs->odo_l_speed);
+    TCPPutString(sktHTTP, theStr);
+}
 
 #endif

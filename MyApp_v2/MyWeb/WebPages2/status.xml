@@ -1,6 +1,8 @@
 <response>
 <r_wheel_speed>~r_wheel_speed~</r_wheel_speed>
 <l_wheel_speed>~l_wheel_speed~</l_wheel_speed>
+<odo_r_speed>~odo_r_speed~</odo_r_speed>
+<odo_l_speed>~odo_l_speed~</odo_l_speed>
 <omegaref_R>~omegaref_R~</omegaref_R>
 <omegaref_L>~omegaref_L~</omegaref_L>
 <kp>~kp~</kp>
