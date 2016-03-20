@@ -8,8 +8,6 @@
 #include <stdio.h>
 #include "math.h"
 
-#ifndef _SIMU_GAME_GR1_H_
-#define _SIMU_GAME_GR1_H_
 #ifdef ASTAR
 
 NAMESPACE_INIT(ctrlGr1);
@@ -760,5 +758,4 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 
 NAMESPACE_CLOSE();
 
-#endif
 #endif

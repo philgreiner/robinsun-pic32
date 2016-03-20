@@ -7,7 +7,6 @@
 
 #include "namespace_ctrl.h"
 #include "CtrlStruct_gr1.h"
-#define POTENTIAL
 NAMESPACE_INIT(ctrlGr1);
 
 int edge_allocate(double *obstacle, double qstart, double qend, double step, double qconst, int XY, int start_index);

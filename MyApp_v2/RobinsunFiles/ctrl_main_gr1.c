@@ -167,17 +167,19 @@ void controller_loop(CtrlStruct *cvs)
 	{
 		strategy_objective(cvs);
 
-    #ifdef POTENTIAL
-        potential_Field(cvs);
-    #endif // POTENTIAL
+        #ifdef POTENTIAL
+            potential_Field(cvs);
+        #endif // POTENTIAL
 
-    #ifdef ASTAR
-		//Astar_read_path(cvs);
-    #endif // ASTAR
+        #ifdef ASTAR
+            Astar_read_path(cvs);
+        #endif // ASTAR
 	}
 	else
 	{
-        calibrate_start(cvs);
+        #ifdef SIMU_PROJECT
+            calibrate_start(cvs);
+        #endif
 	}
 
 	/* Computation of the motor voltages */

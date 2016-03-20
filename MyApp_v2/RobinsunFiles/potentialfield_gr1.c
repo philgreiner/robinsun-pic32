@@ -10,6 +10,7 @@
 #include <math.h>
 #include "potentialfield_gr1.h"
 
+#ifdef POTENTIAL
 #ifdef SIMU_PROJECT
 // Simulation and results
     #include "robot_id.h"
@@ -406,3 +407,4 @@ void potential_Field(CtrlStruct *cvs)
 }
 
 NAMESPACE_CLOSE();
+#endif
