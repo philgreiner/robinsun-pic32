@@ -13,8 +13,13 @@ void odometry_estimate(CtrlStruct * cvs)
 	double drivenR, drivenL, R, b, drivenCenter, drivenCenter2, angleDiff, angleDiff2;
 	int i,j;
 
+#ifdef SIMU_PROJECT
 	R = 0.03;	// Wheel radius [m]
 	b = 0.225;	// Distance between left and right wheels [m]
+#else
+    R = 0.03;
+    b = 0.129;
+#endif
 
 	// Total distance moved for each wheel (30mm = wheel radius)
 	drivenR = cvs->inputs->r_wheel_speed * deltaT * R;
