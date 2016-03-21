@@ -156,8 +156,13 @@ void potential_Field_Init(CtrlStruct *cvs)
 	cvs->param->K_SpeedX = 0.05;
 	cvs->param->K_SpeedRot = 6.0;
 
+#ifdef SIMU_GAME
 	cvs->param->Ki_pot = 1.67;
 	cvs->param->Kp_pot = 5.0;
+#else
+    cvs->param->Ki_pot = 0.0819;
+	cvs->param->Kp_pot = 2.4571;
+#endif
 
 	cvs->state->errorAngle = 0.0;
 	cvs->state->lastT_pot = 0.0;

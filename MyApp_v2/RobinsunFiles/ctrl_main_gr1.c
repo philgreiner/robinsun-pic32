@@ -78,8 +78,8 @@ void controller_init(CtrlStruct *cvs)
         cvs->param->Kp = 0.1043;
         cvs->param->Ki = 28.98;
     #else
-        cvs->param->Kp = 0.09;
-        cvs->param->Ki = 19.71;
+        cvs->param->Kp = 0.0788;
+        cvs->param->Ki = 1.1823;
     #endif
 
 	cvs->state->lastT = cvs->inputs->t;
