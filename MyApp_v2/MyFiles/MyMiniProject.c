@@ -96,12 +96,12 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
     unsigned int sonar12 = MyCyclone_Read(A_sonar12);
     unsigned int sonar34 = MyCyclone_Read(A_sonar34);
     unsigned int sonar56 = MyCyclone_Read(A_sonar56);
-    cvs->inputs->sonars[0] = (sonar12 &= 0xff00) >> 8;
-    cvs->inputs->sonars[1] = sonar12 &= 0x00ff;
-    cvs->inputs->sonars[3] = (sonar34 &= 0xff00) >> 8;
-    cvs->inputs->sonars[4] = sonar34 &= 0x00ff;
-    cvs->inputs->sonars[5] = (sonar56 &= 0xff00) >> 8;
-    cvs->inputs->sonars[6] = sonar56 &= 0x00ff;
+    cvs->inputs->sonars[0] = (sonar12 & 0xFF00) >> 8;
+    cvs->inputs->sonars[1] = sonar12 & 0x00FF;
+    cvs->inputs->sonars[3] = (sonar34 & 0xFF00) >> 8;
+    cvs->inputs->sonars[4] = sonar34 & 0x00FF;
+    cvs->inputs->sonars[5] = (sonar56 & 0xFF00) >> 8;
+    cvs->inputs->sonars[6] = sonar56 & 0x00FF;
 #endif
     cvs->inputs->t = (ReadCoreTimer()/(SYS_FREQ/2.0)) - MyMiniProject_tStart; // time in seconds
 }
