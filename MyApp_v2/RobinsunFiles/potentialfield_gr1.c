@@ -160,8 +160,8 @@ void potential_Field_Init(CtrlStruct *cvs)
 	cvs->param->Ki_pot = 1.67;
 	cvs->param->Kp_pot = 5.0;
 #else
-    cvs->param->Ki_pot = 0.0819;
-	cvs->param->Kp_pot = 2.4571;
+    cvs->param->Ki_pot = 0.74;
+	cvs->param->Kp_pot = 3.3;
 #endif
 
 	cvs->state->errorAngle = 0.0;

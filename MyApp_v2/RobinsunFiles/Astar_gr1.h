@@ -7,18 +7,13 @@
 
 #include "namespace_ctrl.h"
 #include "CtrlStruct_gr1.h"
-#include <math.h>
 
 NAMESPACE_INIT(ctrlGr1);
 /*
-* Get the path
+* Drawing the map, hardcoded from the picture received of the game table
 * \param[in] cvs controller main structure
 */
-void Astar_get_path(CtrlStruct *cvs);
-
-
-void Astar_read_path(CtrlStruct *cvs);
-
+void Astar_get_path(CtrlStruct *cvs );
 
 NAMESPACE_CLOSE();
 

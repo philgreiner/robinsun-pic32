@@ -6,14 +6,19 @@
         <group>
             <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyFiles/MyHTTP.c</file>
             <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/RobinsunFiles/ctrl_io.h</file>
-            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyFiles/MyWIFI.c</file>
-            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyIncludes/MyApp.h</file>
             <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyWeb/HTTPPrint.h</file>
             <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyConfig/MyConfig_WIFI/WF_Config.h</file>
             <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/RobinsunFiles/odometry_gr1.c</file>
-            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/RobinsunFiles/kalman_gr1.c</file>
-            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/RobinsunFiles/map_design_gr1.c</file>
-            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyFiles/MyMiniProject.c</file>
+            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/RobinsunFiles/ctrl_main_gr1.c</file>
+            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/RobinsunFiles/CtrlStruct_gr1.h</file>
+            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyIncludes/MyCyclone.h</file>
+            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/RobinsunFiles/ctrl_main_gr1.h</file>
+            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyFiles/MyApp.c</file>
+            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/RobinsunFiles/CtrlStruct_gr1.c</file>
+            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyFiles/MyLED.c</file>
+            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyIncludes/MyApp.h</file>
+            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyIncludes/MyLED.h</file>
+            <file>file:/D:/Documents/Github/robinsun-pic32/MyApp_v2/MyIncludes/MyWIFI.h</file>
         </group>
     </open-files>
 </project-private>

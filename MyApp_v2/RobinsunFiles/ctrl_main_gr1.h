@@ -21,7 +21,7 @@ NAMESPACE_INIT(ctrlGr1);
 void controller_init(CtrlStruct *cvs);
 void controller_loop(CtrlStruct *cvs);
 void controller_finish(CtrlStruct *cvs);
-void motors_control(CtrlStruct *cvs, double *wheels);
+void motors_control(CtrlStruct *cvs, double *position, double *wheels);
 
 NAMESPACE_CLOSE();
 

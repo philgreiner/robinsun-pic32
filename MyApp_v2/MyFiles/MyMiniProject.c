@@ -78,30 +78,30 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
 {
     unsigned int speedR = MyCyclone_Read(A_speedR);
     int dirR    = (MyCyclone_Read(A_dirR))*(-2)+1; // == 1 if going forward, == -1 otherwise
-    cvs->inputs->r_wheel_speed = (double) dirR*speedR*2*M_PI/(53242*0.1); // in rad/s 
+    cvs->inputs->r_wheel_speed = (double) -dirR*speedR*2*M_PI/(53242*.1); // in rad/s 
 
     unsigned int speedL = MyCyclone_Read(A_speedL);
     int dirL    = (MyCyclone_Read(A_dirL))*(2)-1; // == 1 if going forward, == -1 otherwise
-    cvs->inputs->l_wheel_speed = (double) dirL*speedL*2*M_PI/(47283*0.1); 
+    cvs->inputs->l_wheel_speed = (double) -dirL*speedL*2*M_PI/(47283*.1)*1.7; 
     
 #ifdef ROBINSUN
     unsigned int speedOdoR = MyCyclone_Read(A_speedOdoR);
     int dirOdoR = (MyCyclone_Read(A_dirOdoR))*(-2)+1; // == 1 if going forward, == -1 otherwise
-    cvs->inputs->odo_r_speed = (double) dirOdoR*speedOdoR*2*M_PI/(8192*0.1);
+    cvs->inputs->odo_r_speed = (double) dirOdoR*speedOdoR*2*M_PI/(8192*.015);
     
     unsigned int speedOdoL = MyCyclone_Read(A_speedOdoL);
     int dirOdoL = (MyCyclone_Read(A_dirOdoL))*(2)-1; // == 1 if going forward, == -1 otherwise
-    cvs->inputs->odo_l_speed = (double) dirOdoL*speedOdoL*2*M_PI/(8192*0.1);
+    cvs->inputs->odo_l_speed = (double) dirOdoL*speedOdoL*2*M_PI/(8192*.015);
     
     unsigned int sonar12 = MyCyclone_Read(A_sonar12);
     unsigned int sonar34 = MyCyclone_Read(A_sonar34);
     unsigned int sonar56 = MyCyclone_Read(A_sonar56);
-    cvs->inputs->sonars[0] = (sonar12 & 0xFF00) >> 8;
-    cvs->inputs->sonars[1] = sonar12 & 0x00FF;
-    cvs->inputs->sonars[3] = (sonar34 & 0xFF00) >> 8;
-    cvs->inputs->sonars[4] = sonar34 & 0x00FF;
-    cvs->inputs->sonars[5] = (sonar56 & 0xFF00) >> 8;
-    cvs->inputs->sonars[6] = sonar56 & 0x00FF;
+    cvs->inputs->sonars[0] = sonar12 &= 0xff00;
+    cvs->inputs->sonars[1] = sonar12 &= 0x00ff;
+    cvs->inputs->sonars[3] = sonar34 &= 0xff00;
+    cvs->inputs->sonars[4] = sonar34 &= 0x00ff;
+    cvs->inputs->sonars[5] = sonar56 &= 0xff00;
+    cvs->inputs->sonars[6] = sonar56 &= 0x00ff;
 #endif
     cvs->inputs->t = (ReadCoreTimer()/(SYS_FREQ/2.0)) - MyMiniProject_tStart; // time in seconds
 }

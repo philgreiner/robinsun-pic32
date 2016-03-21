@@ -13,13 +13,8 @@ void odometry_estimate(CtrlStruct * cvs)
 	double drivenR, drivenL, R, b, drivenCenter, drivenCenter2, angleDiff, angleDiff2;
 	int i,j;
 
-#ifdef SIMU_PROJECT
 	R = 0.03;	// Wheel radius [m]
 	b = 0.225;	// Distance between left and right wheels [m]
-#else
-    R = 0.03;
-    b = 0.129;
-#endif
 
 	// Total distance moved for each wheel (30mm = wheel radius)
 	drivenR = cvs->inputs->r_wheel_speed * deltaT * R;
@@ -64,66 +59,11 @@ void odometry_estimate(CtrlStruct * cvs)
 
 	// P_est = Fx * P * Fx' + Fu * Q * Fu'
 
-	double intermediate1[3][3];
-	double intermediate2[3][3];
-	double intermediate3[3][2];
-	double intermediate4[3][3];
-
-	mult_matrix33_33(&(Fx[0]),&(cvs->state->covariance[0]),&(intermediate1[0]));
-	mult_matrix33_33(&(intermediate1[0]),&(Fx_transposed[0]),&(intermediate2[0]));
-
-	mult_matrix32_22(&(Fu[0]),&(Q[0]),&(intermediate3[0]));
-	mult_matrix32_23(&(intermediate3[0]),&(Fu_transposed[0]),&(intermediate4[0]));
-
-	// cvs->state->covariance_odo = Fx * cvs->state->covariance * Fx_transposed + Fu * Q * Fu_transposed;
 	for(i=0;i<3;i=i+1)
 		for(j=0;j<3;j=j+1)
-			cvs->state->covariance_odo[i][j] = intermediate2[i][j] + intermediate4[i][j];
+			cvs->state->covariance_odo[i][j] = Fx[i][j];					// TO BE MODIFIED WHEN MULTIPLICATION IS OK
+	// cvs->state->covariance_odo = Fx * cvs->state->covariance * Fx_transposed + Fu * Q * Fu_transposed;
 }
 
-void mult_matrix33_33(double A[3][3], double B[3][3], double result[3][3])																		// TO DO
-{
-	// How to call function ? --> mult_matrix33(&A[0],&B[0],&result[0]);
-
- 	int i,j,k;
-
- 	for(i=0;i<3;i=i+1)
-  		for(j=0;j<3;j=j+1)
-  		{
-  			result[i][j] = 0.0;
-   			for(k=0;k<3;k=k+1)
-   				 result[i][j] = result[i][j] + A[i][k]*B[k][j];
-   		}
-}
-
-void mult_matrix32_22(double A[3][2], double B[2][2], double result[3][2])
-{
-	// How to call function ? --> mult_matrix33(&A[0],&B[0],&result[0]);
-
- 	int i,j,k;
-
- 	for(i=0;i<3;i=i+1)
-  		for(j=0;j<2;j=j+1)
-  		{
-  			result[i][j] = 0.0;
-   			for(k=0;k<2;k=k+1)
-   				 result[i][j] = result[i][j] + A[i][k]*B[k][j];
-   		}
-}
-
-void mult_matrix32_23(double A[3][2], double B[2][3], double result[3][3])
-{
-	// How to call function ? --> mult_matrix33(&A[0],&B[0],&result[0]);
-	
- 	int i,j,k;
-
- 	for(i=0;i<3;i=i+1)
-  		for(j=0;j<3;j=j+1)
-  		{
-  			result[i][j] = 0.0;
-   			for(k=0;k<2;k=k+1)
-   				 result[i][j] = result[i][j] + A[i][k]*B[k][j];
-   		}
-}
 
 NAMESPACE_CLOSE();

@@ -162,19 +162,11 @@ void triangulation(CtrlStruct *cvs)
     else if (thetaR < -M_PI)    thetaR = thetaR + (2.0*M_PI);
 
     /* Step 8 : Copy the computed values in the position vector */
-
-    if (isnan(xR) || isnan(yR) || isnan(thetaR)){
-        cvs->state->position_triang[0] = position[0];
-        cvs->state->position_triang[1] = position[1];
-        cvs->state->position_triang[2] = position[2];
-    }
-    else {
-        cvs->state->position_triang[0] = xR;
-        cvs->state->position_triang[1] = yR;
-        cvs->state->position_triang[2] = -thetaR;
-    }
-#else
-
+    cvs->state->position_triang[0] = xR;
+	cvs->state->position_triang[1] = yR;
+	cvs->state->position_triang[2] = -thetaR;
+#else 
+    
     // Code using POZYX
 #endif
 }

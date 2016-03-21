@@ -15,12 +15,12 @@
 <div id="charts">
 <div id="left">
 	<p> Left wheel speed: <span id="l_wheel_speed" style="font-weight:normal">-</span> [rad/s] - Reference Value: <span id="omegaref_L" style="font-weight:normal">-</span> [rad/s]</p>
-	<p> Left odometer: <span id="odo_l_speed" style="font-weight:normal">-</span> [rad/s] </p>
+	<p> Left odometer: <span id="odometer_L" style="font-weight:normal">-</span> [rad/s] </p>
 	<canvas id="leftwheel" width="600" height="200"></canvas>
 </div>
 <div id="right">
 	<p> Right wheel speed: <span id="r_wheel_speed" style="font-weight:normal">-</span> [rad/s] - Reference Value: <span id="omegaref_R" style="font-weight:normal">-</span> [rad/s]</p>
-	<p> Right odometer: <span id="odo_r_speed" style="font-weight:normal">-</span> [rad/s] </p>
+	<p> Right odometer: <span id="odometer_R" style="font-weight:normal">-</span> [rad/s] </p>
 	<canvas id="rightwheel" width="600" height="200"></canvas>
 </div>
 </div>
@@ -77,9 +77,9 @@ function updateStatus(xmlData) {
     // Update omegaref_L value
 	document.getElementById('omegaref_L').innerHTML = getXMLValue(xmlData, 'omegaref_L');
 	// Update odometer_R value
-	document.getElementById('odo_r_speed').innerHTML = getXMLValue(xmlData, 'odo_r_speed');
+	document.getElementById('odometer_R').innerHTML = getXMLValue(xmlData, 'odometer_R');
     // Update odometer_L value
-	document.getElementById('odo_l_speed').innerHTML = getXMLValue(xmlData, 'odo_l_speed');
+	document.getElementById('odometer_L').innerHTML = getXMLValue(xmlData, 'odometer_L');
 	// Update sonar values
 	document.getElementById('sonar1').innerHTML = getXMLValue(xmlData, 'sonar1');
 	document.getElementById('sonar2').innerHTML = getXMLValue(xmlData, 'sonar2');

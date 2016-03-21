@@ -38,8 +38,6 @@ void HTTPPrint_speed_fish_vertical(void);
 void HTTPPrint_command_blocks(void);
 void HTTPPrint_command_fish_horizontal(void);
 void HTTPPrint_command_fish_vertical(void);
-void HTTPPrint_odo_r_speed(void);
-void HTTPPrint_odo_l_speed(void);
 
 void HTTPPrint(DWORD callbackID)
 {
@@ -110,12 +108,6 @@ void HTTPPrint(DWORD callbackID)
 			break;
         case 0x00000074:
 			HTTPPrint_command_fish_vertical();
-			break;
-        case 0x00000075:
-			HTTPPrint_odo_r_speed();
-			break;
-        case 0x00000076:
-			HTTPPrint_odo_l_speed();
 			break;
 		default:
 			// Output notification for undefined values
