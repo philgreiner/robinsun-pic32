@@ -235,7 +235,8 @@ HTTP_IO_RESULT HTTPExecuteGet(void)
                 cvs->outputs->command_fish_vertical = 0.0;
                 cvs->outputs->command_fish_horizontal = 0.0;
                 cvs->outputs->command_blocks = 0.0;
-#endif          }
+#endif          
+            }
             else if(strcmppgm2ram((char*)ptr,(ROM char*)"forward") == 0){
                 cvs->state->omegaref[R_ID] = 2*6.28;
                 cvs->state->omegaref[L_ID] = 2*6.28;

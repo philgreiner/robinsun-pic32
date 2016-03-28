@@ -136,9 +136,9 @@ void controller_loop(CtrlStruct *cvs)
 	ivs = cvs->inputs;
 	ovs = cvs->outputs;
 
-    if(fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 7)
+    if(fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 2)
         ivs->r_wheel_speed = cvs->state->avSpeedR;
-    if(fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 7)
+    if(fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 2)
         ivs->l_wheel_speed = cvs->state->avSpeedL;
     
     int i;
@@ -189,8 +189,8 @@ void controller_loop(CtrlStruct *cvs)
 	strategy_objective(cvs);
     potential_Field(cvs);
 
-    cvs->state->omegaref[R_ID] = (ivs->t > 10)? .30/.0325 : 0;
-    cvs->state->omegaref[L_ID] = (ivs->t > 10)? .30/.0325 : 0;
+    cvs->state->omegaref[R_ID] = (ivs->t > 10)? .3/.0325 : 0;
+    cvs->state->omegaref[L_ID] = (ivs->t > 10)? .3/.0325 : 0;
 	/* Computation of the motor voltages */
 	double wheels[2];
 	motors_control(cvs, cvs->state->position_odo, wheels);

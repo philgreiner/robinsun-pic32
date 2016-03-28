@@ -11,6 +11,7 @@
 #define __HTTPPRINT_H
 
 #include "TCPIP Stack/TCPIP.h"
+#include "MyApp.h"
 
 #if defined(STACK_USE_HTTP2_SERVER)
 
@@ -78,6 +79,7 @@ void HTTPPrint(DWORD callbackID)
         case 0x00000068:
 			HTTPPrint_omegaref_L();
 			break;
+#ifdef ROBINSUN
         case 0x00000069:
 			HTTPPrint_sonar1();
 			break;
@@ -120,6 +122,7 @@ void HTTPPrint(DWORD callbackID)
         case 0x00000076:
 			HTTPPrint_odometer_L();
 			break;
+#endif
         case 0x00000077:
 			HTTPPrint_position0();
 			break;
