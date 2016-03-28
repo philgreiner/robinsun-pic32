@@ -78,13 +78,25 @@ void MyMiniProject_Init(void)
 
 void    MyMiniProject_Update(CtrlStruct *cvs)
 {
-    unsigned int speedR = MyCyclone_Read(A_speedR);
-    int dirR    = (MyCyclone_Read(A_dirR))*(-2)+1; // == 1 if going forward, == -1 otherwise
-    cvs->inputs->r_wheel_speed = (double) dirR*speedR*2*M_PI*1.03/(53242*0.025); // 53242 in rad/s 
+    #ifdef ROBINSUN
+        unsigned int speedR = MyCyclone_Read(A_speedR);
+        int dirR    = (MyCyclone_Read(A_dirR))*(-2)+1; // == 1 if going forward, == -1 otherwise
+        cvs->inputs->r_wheel_speed = (double) dirR*speedR*2*M_PI*1.03/(53242*0.015); // 53242 in rad/s 
 
-    unsigned int speedL = MyCyclone_Read(A_speedL);
-    int dirL    = (MyCyclone_Read(A_dirL))*(2)-1; // == 1 if going forward, == -1 otherwise
-    cvs->inputs->l_wheel_speed = (double) dirL*speedL*2*M_PI/(47283*0.025); 
+        unsigned int speedL = MyCyclone_Read(A_speedL);
+        int dirL    = (MyCyclone_Read(A_dirL))*(2)-1; // == 1 if going forward, == -1 otherwise
+        cvs->inputs->l_wheel_speed = (double) dirL*speedL*2*M_PI/(47283*0.015); 
+    #endif
+    
+    #ifdef MINIBOT
+        unsigned int speedR = MyCyclone_Read(A_speedR);
+        int dirR    = (MyCyclone_Read(A_dirR))*(-2)+1; // == 1 if going forward, == -1 otherwise
+        cvs->inputs->r_wheel_speed = (double) dirR*speedR*(1.0/315.0); 
+
+        unsigned int speedL = MyCyclone_Read(A_speedL);
+        int dirL    = (MyCyclone_Read(A_dirL))*(2)-1; // == 1 if going forward, == -1 otherwise
+        cvs->inputs->l_wheel_speed = (double) dirL*speedL*(1.0/135.0); 
+    #endif
    
     #ifdef ROBINSUN
         unsigned int speedOdoR = MyCyclone_Read(A_speedOdoR);
@@ -126,7 +138,8 @@ void    MyMiniProject_Send(CtrlStruct *cvs)
     char LSBL[3] = {0x22, 0x03, LSB0};
     MyCAN_TxMsg(MotorSID,MSBL);
     MyCAN_TxMsg(MotorSID,LSBL);
-
+    
+    #ifdef ROBINSUN
     // Vertical fish motor
     DutyToInf(cvs->outputs->command_fish_vertical, &MSB0, &LSB0);
     char MSBFV[3] = {0x25, 0x3f, MSB0};
@@ -147,15 +160,16 @@ void    MyMiniProject_Send(CtrlStruct *cvs)
     char LSBB[3] = {0x21, 0x03, LSB0};
     MyCAN_TxMsg(BlockSID,MSBB);
     MyCAN_TxMsg(BlockSID,LSBB);
+    #endif
 }
 
 
 void MyMiniProject_Task(void)
 {
 #ifndef ROBINSUN
-    MyDataUpdate();
-    MyCtrlUpdate();
-    SendCtrls();
+//    MyDataUpdate();
+//    MyCtrlUpdate();
+//    SendCtrls();
 #endif
 }
 

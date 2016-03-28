@@ -15,7 +15,6 @@
     #include "robot_id.h"
 #endif
 #define MANUAL
-//#define ROBOTCONSOLE
 
 // User defined files
 #include "potentialfield_gr1.h"
@@ -60,8 +59,8 @@ void controller_init(CtrlStruct *cvs)
             cvs->param->Kp = 0.09;
             cvs->param->Ki = 1.18; 
         #else
-            cvs->param->Kp = 0.038;
-            cvs->param->Ki = 0.579;
+            cvs->param->Kp = -0.0426;
+            cvs->param->Ki = 1.3907;
         #endif
     #endif
 
@@ -189,16 +188,32 @@ void controller_loop(CtrlStruct *cvs)
 	strategy_objective(cvs);
     potential_Field(cvs);
 
-    cvs->state->omegaref[R_ID] = (ivs->t > 10)? .3/.0325 : 0;
-    cvs->state->omegaref[L_ID] = (ivs->t > 10)? .3/.0325 : 0;
-	/* Computation of the motor voltages */
+    #ifdef ROBINSUN
+        cvs->state->omegaref[R_ID] = (ivs->t > 5)? .30/.0325 : 0;
+        cvs->state->omegaref[L_ID] = (ivs->t > 5)? .30/.0325 : 0;
+    #endif
+    
+    #ifdef MINIBOT
+        cvs->state->omegaref[R_ID] = 0.2/0.03;
+        cvs->state->omegaref[L_ID] = 0.2/0.03;
+    #endif
+    
+    /* Computation of the motor voltages */
 	double wheels[2];
 	motors_control(cvs, cvs->state->position_odo, wheels);
+    
+    #ifdef MINIBOT
+        ovs->wheel_commands[R_ID] = wheels[L_ID];
+        ovs->wheel_commands[L_ID] = wheels[R_ID];
+    #else
+        ovs->wheel_commands[R_ID] = wheels[R_ID];
+        ovs->wheel_commands[L_ID] = wheels[L_ID];
+    #endif
 
-	ovs->wheel_commands[R_ID] = wheels[R_ID];
-	ovs->wheel_commands[L_ID] = wheels[L_ID];
+    #ifdef ROBINSUN
+        ovs->command_blocks = 50;
+    #endif
 
-    ovs->command_blocks = 50;
 	/* Locate the opponent */
 	//robot_Detect(cvs);
 
@@ -232,8 +247,18 @@ void motors_control(CtrlStruct *cvs, double * position, double * wheels)
 	double *omegaref = cvs->state->omegaref;
 
 	// Get values for current speed and reference speed
-	double rspeed = cvs->state->avSpeedR;
-	double lspeed = cvs->state->avSpeedL;
+    #ifdef ROBINSUN
+        double rspeed = cvs->state->avSpeedR;
+        double lspeed = cvs->state->avSpeedL;
+    #else
+        #ifdef MINIBOT
+            double rspeed = -ivs->r_wheel_speed;
+            double lspeed = -ivs->l_wheel_speed;
+        #else
+            double rspeed = ivs->r_wheel_speed;
+            double lspeed = ivs->l_wheel_speed;
+        #endif
+    #endif
 
 	// Integrate the error
     
@@ -281,13 +306,18 @@ void motors_control(CtrlStruct *cvs, double * position, double * wheels)
     #ifdef ROBOTCONSOLE
         sprintf(msg, "Right speed: %.3f; omegaref: %.3f; UconsigneR: %.3f, errorIntR = %.3f\n", rspeed, omegaref[R_ID], UconsigneR, cvs->state->errorIntR);
         MyConsole_SendMsg(msg);
-//        sprintf(msg, "Left speed: %.3f; omegaref: %.3f; UconsigneL: %.3f\n", lspeed, omegaref[L_ID], UconsigneL);
-//        MyConsole_SendMsg(msg);
+        sprintf(msg, "Left speed: %.3f; omegaref: %.3f; UconsigneL: %.3f, errorIntL = %.3f\n", lspeed, omegaref[L_ID], UconsigneL, UconsigneR, cvs->state->errorIntL);
+        MyConsole_SendMsg(msg);
     #endif
 
     // Update command values
-    wheels[R_ID] = -100.0*UconsigneR/26.0;
-    wheels[L_ID] = 100.0*UconsigneL/26.0;
+    #ifdef ROBINSUN
+        wheels[R_ID] = -100.0*UconsigneR/26.0;
+        wheels[L_ID] = 100.0*UconsigneL/26.0;
+    #else
+        wheels[R_ID] = 100.0*UconsigneR/Valim;
+        wheels[L_ID] = 100.0*UconsigneL/Valim;
+    #endif
 #endif
 }
 

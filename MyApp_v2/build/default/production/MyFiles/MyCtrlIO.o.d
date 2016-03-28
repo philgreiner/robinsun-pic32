@@ -20,4 +20,5 @@ RobinsunFiles/CtrlStruct_gr1.h  \
  RobinsunFiles/ctrl_io.h  \
 RobinsunFiles/namespace_ctrl.h  \
  MyIncludes/MyCtrlIO.h  \
+RobinsunFiles/ctrl_io.h  \
 MyIncludes/MyCtrlIO.h 

@@ -4,9 +4,6 @@
 
 #ifndef MyAPP_H_
 #define MyAPP_H_
-
-//#define MINIBOT
-#define ROBINSUN
 // Adds support for PIC32 Peripheral library functions and macros
 #include <plib.h>
 
@@ -27,6 +24,7 @@
 #include "MyMiniProject.h"
 #include "MyCtrlIO.h"
 #include "CtrlStruct_gr1.h"
+#include "ctrl_io.h"
 
 /*******************************************************************************
 * Constants                                                                    *
