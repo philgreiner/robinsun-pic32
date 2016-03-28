@@ -3,6 +3,8 @@
 <l_wheel_speed>~l_wheel_speed~</l_wheel_speed>
 <omegaref_R>~omegaref_R~</omegaref_R>
 <omegaref_L>~omegaref_L~</omegaref_L>
+<odometer_R>~odometer_R~</odometer_R>
+<odometer_L>~odometer_L~</odometer_L>
 <kp>~kp~</kp>
 <ki>~ki~</ki>
 <buttonL>~buttonL~</buttonL>
@@ -19,4 +21,7 @@
 <command_blocks>~command_blocks~</command_blocks>
 <command_fish_horizontal>~command_fish_horizontal~</command_fish_horizontal>
 <command_fish_vertical>~command_fish_vertical~</command_fish_vertical>
+<position0>~position0~</position0>
+<position1>~position1~</position1>
+<position2>~position2~</position2>
 </response>

@@ -227,8 +227,8 @@ void MyCAN_Task(void) {
         if(theSID==0x302){
             //char msg[1024];
             //sprintf(msg,"0 %i, 1: %i, 2: %i, 3: %i, 4: %i, 5: %i, 6: %i, 7: %i;\n > ",in0, in1, in2, in3, in4, in5, in6, in7);
-            dataIN.u_switch[1] = in1 + 1; // left
-            dataIN.u_switch[0] = in3 + 1; // right
+            cvs->inputs->u_switch[1] = in1 + 1; // left
+            cvs->inputs->u_switch[0] = in3 + 1; // right
             //MyConsole_SendMsg(msg);  
         }
         if (theSID == 0x200)

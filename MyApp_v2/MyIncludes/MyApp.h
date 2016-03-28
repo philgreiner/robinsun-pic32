@@ -5,7 +5,8 @@
 #ifndef MyAPP_H_
 #define MyAPP_H_
 
-#define ROBOT
+//#define MINIBOT
+#define ROBINSUN
 // Adds support for PIC32 Peripheral library functions and macros
 #include <plib.h>
 
@@ -140,24 +141,11 @@ MyAPP_EXT  int      MyVideo_Counter MyAPP_INIT;
 #define MotorSID  0x708
 #define FishSID   0x508
 #define BlockSID  0x408
-#define ROBINSUN
-
-CtrlIn dataIN;
-CtrlOut dataOUT;
 
 MyAPP_EXT   CtrlParam param;
 MyAPP_EXT   CtrlStruct *cvs;
 
 MyAPP_EXT   float   MyMiniProject_tStart MyAPP_INIT;
-MyAPP_EXT   float   Ki          MyAPP_INIT;
-MyAPP_EXT   float   Kp          MyAPP_INIT;
-MyAPP_EXT   float   speedREF    MyAPP_INIT;
-MyAPP_EXT   float   maxspeed    MyAPP_INIT;
-MyAPP_EXT   float   erreurIntR  MyAPP_INIT;
-MyAPP_EXT   float   erreurIntL  MyAPP_INIT;
-MyAPP_EXT   double  prevT       MyAPP_INIT;
-#define     T_DISCRETISATION    10;  //msec
-//#define     ROBOTCONSOLE
 
 int i;
 #endif /* MyAPP_H_ */

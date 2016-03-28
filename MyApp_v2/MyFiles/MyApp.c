@@ -78,7 +78,7 @@ int main(void)
     MyFlash_Init();
     MyTemperature_Init();
     //MyMIWI_Init();
-    //MyWIFI_Init();
+    MyWIFI_Init();
 
     // Configure for multi-vectored mode
     INTConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
@@ -104,7 +104,7 @@ int main(void)
     MyMiniProject_Update(cvs);
     controller_init(cvs);
     // Execute forever
-    unsigned int tWait=(SYS_FREQ/2000)*T_DISCRETISATION;
+    unsigned int tWait=(SYS_FREQ/2000)*25;
     unsigned int tStart = ReadCoreTimer();
     while (1)
     {

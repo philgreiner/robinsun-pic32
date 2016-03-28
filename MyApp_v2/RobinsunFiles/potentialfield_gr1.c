@@ -160,8 +160,8 @@ void potential_Field_Init(CtrlStruct *cvs)
 	cvs->param->Ki_pot = 1.67;
 	cvs->param->Kp_pot = 5.0;
 #else
-    cvs->param->Ki_pot = 0.74;
-	cvs->param->Kp_pot = 3.3;
+    cvs->param->Ki_pot = 10.42;
+	cvs->param->Kp_pot = 10.5;
 #endif
 
 	cvs->state->errorAngle = 0.0;
@@ -391,8 +391,8 @@ void potential_Field(CtrlStruct *cvs)
         vlin = (vlin/(fabs(vlin)))*2.5;
 	}
 
-	omega_R = vlin - omega;
-	omega_L = vlin + omega;
+	omega_R = vlin + omega;
+	omega_L = vlin - omega;
 
 	if (isnan(omega_R) || (d < 0.02))
 	{
@@ -407,7 +407,7 @@ void potential_Field(CtrlStruct *cvs)
 		cvs->state->omegaref[L_ID] = 0.0;
 	}
 	else {
-		cvs->state->omegaref[L_ID] = omega_L;
+		cvs->state->omegaref[L_ID] = -omega_L;
 	}
 }
 

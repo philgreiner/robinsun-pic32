@@ -23,6 +23,8 @@ typedef struct CtrlState
 {
     double omegaref[2];
 	double errorIntR, errorIntL;
+    double lastMesR[10], lastMesL[10];
+    double avSpeedR, avSpeedL;
 	double lastT;
 
 	double position[3];

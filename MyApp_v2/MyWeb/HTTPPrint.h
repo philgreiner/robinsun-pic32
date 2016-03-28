@@ -38,6 +38,11 @@ void HTTPPrint_speed_fish_vertical(void);
 void HTTPPrint_command_blocks(void);
 void HTTPPrint_command_fish_horizontal(void);
 void HTTPPrint_command_fish_vertical(void);
+void HTTPPrint_odometer_R(void);
+void HTTPPrint_odometer_L(void);
+void HTTPPrint_position0(void);
+void HTTPPrint_position1(void);
+void HTTPPrint_position2(void);
 
 void HTTPPrint(DWORD callbackID)
 {
@@ -108,6 +113,21 @@ void HTTPPrint(DWORD callbackID)
 			break;
         case 0x00000074:
 			HTTPPrint_command_fish_vertical();
+			break;
+        case 0x00000075:
+			HTTPPrint_odometer_R();
+			break;
+        case 0x00000076:
+			HTTPPrint_odometer_L();
+			break;
+        case 0x00000077:
+			HTTPPrint_position0();
+			break;
+        case 0x00000078:
+			HTTPPrint_position1();
+			break;
+        case 0x00000079:
+			HTTPPrint_position2();
 			break;
 		default:
 			// Output notification for undefined values

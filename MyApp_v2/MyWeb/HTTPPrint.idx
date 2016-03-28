@@ -115,3 +115,8 @@ MyVarFloat(26)
 +command_blocks
 +command_fish_horizontal
 +command_fish_vertical
++odometer_R
++odometer_L
++position0
++position1
++position2

@@ -14,6 +14,7 @@
 
 #include "TCPIP Stack/TCPIP.h"
 #include "MyApp.h"
+#include <math.h>
 
 #define LED0_IO     (LATBbits.LATB9)
 #define LED1_IO     (LATBbits.LATB9)
@@ -256,7 +257,6 @@ HTTP_IO_RESULT HTTPExecuteGet(void)
                 cvs->outputs->command_fish_horizontal = 20;
             }
         }
-        
     }
 	
 	return HTTP_IO_DONE;
@@ -1417,34 +1417,8 @@ static HTTP_IO_RESULT HTTPautocontrol(void)
             if (HTTPReadPostName(ptr, HTTP_MAX_DATA_LEN) == HTTP_READ_INCOMPLETE)
                 return HTTP_IO_NEED_DATA;
 
-            if (!strcmppgm2ram((char *) ptr, (ROM char*) "refspeed"))
-                formInput = 1; 
-            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "maxspeed"))
-                formInput = 2;
-            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "kp"))
-                formInput = 3;
-            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "ki"))
-                formInput = 4;
-
             if (HTTPReadPostValue(ptr, HTTP_MAX_DATA_LEN) == HTTP_READ_INCOMPLETE)
                 return HTTP_IO_NEED_DATA;
-            
-            if(formInput == 1)
-            {
-                speedREF = atof(ptr);
-            }
-            else if(formInput == 2)
-            {
-                maxspeed = atof(ptr);
-            }
-            else if(formInput == 3) 
-            {
-                Kp = atof(ptr);
-            }
-            else if(formInput == 4) 
-            {
-                Ki = atof(ptr);
-            }
             
             curHTTP.smPost = POST_READ;
             break;
@@ -1496,14 +1470,14 @@ void HTTPPrint_status_fail(void)
 void HTTPPrint_r_wheel_speed(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%f", cvs->inputs->r_wheel_speed);
+    sprintf(theStr, "%f", cvs->inputs->r_wheel_speed*.0325);
     TCPPutString(sktHTTP, theStr);
 }
 
 void HTTPPrint_l_wheel_speed(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%f", cvs->inputs->l_wheel_speed);
+    sprintf(theStr, "%f", cvs->inputs->l_wheel_speed*0.0325);
     TCPPutString(sktHTTP, theStr);
 }
 
@@ -1538,14 +1512,14 @@ void HTTPPrint_buttonR(void)
 void HTTPPrint_omegaref_R(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%f", cvs->state->omegaref[R_ID]);
+    sprintf(theStr, "%f", cvs->state->omegaref[R_ID]*.0325);
     TCPPutString(sktHTTP, theStr);
 }
 
 void HTTPPrint_omegaref_L(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%f", cvs->state->omegaref[L_ID]);
+    sprintf(theStr, "%f", cvs->state->omegaref[L_ID]*.0325);
     TCPPutString(sktHTTP, theStr);
 }
 
@@ -1633,5 +1607,39 @@ void HTTPPrint_command_fish_vertical(void)
     TCPPutString(sktHTTP, theStr);
 }
 
+void HTTPPrint_odometer_R(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->inputs->odo_r_speed*.0223);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_odometer_L(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->inputs->odo_l_speed*.0223);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_position0(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->state->position[0]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_position1(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->state->position[1]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_position2(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%f", cvs->state->position[2]*180/M_PI);
+    TCPPutString(sktHTTP, theStr);
+}
 
 #endif

@@ -6,11 +6,17 @@
 #ifndef MyCAN_H_
 #define MyCAN_H_
 
+#include "MyApp.h"
+
 /*******************************************************************************
 * Constants                                                                    *
 *******************************************************************************/
 
-#define CAN_BUS_SPEED 125000
+#ifdef ROBINSUN
+    #define CAN_BUS_SPEED 500000
+#else
+    #define CAN_BUS_SPEED 125000
+#endif
 
 /*******************************************************************************
 * Functions Prototypes                                                         *
