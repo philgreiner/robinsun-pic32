@@ -72,6 +72,7 @@ void HTTPPrint(DWORD callbackID)
         case 0x00000066:
 			HTTPPrint_buttonR();
 			break;
+        #ifdef ROBINSUN
         case 0x00000067:
 			HTTPPrint_omegaref_R();
 			break;
@@ -120,6 +121,7 @@ void HTTPPrint(DWORD callbackID)
         case 0x00000076:
 			HTTPPrint_odometer_L();
 			break;
+        #endif 
         case 0x00000077:
 			HTTPPrint_position0();
 			break;

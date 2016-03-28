@@ -231,11 +231,12 @@ HTTP_IO_RESULT HTTPExecuteGet(void)
             if(strcmppgm2ram((char*)ptr,(ROM char*)"stop") == 0) {
                 cvs->state->omegaref[R_ID] = 0.0;
                 cvs->state->omegaref[L_ID] = 0.0;
-#ifdef ROBINSUN
-                cvs->outputs->command_fish_vertical = 0.0;
-                cvs->outputs->command_fish_horizontal = 0.0;
-                cvs->outputs->command_blocks = 0.0;
-#endif          }
+                #ifdef ROBINSUN
+                    cvs->outputs->command_fish_vertical = 0.0;
+                    cvs->outputs->command_fish_horizontal = 0.0;
+                    cvs->outputs->command_blocks = 0.0;
+                #endif          
+            }
             else if(strcmppgm2ram((char*)ptr,(ROM char*)"forward") == 0){
                 cvs->state->omegaref[R_ID] = 2*6.28;
                 cvs->state->omegaref[L_ID] = 2*6.28;
@@ -245,25 +246,25 @@ HTTP_IO_RESULT HTTPExecuteGet(void)
                 cvs->state->omegaref[L_ID] = -2*6.28;
             }
             else if(strcmppgm2ram((char*)ptr,(ROM char*)"openblocks") == 0){
-#ifdef ROBINSUN
-                cvs->outputs->command_blocks = 10;
-#endif
+                #ifdef ROBINSUN
+                    cvs->outputs->command_blocks = 10;
+                #endif
             }
             else if(strcmppgm2ram((char*)ptr,(ROM char*)"closeblocks") == 0){
                 #ifdef ROBINSUN
-                cvs->outputs->command_blocks = -10;
+                    cvs->outputs->command_blocks = -10;
                 #endif
             }
             else if(strcmppgm2ram((char*)ptr,(ROM char*)"fishlift") == 0){
                 #ifdef ROBINSUN
-                cvs->outputs->command_fish_vertical = -20;
-                cvs->outputs->command_fish_horizontal = -20;
+                    cvs->outputs->command_fish_vertical = -20;
+                    cvs->outputs->command_fish_horizontal = -20;
                 #endif
             }
             else if(strcmppgm2ram((char*)ptr,(ROM char*)"fishdrop") == 0){
                 #ifdef ROBINSUN
-                cvs->outputs->command_fish_vertical = 20;
-                cvs->outputs->command_fish_horizontal = 20;
+                    cvs->outputs->command_fish_vertical = 20;
+                    cvs->outputs->command_fish_horizontal = 20;
                 #endif
             }
         }
@@ -1617,7 +1618,6 @@ void HTTPPrint_command_fish_vertical(void)
     sprintf(theStr, "%f", cvs->outputs->command_fish_vertical);
     TCPPutString(sktHTTP, theStr);
 }
-#endif
 
 void HTTPPrint_odometer_R(void)
 {
@@ -1632,6 +1632,7 @@ void HTTPPrint_odometer_L(void)
     sprintf(theStr, "%f", cvs->inputs->odo_l_speed*.0223);
     TCPPutString(sktHTTP, theStr);
 }
+#endif
 
 void HTTPPrint_position0(void)
 {
