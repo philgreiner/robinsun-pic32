@@ -7,5 +7,6 @@ RobinsunFiles/ctrl_io.h  \
 RobinsunFiles/odometry_gr1.h  \
  RobinsunFiles/potentialfield_gr1.h  \
 RobinsunFiles/robot_detect_gr1.h  \
- RobinsunFiles/ctrl_strategy_gr1.h  \
-RobinsunFiles/calibrate_gr1.h 
+ RobinsunFiles/triangulation_gr1.h  \
+RobinsunFiles/ctrl_strategy_gr1.h  \
+ RobinsunFiles/calibrate_gr1.h 

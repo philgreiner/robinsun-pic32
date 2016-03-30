@@ -7,6 +7,9 @@
 
 #include "namespace_ctrl.h"
 #include "CtrlStruct_gr1.h" // adapt it with your headers
+#include "triangulation_gr1.h"	// For the lowpass function
+
+#define TAU_DETECT 0.75
 
 NAMESPACE_INIT(ctrlGr1);
 

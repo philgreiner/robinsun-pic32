@@ -83,65 +83,73 @@ int diag_allocate(double *obstacle, double qstartx, double qendx, double qstarty
 void potential_Field_Init(CtrlStruct *cvs)
 {
     /* Allocation of the obstacles coordinates */
-	cvs->param->nb_edges = 1041;
+	cvs->param->nb_edges = 147;
 	double* edges = cvs->param->obstacle_edges;
 	int start_ind = 0;
 	int last_ind = 0;
-	last_ind = edge_allocate(edges, -1.25, 1.25, 0.01, 1.0, 1, start_ind);
+	last_ind = edge_allocate(edges, -1.25, 1.25, 0.1, 1.0, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, 1.0, 0.75, 0.01, 1.25, 0, start_ind);
+	last_ind = edge_allocate(edges, 1.0, 0.75, 0.05, 1.25, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, 1.25, 1.5, 0.01, 0.75, 1, start_ind);
+	last_ind = edge_allocate(edges, 1.25, 1.5, 0.05, 0.75, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, 0.75, -1.0, 0.01, 1.5, 0, start_ind);
+	last_ind = edge_allocate(edges, 0.75, -1.0, 0.05, 1.5, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, 1.5, 0.7, 0.01, -1.0, 1, start_ind);
+	last_ind = edge_allocate(edges, 1.5, 0.7, 0.1, -1.0, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -1.0, -0.8, 0.01, 0.7, 0, start_ind);
+	last_ind = edge_allocate(edges, -1.0, -0.8, 0.1, 0.7, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, 0.7, -0.7, 0.01, -0.8, 1, start_ind);
+	last_ind = edge_allocate(edges, 0.7, -0.7, 0.1, -0.8, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -0.8, -1.0, 0.01, -0.7, 0, start_ind);
+	last_ind = edge_allocate(edges, -0.8, -1.0, 0.1, -0.7, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -0.7, -1.5, 0.01, -1.0, 1, start_ind);
+	last_ind = edge_allocate(edges, -0.7, -1.5, 0.1, -1.0, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -1.0, 0.75, 0.01, -1.5, 0, start_ind);
+	last_ind = edge_allocate(edges, -1.0, 0.75, 0.05, -1.5, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -1.5, -1.25, 0.01, 0.75, 1, start_ind);
+	last_ind = edge_allocate(edges, -1.5, -1.25, 0.05, 0.75, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, 0.75, 1.0, 0.01, -1.25, 0, start_ind);
+	last_ind = edge_allocate(edges, 0.75, 1.0, 0.05, -1.25, 0, start_ind);
 
-    cvs->param->nb_center = 409;
+    cvs->param->nb_center = 49;
     double* center = cvs->param->obstacle_center;
 
 	start_ind = 0;
 	last_ind = 0;
-	last_ind = edge_allocate(center, 0.65, -0.65, 0.01, -0.28, 1, start_ind);
+	last_ind = edge_allocate(center, 0.65, -0.65, 0.1, -0.28, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.28, -0.2, 0.01, -0.65, 0, start_ind);
+	last_ind = edge_allocate(center, -0.28, -0.2, 0.02, -0.65, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.65, 0.65, 0.01, -0.2, 1, start_ind);
+	last_ind = edge_allocate(center, -0.65, 0.65, 0.1, -0.2, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.2, -0.28, 0.01, 0.65, 0, start_ind);
+	last_ind = edge_allocate(center, -0.2, -0.28, 0.02, 0.65, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.25, 0.35, 0.01, 0.05, 0, start_ind);
+	last_ind = edge_allocate(center, -0.25, 0.35, 0.1, 0.05, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.05, 0.05, 0.01, 0.35, 1, start_ind);
+	last_ind = edge_allocate(center, -0.05, 0.05, 0.05, 0.35, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, 0.35, -0.25, 0.01, -0.05, 0, start_ind);
+	last_ind = edge_allocate(center, 0.35, -0.25, 0.1, -0.05, 0, start_ind);
 	start_ind = last_ind;
 
-	cvs->param->nb_purple = 66;
+	cvs->param->nb_purple = 14;
     double* purple = cvs->param->obstacle_purpleZone;
     start_ind = 0;
 	last_ind = 0;
-	last_ind = diag_allocate(purple, -0.2, 0.45, -0.65, 0.0, 0.01, start_ind);
+	last_ind = diag_allocate(purple, -0.2, 0.45, -0.65, 0.0, 0.05, start_ind);
 
-	cvs->param->nb_green = 66;
+	cvs->param->nb_green = 14;
     double* green = cvs->param->obstacle_greenZone;
     start_ind = 0;
 	last_ind = 0;
-	last_ind = diag_allocate(green, -0.2, 0.45, 0.65, 0.0, 0.01, start_ind);
+	last_ind = diag_allocate(green, -0.2, 0.45, 0.65, 0.0, 0.05, start_ind);
+
+	/* Moving obstacles (opponents) */
+    cvs->param->nb_robot1 = 21;
+    cvs->param->k_robot1 = 17.0;
+    cvs->param->rho_robot1 = 0.2;
+    cvs->param->nb_robot2 = 21;
+    cvs->param->k_robot2 = 17.0;
+    cvs->param->rho_robot2 = 0.2;
 
 	/* Initialization of the parameters of the potential field path planning */
 	cvs->param->k_edge = 8.5;
@@ -154,8 +162,8 @@ void potential_Field_Init(CtrlStruct *cvs)
 	cvs->param->rho_green = 0.3;
 
 	cvs->param->rho_att = 0.1;
-	cvs->param->k_att_conic = 185.0;
-	cvs->param->k_att_quad = 185.0/0.1;
+	cvs->param->k_att_conic = 200.0;
+	cvs->param->k_att_quad = 200.0/0.1;
 
 	cvs->param->K_SpeedX = 0.035;
 	cvs->param->K_SpeedRot = 7.5;
@@ -252,23 +260,70 @@ void potential_Field(CtrlStruct *cvs)
 	double d = sqrt((x - x_goal)*(x - x_goal) + (y - y_goal)*(y - y_goal));
 
 	/* Compute the smallest distance and the coordinates of the closest point in the edge and the central obstacle */
-	double d_edge, angle_edge;
+	double d_edge;
 	double coord_edge[2];
-	double d_center, angle_center;
+	double d_center;
 	double coord_center[2];
-	double d_purple, angle_purple;
+	double d_purple;
 	double coord_purple[2];
-	double d_green, angle_green;
+	double d_green;
 	double coord_green[2];
 
 	d_edge = min_Distance(cvs->state->position, cvs->param->obstacle_edges, coord_edge, cvs->param->nb_edges);
 	d_center = min_Distance(cvs->state->position, cvs->param->obstacle_center, coord_center, cvs->param->nb_center);
 	d_purple = min_Distance(cvs->state->position, cvs->param->obstacle_purpleZone, coord_purple, cvs->param->nb_purple);
 	d_green = min_Distance(cvs->state->position, cvs->param->obstacle_greenZone, coord_green, cvs->param->nb_green);
-	angle_edge = angle_Obstacle(cvs->state->position, coord_edge);
-	angle_center = angle_Obstacle(cvs->state->position, coord_center);
-	angle_purple = angle_Obstacle(cvs->state->position, coord_purple);
-	angle_green = angle_Obstacle(cvs->state->position, coord_green);
+
+	#ifdef SIMU_PROJECT
+        int n_robots = cvs->inputs->nb_opponents;
+        double d_robot1;
+        double coord_robot1[2];
+        if(n_robots > 0) {
+            // Robot coordinates
+            double xrobot1, yrobot1;
+            xrobot1 = cvs->state->opponent_position[0];
+            yrobot1 = cvs->state->opponent_position[1];
+
+            // Dynamic obstacle definition
+            double* robot1 = cvs->param->obstacle_robot1;
+            int start_ind = 0;
+            int last_ind = 0;
+            last_ind = edge_allocate(robot1, xrobot1-0.125, xrobot1+0.125, 0.05, yrobot1-0.125, 0, start_ind);
+            start_ind = last_ind;
+            last_ind = edge_allocate(robot1, yrobot1-0.125, yrobot1+0.125, 0.05, xrobot1+0.125, 1, start_ind);
+            start_ind = last_ind;
+            last_ind = edge_allocate(robot1, xrobot1+0.125, xrobot1-0.125, 0.05, yrobot1+0.125, 0, start_ind);
+            start_ind = last_ind;
+            last_ind = edge_allocate(robot1, yrobot1+0.125, yrobot1-0.125, 0.05, xrobot1-0.125, 1, start_ind);
+
+            //Obstacle distance and coordinates
+            d_robot1 = min_Distance(cvs->state->position, cvs->param->obstacle_robot1, coord_robot1, cvs->param->nb_robot1);
+        }
+
+        double d_robot2;
+        double coord_robot2[2];
+        if(n_robots > 1) {
+            // Robot coordinates
+            double xrobot2, yrobot2;
+            xrobot2 = cvs->state->opponent_position[2];
+            yrobot2 = cvs->state->opponent_position[3];
+
+            // Dynamic obstacle definition
+            double* robot2 = cvs->param->obstacle_robot2;
+            int start_ind = 0;
+            int last_ind = 0;
+            last_ind = edge_allocate(robot2, xrobot2-0.125, xrobot2+0.125, 0.05, yrobot2-0.125, 0, start_ind);
+            start_ind = last_ind;
+            last_ind = edge_allocate(robot2, yrobot2-0.125, yrobot2+0.125, 0.05, xrobot2+0.125, 1, start_ind);
+            start_ind = last_ind;
+            last_ind = edge_allocate(robot2, xrobot2+0.125, xrobot2-0.125, 0.05, yrobot2+0.125, 0, start_ind);
+            start_ind = last_ind;
+            last_ind = edge_allocate(robot2, yrobot2+0.125, yrobot2-0.125, 0.05, xrobot2-0.125, 1, start_ind);
+
+            //Obstacle distance and coordinates
+            d_robot2 = min_Distance(cvs->state->position, cvs->param->obstacle_robot2, coord_robot2, cvs->param->nb_robot2);
+        }
+	#endif
 
 	/* Calculate the forces using the gradient of the potential field */
 	double F_x_att, F_x_edge, F_x_center, F_x_purple, F_x_green;
@@ -284,6 +339,10 @@ void potential_Field(CtrlStruct *cvs)
 	double rho_purple = cvs->param->rho_purple;
 	double k_green = cvs->param->k_green;
 	double rho_green = cvs->param->rho_green;
+	double k_robot1 = cvs->param->k_robot1;
+	double rho_robot1 = cvs->param->rho_robot1;
+	double k_robot2 = cvs->param->k_robot2;
+	double rho_robot2 = cvs->param->rho_robot2;
 
 	#ifdef SIMU_PROJECT
         int purple_team = ((cvs->inputs->robot_id == ROBOT_B)||(cvs->inputs->robot_id == ROBOT_R));
@@ -318,8 +377,8 @@ void potential_Field(CtrlStruct *cvs)
         cvs->param->rho_edge = 0.225;
     }
     else {
-        cvs->param->k_edge = 11.5;
-        cvs->param->rho_edge = 0.275;
+        cvs->param->k_edge = 9.0;
+        cvs->param->rho_edge = 0.325;
     }
 
     // Forces
@@ -370,6 +429,43 @@ void potential_Field(CtrlStruct *cvs)
 		F_y_green = 0.0;
 	}
 
+	#ifdef SIMU_PROJECT
+        double F_x_robot1, F_y_robot1;
+        if(n_robots > 0) {
+            if (d_robot1 < rho_robot1)
+            {
+                printf("Robot obstacle \n");
+                F_x_robot1 = k_robot1*((1 / d_robot1) - (1 / rho_robot1))*((x - coord_robot1[0]) / (d_robot1*d_robot1*d_robot1));
+                F_y_robot1 = k_robot1*((1 / d_robot1) - (1 / rho_robot1))*((y - coord_robot1[1]) / (d_robot1*d_robot1*d_robot1));
+            }
+            else {
+                F_x_robot1 = 0.0;
+                F_y_robot1 = 0.0;
+            }
+        }
+        else {
+                F_x_robot1 = 0.0;
+                F_y_robot1 = 0.0;
+        }
+
+        double F_x_robot2, F_y_robot2;
+        if(n_robots > 1) {
+            if (d_robot2 < rho_robot2)
+            {
+                F_x_robot2 = k_robot2*((1 / d_robot2) - (1 / rho_robot2))*((x - coord_robot2[0]) / (d_robot2*d_robot2*d_robot2));
+                F_y_robot2 = k_robot2*((1 / d_robot2) - (1 / rho_robot2))*((y - coord_robot2[1]) / (d_robot2*d_robot2*d_robot2));
+            }
+            else {
+                F_x_robot2 = 0.0;
+                F_y_robot2 = 0.0;
+            }
+        }
+        else {
+                F_x_robot2 = 0.0;
+                F_y_robot2 = 0.0;
+            }
+    #endif
+
 	double Fx, Fy;      // Forces in the inertial frame
 	double FxR, FyR;    // Forces in the robot frame
 	double K_SpeedX = cvs->param->K_SpeedX;
@@ -377,8 +473,8 @@ void potential_Field(CtrlStruct *cvs)
 	double angle;
 	double omega, vlin, omega_R, omega_L;
 
-	Fx = F_x_att + F_x_edge + F_x_center + F_x_purple + F_x_green;
-	Fy = F_y_att + F_y_edge + F_y_center + F_y_purple + F_y_green;
+	Fx = F_x_att + F_x_edge + F_x_center + F_x_purple + F_x_green + F_x_robot1 + F_x_robot2;
+	Fy = F_y_att + F_y_edge + F_y_center + F_y_purple + F_y_green + F_y_robot1 + F_y_robot2;
 
 	FxR = Fx*cos(orientation) + Fy*sin(orientation);
 	FyR = -Fx*sin(orientation) + Fy*cos(orientation);
@@ -436,7 +532,7 @@ void potential_Field(CtrlStruct *cvs)
         omega_L = vlin + omega;
     }
 
-	if (isnan(omega_R) || (d < 0.04))
+	if (isnan(omega_R) || (d < 0.05))
 	{
 		cvs->state->omegaref[R_ID] = 0.0;
 	}
@@ -444,7 +540,7 @@ void potential_Field(CtrlStruct *cvs)
 		cvs->state->omegaref[R_ID] = lowpass(cvs->state->omegaref[R_ID], omega_R, TAU_POT, cvs);
 	}
 
-	if (isnan(omega_L) || (d < 0.04))
+	if (isnan(omega_L) || (d < 0.05))
 	{
 		cvs->state->omegaref[L_ID] = 0.0;
 	}

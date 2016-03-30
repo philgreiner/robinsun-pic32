@@ -77,26 +77,38 @@ typedef struct CtrlParam{
 	double Ki, Kp;
 	#ifdef POTENTIAL
 	    double Ki_pot, Kp_pot;
-		double obstacle_center[818];    // Coordinates of the central obstacle
+		double obstacle_center[98];    // Coordinates of the central obstacle
 		int nb_center;                  // Number of points in center
 		double k_center;
 		double rho_center;
 		double k_att;
 
-		double obstacle_edges[2082];    // Coordinates of the table edges, under the format (x,y). Precision of 1 cm
+		double obstacle_edges[294];    // Coordinates of the table edges, under the format (x,y). Precision of 1 cm
 		int nb_edges;                   // Number of points in edges
 		double k_edge;
 		double rho_edge;
 
-		double obstacle_purpleZone[132];
+		double obstacle_purpleZone[28];
 		int nb_purple;                   // Number of points in edges
 		double k_purple;
 		double rho_purple;
 
-		double obstacle_greenZone[132];
+		double obstacle_greenZone[28];
 		int nb_green;                   // Number of points in edges
 		double k_green;
 		double rho_green;
+        
+        #ifdef SIMU_PROJECT
+            double obstacle_robot1[42];
+            int nb_robot1;
+            double k_robot1;
+            double rho_robot1;
+
+            double obstacle_robot2[42];
+            int nb_robot2;
+            double k_robot2;
+            double rho_robot2;
+		#endif
 
 		double K_SpeedX;                 // Coefficients of proportionnality between speed and force for the potential field approach
 		double K_SpeedRot;

@@ -52,11 +52,7 @@
         <itemPath>RobinsunFiles/odometry_gr1.h</itemPath>
         <itemPath>RobinsunFiles/robot_detect_gr1.h</itemPath>
         <itemPath>RobinsunFiles/triangulation_gr1.h</itemPath>
-<<<<<<< HEAD
         <itemPath>RobinsunFiles/potentialfield_gr1.h</itemPath>
-=======
-        <itemPath>RobinsunFiles/MyAnalog.h</itemPath>
->>>>>>> 98fe7c28a956b6dc144511d572da6786bf003df0
       </logicalFolder>
       <itemPath>MyIncludes/MyApp.h</itemPath>
     </logicalFolder>
@@ -181,11 +177,7 @@
         <itemPath>RobinsunFiles/potentialfield_gr1.c</itemPath>
         <itemPath>RobinsunFiles/robot_detect_gr1.c</itemPath>
         <itemPath>RobinsunFiles/triangulation_gr1.c</itemPath>
-<<<<<<< HEAD
         <itemPath>RobinsunFiles/calibrate_gr1.c</itemPath>
-=======
-        <itemPath>RobinsunFiles/MyAnalog.c</itemPath>
->>>>>>> 98fe7c28a956b6dc144511d572da6786bf003df0
       </logicalFolder>
       <itemPath>MyFiles/MyApp.c</itemPath>
     </logicalFolder>
