@@ -6,7 +6,7 @@
 #include "ctrl_strategy_gr1.h"
 #include <math.h>
 #ifdef SIMU_PROJECT
-	#include "robot_id.h"
+#include "robot_id.h"
 #endif
 
 NAMESPACE_INIT(ctrlGr1);
@@ -27,29 +27,29 @@ void strategy_objective(CtrlStruct *cvs)
 		cvs->state->goal_position[1] = cvs->state->position[1];
 		cvs->state->goal_position[2] = cvs->state->position[2];
 
-		#ifdef SIMU_PROJECT
-			cvs->outputs->flag_release = 0;
-		#endif
-        
-        #ifdef SIMU_PROJECT
-            if (cvs->inputs->t > 0.0)
-            {
-                cvs->state->strategy_state = GOTO_OBJ;
-            }
-        #else
-            if (cvs->inputs->t > 20.0)
-            {
-                cvs->state->strategy_state = GOTO_OBJ;
-            }
-        #endif
+#ifdef SIMU_PROJECT
+		cvs->outputs->flag_release = 0;
+#endif
+
+#ifdef SIMU_PROJECT
+		if (cvs->inputs->t > 0.0)
+		{
+			cvs->state->strategy_state = GOTO_OBJ;
+		}
+#else
+		if (cvs->inputs->t > 20.0)
+		{
+			cvs->state->strategy_state = GOTO_OBJ;
+		}
+#endif
 		break;
 
 	case GOTO_OBJ: // Select next_objective depending on done_objectives and objectives_on_robot
 		objective_selection(cvs);
-        #ifdef ASTAR
-            cvs->param->ready_start_astar = 1;
-            cvs->param->Astar_path_active = 0;
-        #endif // ASTAR
+#ifdef ASTAR
+		cvs->param->ready_start_astar = 1;
+		cvs->param->Astar_path_active = 0;
+#endif // ASTAR
 		cvs->state->strategy_state = WAIT_FOR_DESTINATION;
 		break;
 
@@ -71,36 +71,36 @@ void strategy_objective(CtrlStruct *cvs)
 		d = sqrt((x - x_goal)*(x - x_goal) + (y - y_goal)*(y - y_goal));
 
 		double accuracy;
-        #ifdef ASTAR
-            accuracy = 0.1;
-        #endif
+#ifdef ASTAR
+		accuracy = 0.1;
+#endif
 
-        #ifdef POTENTIAL
-            accuracy = 0.04;
-        #endif
+#ifdef POTENTIAL
+        accuracy = 0.05;
+#endif
 
 		if (d < accuracy && cvs->state->next_objective != BASE)
 		{
-            #ifdef SIMU_PROJECT
-                cvs->outputs->flag_release = 0;
-            #endif
+#ifdef SIMU_PROJECT
+			cvs->outputs->flag_release = 0;
+#endif
 			cvs->state->timer = cvs->inputs->t;
 			cvs->state->strategy_state = WAIT_TO_TAKE;
 		}
 		else if (d < accuracy && cvs->state->next_objective == BASE)
 		{
-            #ifdef SIMU_PROJECT
-                cvs->outputs->flag_release = 1;
-            #endif
+#ifdef SIMU_PROJECT
+			cvs->outputs->flag_release = 1;
+#endif
 			cvs->state->objectives_on_robot = 0;
 			cvs->state->strategy_state = GOTO_OBJ;
 		}
 		break;
 
 	default:
-        #ifdef SIMU_GAME
-            printf("Error: unknown state : %d !\n", cvs->state->strategy_state);
-        #endif
+#ifdef SIMU_GAME
+		printf("Error: unknown state : %d !\n", cvs->state->strategy_state);
+#endif
 		exit(EXIT_FAILURE);
 	}
 }
@@ -119,7 +119,7 @@ void objective_selection(CtrlStruct *cvs)
         #else
             timeout = (cvs->inputs->t >= 90);
         #endif
-            
+
 		if (cvs->state->objectives_on_robot > 1 || timeout)
 		{
             #ifdef SIMU_PROJECT
@@ -146,122 +146,112 @@ void objective_selection(CtrlStruct *cvs)
 				cvs->state->goal_position[1] = -0.25;
 				cvs->state->goal_position[2] = -M_PI;
             #endif
+	}
+	else
+	{
+		int i;
+		for (i = 0; i <= 7; i++)
+		{
+			if (cvs->state->done_objectives[i] == NOTDONE || i == 7)
+			{
+				cvs->state->next_objective = (objectives)i;
 
-            #ifdef ASTAR
-				cvs->param->ready_start_astar = 1;
-            #endif // ASTAR
-        }
-        else
-        {
-            int i;
-            for (i = 0; i <= 7; i++)
-            {
-                if (cvs->state->done_objectives[i] == NOTDONE || i == 7)
-                {
-                    cvs->state->next_objective = (objectives) i;
-
-                    #ifdef ASTAR
-                        cvs->param->ready_start_astar = 1;						// allow astar to calculate its path
-                    #endif
-
-                    switch (i)
-                    {
-                    case OBJ0:
-                        #ifdef SIMU_PROJECT
-                            printf("Going to objective 0. \n");
-                        #endif
-
-                        #ifdef ASTAR
-                            #ifdef SIMU_GAME
-                                cvs->state->goal_position[1] = (cvs->inputs->robot_id == ROBOT_Y || cvs->inputs->robot_id == ROBOT_W) ? 0.0 : 0.2;
-                                cvs->state->goal_position[0] = -0.4;
-                            #else				
-                                cvs->state->goal_position[1] = 0.0;
-                                cvs->state->goal_position[0] = -0.6;
-                            #endif
-                        #else
-                            cvs->state->goal_position[1] = 0.0;
-                            cvs->state->goal_position[0] = -0.6;
-                        #endif
-
-                        cvs->state->goal_position[2] = -M_PI;
-                        break;
-                    case OBJ1:
-                        #ifdef SIMU_PROJECT
-                            printf("Going to objective 1. \n");
-                        #endif
-                        cvs->state->goal_position[0] = 0.8;
-                        cvs->state->goal_position[1] = -0.8;
-                        cvs->state->goal_position[2] = -M_PI;
-                        break;
-                    case OBJ2:
-                        #ifdef SIMU_PROJECT
-                            printf("Going to objective 2. \n");
-                        #endif
-                        cvs->state->goal_position[0] = 0.8;
-                        cvs->state->goal_position[1] = 0.8;
-                        cvs->state->goal_position[2] = -M_PI;
-                        break;
-                    case OBJ3:
-                        #ifdef SIMU_PROJECT
-                            printf("Going to objective 3. \n");
-                        #endif
-                        cvs->state->goal_position[0] = 0.4;
-                        cvs->state->goal_position[1] = -1.1;
-                        cvs->state->goal_position[2] = -M_PI;
-                        break;
-                    case OBJ4:
-                        #ifdef SIMU_PROJECT
-                            printf("Going to objective 4. \n");
-                        #endif
-                        cvs->state->goal_position[0] = -0.6;
-                        cvs->state->goal_position[1] = -1.2;
-                        cvs->state->goal_position[2] = -M_PI;
-                        break;
-                    case OBJ5:
-                        #ifdef SIMU_PROJECT
-                            printf("Going to objective 5. \n");
-                        #endif
-                        cvs->state->goal_position[0] = 0.4;
-                        cvs->state->goal_position[1] = 1.1;
-                        cvs->state->goal_position[2] = -M_PI;
-                    break;
-                    case OBJ6:
-                        #ifdef SIMU_PROJECT
-                            printf("Going to objective 6. \n");
-                        #endif
-                        cvs->state->goal_position[0] = -0.6;
-                        cvs->state->goal_position[1] = 1.2;
-                        cvs->state->goal_position[2] = -M_PI;
-                        break;
-                    case BASE:
-                        #ifdef SIMU_PROJECT
-                            printf("All objectives taken, going back to base.\n");
-                            // Set goal position depending on team
-                            if (cvs->inputs->robot_id == ROBOT_Y || cvs->inputs->robot_id == ROBOT_W)// Team B (green zone)
-                            {
-                                cvs->state->goal_position[0] = 0.05;
-                                cvs->state->goal_position[1] = 0.25;
-                                cvs->state->goal_position[2] = -M_PI;
-                            }
-                            else // Team A (purple zone)
-                            {
-                                cvs->state->goal_position[0] = 0.05;
-                                cvs->state->goal_position[1] = -0.25;
-                                cvs->state->goal_position[2] = -M_PI;
-                            }
-                        #else
-                            cvs->state->goal_position[0] = 0.1;
-                            cvs->state->goal_position[1] = -0.25;
-                            cvs->state->goal_position[2] = -M_PI;
-                        #endif
+				switch (i)
+				{
+				case OBJ0:
+					#ifdef SIMU_PROJECT
+						printf("Going to objective 0. \n");
+					#endif
+					#ifdef ASTAR
+						#ifdef SIMU_PROJECT
+							cvs->state->goal_position[1] = (cvs->inputs->robot_id == ROBOT_Y || cvs->inputs->robot_id == ROBOT_W) ? 0.0 : 0.05;
+							cvs->state->goal_position[0] = -0.55;
+						#else
+							cvs->state->goal_position[1] = 0.0;
+							cvs->state->goal_position[0] = -0.6;
+						#endif
+					#else
+						cvs->state->goal_position[1] = 0.0;
+						cvs->state->goal_position[0] = -0.6;
+					#endif
+					cvs->state->goal_position[2] = -M_PI;
+					break;
+				case OBJ1:
+					#ifdef SIMU_PROJECT
+						printf("Going to objective 1. \n");
+					#endif
+					cvs->state->goal_position[0] = 0.8;
+					cvs->state->goal_position[1] = -0.8;
+					cvs->state->goal_position[2] = -M_PI;
+					break;
+				case OBJ2:
+					#ifdef SIMU_PROJECT
+						printf("Going to objective 2. \n");
+					#endif
+					cvs->state->goal_position[0] = 0.8;
+					cvs->state->goal_position[1] = 0.8;
+					cvs->state->goal_position[2] = -M_PI;
+					break;
+				case OBJ3:
+					#ifdef SIMU_PROJECT
+						printf("Going to objective 3. \n");
+					#endif
+					cvs->state->goal_position[0] = 0.4;
+					cvs->state->goal_position[1] = -1.1;
+					cvs->state->goal_position[2] = -M_PI;
+					break;
+				case OBJ4:
+					#ifdef SIMU_PROJECT
+						printf("Going to objective 4. \n");
+					#endif
+					cvs->state->goal_position[0] = -0.6;
+					cvs->state->goal_position[1] = -1.2;
+					cvs->state->goal_position[2] = -M_PI;
+					break;
+				case OBJ5:
+					#ifdef SIMU_PROJECT
+						printf("Going to objective 5. \n");
+					#endif
+					cvs->state->goal_position[0] = 0.4;
+					cvs->state->goal_position[1] = 1.1;
+					cvs->state->goal_position[2] = -M_PI;
+					break;
+				case OBJ6:
+					#ifdef SIMU_PROJECT
+						printf("Going to objective 6. \n");
+					#endif
+					cvs->state->goal_position[0] = -0.6;
+					cvs->state->goal_position[1] = 1.2;
+					cvs->state->goal_position[2] = -M_PI;
+					break;
+				case BASE:
+					printf("All objectives taken, going back to base.\n");
+					#ifdef SIMU_PROJECT
+						// Set goal position depending on team
+						if (cvs->inputs->robot_id == ROBOT_Y || cvs->inputs->robot_id == ROBOT_W)// Team B (green zone)
+						{
+							cvs->state->goal_position[0] = 0.05;
+							cvs->state->goal_position[1] = 0.25;
+							cvs->state->goal_position[2] = -M_PI;
+						}
+						else // Team A (purple zone)
+						{
+							cvs->state->goal_position[0] = 0.05;
+							cvs->state->goal_position[1] = -0.25;
+							cvs->state->goal_position[2] = -M_PI;
+						}
+					#else
+						cvs->state->goal_position[0] = 0.1;
+						cvs->state->goal_position[1] = -0.25;
+						cvs->state->goal_position[2] = -M_PI;
+					#endif
 					break;
 				} // SWITCH
 				return;
-			} // IF
-		} // FOR
-	} // ELSE
-}
+				} // IF
+			} // FOR
+		} // ELSE
+	}
 
 NAMESPACE_CLOSE();
 

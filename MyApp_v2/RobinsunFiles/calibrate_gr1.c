@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <math.h>
 #ifdef SIMU_PROJECT
-    #include "robot_id.h"
+#include "robot_id.h"
 #endif
 
 NAMESPACE_INIT(ctrlGr1);

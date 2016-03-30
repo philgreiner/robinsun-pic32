@@ -5,7 +5,6 @@
 
 // Basic includes
 #include "ctrl_main_gr1.h"
-#define ROBOTCONSOLET
 
 NAMESPACE_INIT(ctrlGr1);
 
@@ -16,20 +15,20 @@ NAMESPACE_INIT(ctrlGr1);
 void controller_init(CtrlStruct *cvs)
 {
     int i,j;
-    
+
     /* Parameters of the wheel speed control */
 	cvs->state->errorIntR = 0.0;
 	cvs->state->errorIntL = 0.0;
     cvs->state->avSpeedR = 0.0;
     cvs->state->avSpeedL = 0.0;
-    
+
     int zeta;
     for(zeta=0;zeta<10;zeta++)
     {
         cvs->state->lastMesL[zeta] = 0;
         cvs->state->lastMesR[zeta] = 0;
     }
-    
+
     #ifdef SIMU_GAME
         // Controller parameters
         cvs->param->Kp = 0.0038;
@@ -56,10 +55,10 @@ void controller_init(CtrlStruct *cvs)
         // Controller parameters
         #ifdef ROBINSUN
             cvs->param->Kp = 0.09;
-            cvs->param->Ki = 1.18; 
+            cvs->param->Ki = 1.18;
         #else
-            cvs->param->Kp = 0.027;//0.0038;//-0.031;
-            cvs->param->Ki = 8.6916; //5.5626;//2.1729;
+            cvs->param->Kp = 0.0038;//-0.031;
+            cvs->param->Ki = 5.5626;//2.1729;
         #endif
 
         // Kalman filter uncertainties
@@ -147,6 +146,11 @@ void controller_init(CtrlStruct *cvs)
         cvs->param->ready_start_astar = 0;          // No objective inserted yet
     #endif
 
+    // Initialise opponent positions
+    for(i=0;i<4;i++)
+    {
+        cvs->state->opponent_position[i] = 0.0;
+    }
     // Strategy parameters initialization
     cvs->state->objectives_on_robot = 0;
     for (i=0; i<7; i=i+1)
@@ -171,11 +175,11 @@ void controller_loop(CtrlStruct *cvs)
 	ivs = cvs->inputs;
 	ovs = cvs->outputs;
 
-    if(fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 2)
-        ivs->r_wheel_speed = cvs->state->avSpeedR;
-    if(fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 2)
-        ivs->l_wheel_speed = cvs->state->avSpeedL;
-    
+//    if(fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 7)
+//        ivs->r_wheel_speed = cvs->state->avSpeedR;
+//    if(fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 7)
+//        ivs->l_wheel_speed = cvs->state->avSpeedL;
+
     // Computation of the average speed
     int i;
     for(i = 0; i<9; i++)
@@ -185,10 +189,10 @@ void controller_loop(CtrlStruct *cvs)
     }
     cvs->state->lastMesR[0] = ivs->r_wheel_speed;
     cvs->state->lastMesL[0] = ivs->l_wheel_speed;
-    
+
     cvs->state->avSpeedR = 0.0;
     cvs->state->avSpeedL = 0.0;
-    
+
     for(i = 0; i<10; i++)
     {
         cvs->state->avSpeedR += cvs->state->lastMesR[i];
@@ -196,10 +200,10 @@ void controller_loop(CtrlStruct *cvs)
     }
     cvs->state->avSpeedR = cvs->state->avSpeedR/10.0;
     cvs->state->avSpeedL = cvs->state->avSpeedL/10.0;
-    
+
     #ifdef SIMU_PROJECT
-        set_plot(ivs->r_wheel_speed, "r_wheel_speed");
-        set_plot(ivs->l_wheel_speed, "l_wheel_speed");
+        //set_plot(ivs->r_wheel_speed, "r_wheel_speed");
+        //set_plot(ivs->l_wheel_speed, "l_wheel_speed");
     #endif
 
     // Choice of the localization method
@@ -259,7 +263,7 @@ void controller_loop(CtrlStruct *cvs)
 
 	/* Path planning through potential field computation */
 
-	
+
     // Choice of the path planning algorithm
 	if (cvs->inputs->t >= 0 && cvs->inputs->t < 89)
 	{
@@ -299,14 +303,14 @@ void controller_loop(CtrlStruct *cvs)
         cvs->state->omegaref[L_ID] = (ivs->t > 5)? .30/.0325 : 0;
     #endif
     #ifdef MINIBOT
-        cvs->state->omegaref[R_ID] = 4*M_PI*sin(2*M_PI*ivs->t);
-        cvs->state->omegaref[L_ID] = -2*M_PI*cos(2*M_PI*ivs->t);
+        //cvs->state->omegaref[R_ID] = 2*M_PI;
+        //cvs->state->omegaref[L_ID] = 2*M_PI;
     #endif
-    
+
 	/* Computation of the motor voltages */
 	double wheels[2];
 	motors_control(cvs, wheels);
-    
+
     #ifdef MINIBOT
         ovs->wheel_commands[R_ID] = wheels[L_ID];
         ovs->wheel_commands[L_ID] = wheels[R_ID];
@@ -320,7 +324,13 @@ void controller_loop(CtrlStruct *cvs)
     #endif
 
 	/* Locate the opponent */
-	//robot_Detect(cvs);
+	robot_Detect(cvs);
+	#ifdef SIMU_PROJECT
+        set_plot(cvs->state->opponent_position[0], "x1");
+        set_plot(cvs->state->opponent_position[1], "y1");
+        set_plot(cvs->state->opponent_position[2], "x2");
+        set_plot(cvs->state->opponent_position[3], "y2");
+	#endif
 
 	ovs->tower_command = 15;
 	cvs->state->lastT = ivs->t;
@@ -364,8 +374,8 @@ void motors_control(CtrlStruct *cvs, double * wheels)
 	// Integrate the error
 	cvs->state->errorIntR += (omegaref[R_ID] - rspeed)*(ivs->t - cvs->state->lastT);
 	cvs->state->errorIntL += (omegaref[L_ID] - lspeed)*(ivs->t - cvs->state->lastT);
-    
-     #ifdef ROBOTCONSOLET
+
+     #ifdef ROBOTCONSOLE
         char msg[1024];
         sprintf(msg, "t: %.3f; lastT: %.3f \n", ivs->t, cvs->state->lastT);
         MyConsole_SendMsg(msg);
@@ -382,8 +392,30 @@ void motors_control(CtrlStruct *cvs, double * wheels)
 	UconsigneR = (omegaref[R_ID] - rspeed) * 14 * cvs->param->Kp + cvs->state->errorIntR * 14 * cvs->param->Ki;
 	UconsigneL = (omegaref[L_ID] - lspeed) * 14 * cvs->param->Kp + cvs->state->errorIntL * 14 * cvs->param->Ki;
 
-	UconsigneR = (UconsigneR>0.9*24) ? (0.9*24) : (UconsigneR);
-	UconsigneL = (UconsigneL>0.9*24) ? (0.9*24) : (UconsigneL);
+	if (UconsigneR > 0.9 * 24)
+	{
+		float delta = 0.9 * 24 - UconsigneR;
+		UconsigneR = 0.9 * 24;
+		UconsigneL += delta;
+	}
+	if (UconsigneR < -0.9 * 24)
+	{
+		float delta = -0.9 * 24 - UconsigneR;
+		UconsigneR = -0.9 * 24;
+		UconsigneL += delta;
+	}
+	if (UconsigneL > 0.9 * 24)
+	{
+		float delta = 0.9 * 24 - UconsigneL;
+		UconsigneL = 0.9 * 24;
+		UconsigneR += delta;
+	}
+	if (UconsigneL < -0.9 * 24)
+	{
+		float delta = -0.9 * 24 - UconsigneL;
+		UconsigneL = -0.9 * 24;
+		UconsigneR += delta;
+	}
 
 	wheels[R_ID] = UconsigneR*(100/(0.9*24));
 	wheels[L_ID] = UconsigneL*(100/(0.9*24));
@@ -398,11 +430,32 @@ void motors_control(CtrlStruct *cvs, double * wheels)
     UconsigneR = (omegaref[R_ID]-rspeed)*cvs->param->Kp + cvs->state->errorIntR*cvs->param->Ki;
     UconsigneL = (omegaref[L_ID]-lspeed)*cvs->param->Kp + cvs->state->errorIntL*cvs->param->Ki;
 
-    UconsigneR = (UconsigneR>Valim) ? ( Valim) : (UconsigneR);
-    UconsigneR = (UconsigneR<-Valim)? (-Valim) : (UconsigneR);
-    UconsigneL = (UconsigneL>Valim) ? ( Valim) : (UconsigneL);
-    UconsigneL = (UconsigneL<-Valim)? (-Valim) : (UconsigneL);
-    
+	if (UconsigneR > Valim)
+	{
+		float delta = Valim - UconsigneR;
+		UconsigneR = Valim;
+		UconsigneL += delta;
+	}
+	if (UconsigneR < -Valim)
+	{
+		float delta = -Valim - UconsigneR;
+		UconsigneR = -Valim;
+		UconsigneL += delta;
+	}
+	if (UconsigneL > Valim)
+	{
+		float delta = Valim - UconsigneL;
+		UconsigneL = Valim;
+		UconsigneR += delta;
+	}
+	if (UconsigneL < -Valim)
+	{
+		float delta = -Valim - UconsigneL;
+		UconsigneL = -Valim;
+		UconsigneR += delta;
+}
+
+
     #ifdef ROBOTCONSOLE
         sprintf(msg, "Right speed: %.3f; omegaref: %.3f; UconsigneR: %.3f, errorIntR = %.3f\n", rspeed, omegaref[R_ID], UconsigneR, cvs->state->errorIntR);
         MyConsole_SendMsg(msg);

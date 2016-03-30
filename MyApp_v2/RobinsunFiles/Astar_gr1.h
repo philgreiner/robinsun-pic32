@@ -8,7 +8,7 @@
 #include "namespace_ctrl.h"
 #include "CtrlStruct_gr1.h"
 #include <math.h>
-#include <stdio.h>
+#include <limits.h>
 
 NAMESPACE_INIT(ctrlGr1);
 /*

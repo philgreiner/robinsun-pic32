@@ -17,8 +17,8 @@
 //#define TRIANG_ONLY
 
 /* --- POTENTIAL or ASTAR --- */
-#define POTENTIAL
-//#define ASTAR
+//#define POTENTIAL
+#define ASTAR
 
 NAMESPACE_INIT(ctrlGr1);
 
@@ -125,8 +125,6 @@ typedef struct CtrlParam{
 		int path[100];					// Stack used to save all the path steps
 		int index_path;					// Show in which path[] position we have to write/read the top stack item
 		int Astar_path_active;			// =0 when no path was calculated, =1 when path is calculated
-
-		double Ki_astar, Kp_astar;
 	#endif
 
 } CtrlParam;
