@@ -1,0 +1,34 @@
+~inc:header.inc~
+
+<div id="content">
+<h1 id="controller"> Automatic controller parameters </h1>
+<p id="top"> To modify the values of the controller parameters, just type in the desired values in the corresponding fields. Then, click on 'Update value' to update the value.</p>
+<p> After your modifications are finished, don't hesitate to go to <a href="/charts.htm"> the charts page</a> to visualize the live results. </p>
+
+<table id="autocontrol">
+	<tr>
+		<th colspan="2"> Speed Parameters </th>
+		<th></th>
+		<th colspan="2"> PI Parameters </th>
+	</tr>
+	<tr>
+		<td> Reference speed </td>
+		<td> <form method="post" id="form1"><input type="text" name="refspeed" id="refspeed" value="~refspeed~"><input type="submit" value="Update"></form> </td>
+		<td class="mid"> </td>
+		<td> Kp </td>
+		<td> <form method="post" id="form2"><input type="text" name="kp" id="kp" value="~kp~"><input type="submit" value="Update"></form> </td>
+	</tr>
+	<tr>
+		<td> Maximum speed </td>
+		<td> <form method="post" id="form3"><input type="text" name="maxspeed" id="maxspeed" value="~maxspeed~"><input type="submit" value="Update"></form> </td>
+		<td class="mid"> </td>
+		<td> Ki </td>
+		<td> <form method="post" id="form4"><input type="text" name="ki" id="ki" value="~ki~"><input type="submit" value="Update"></form> </td>
+	</tr>
+</table>
+
+	<input type="submit" value="Update all values" form="form1 form2 form3 form4">
+
+</div>
+
+~inc:footer.inc~
