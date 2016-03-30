@@ -144,12 +144,14 @@ void potential_Field_Init(CtrlStruct *cvs)
 	last_ind = diag_allocate(green, -0.2, 0.45, 0.65, 0.0, 0.05, start_ind);
 
 	/* Moving obstacles (opponents) */
-    cvs->param->nb_robot1 = 21;
-    cvs->param->k_robot1 = 17.0;
-    cvs->param->rho_robot1 = 0.2;
-    cvs->param->nb_robot2 = 21;
-    cvs->param->k_robot2 = 17.0;
-    cvs->param->rho_robot2 = 0.2;
+    #ifdef SIMU_PROJECT
+        cvs->param->nb_robot1 = 21;
+        cvs->param->k_robot1 = 17.0;
+        cvs->param->rho_robot1 = 0.2;
+        cvs->param->nb_robot2 = 21;
+        cvs->param->k_robot2 = 17.0;
+        cvs->param->rho_robot2 = 0.2;
+    #endif
 
 	/* Initialization of the parameters of the potential field path planning */
 	cvs->param->k_edge = 8.5;
@@ -339,10 +341,12 @@ void potential_Field(CtrlStruct *cvs)
 	double rho_purple = cvs->param->rho_purple;
 	double k_green = cvs->param->k_green;
 	double rho_green = cvs->param->rho_green;
-	double k_robot1 = cvs->param->k_robot1;
-	double rho_robot1 = cvs->param->rho_robot1;
-	double k_robot2 = cvs->param->k_robot2;
-	double rho_robot2 = cvs->param->rho_robot2;
+    #ifdef SIMU_PROJECT
+        double k_robot1 = cvs->param->k_robot1;
+        double rho_robot1 = cvs->param->rho_robot1;
+        double k_robot2 = cvs->param->k_robot2;
+        double rho_robot2 = cvs->param->rho_robot2;
+    #endif
 
 	#ifdef SIMU_PROJECT
         int purple_team = ((cvs->inputs->robot_id == ROBOT_B)||(cvs->inputs->robot_id == ROBOT_R));
@@ -472,9 +476,14 @@ void potential_Field(CtrlStruct *cvs)
 	double K_SpeedRot = cvs->param->K_SpeedRot;
 	double angle;
 	double omega, vlin, omega_R, omega_L;
-
-	Fx = F_x_att + F_x_edge + F_x_center + F_x_purple + F_x_green + F_x_robot1 + F_x_robot2;
-	Fy = F_y_att + F_y_edge + F_y_center + F_y_purple + F_y_green + F_y_robot1 + F_y_robot2;
+    
+    #ifdef SIMU_PROJECT
+        Fx = F_x_att + F_x_edge + F_x_center + F_x_purple + F_x_green + F_x_robot1 + F_x_robot2;
+        Fy = F_y_att + F_y_edge + F_y_center + F_y_purple + F_y_green + F_y_robot1 + F_y_robot2;
+    #else
+        Fx = F_x_att + F_x_edge + F_x_center + F_x_purple + F_x_green;
+        Fy = F_y_att + F_y_edge + F_y_center + F_y_purple + F_y_green;
+    #endif
 
 	FxR = Fx*cos(orientation) + Fy*sin(orientation);
 	FyR = -Fx*sin(orientation) + Fy*cos(orientation);
