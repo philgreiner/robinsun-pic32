@@ -50,9 +50,9 @@
         <itemPath>RobinsunFiles/map_design_gr1.h</itemPath>
         <itemPath>RobinsunFiles/namespace_ctrl.h</itemPath>
         <itemPath>RobinsunFiles/odometry_gr1.h</itemPath>
-        <itemPath>RobinsunFiles/potentialfield_gr1.h</itemPath>
         <itemPath>RobinsunFiles/robot_detect_gr1.h</itemPath>
         <itemPath>RobinsunFiles/triangulation_gr1.h</itemPath>
+        <itemPath>RobinsunFiles/potentialfield_gr1.h</itemPath>
       </logicalFolder>
       <itemPath>MyIncludes/MyApp.h</itemPath>
     </logicalFolder>
@@ -177,6 +177,7 @@
         <itemPath>RobinsunFiles/potentialfield_gr1.c</itemPath>
         <itemPath>RobinsunFiles/robot_detect_gr1.c</itemPath>
         <itemPath>RobinsunFiles/triangulation_gr1.c</itemPath>
+        <itemPath>RobinsunFiles/calibrate_gr1.c</itemPath>
       </logicalFolder>
       <itemPath>MyFiles/MyApp.c</itemPath>
     </logicalFolder>

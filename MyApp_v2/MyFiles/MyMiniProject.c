@@ -91,11 +91,11 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
     #ifdef MINIBOT
         unsigned int speedR = MyCyclone_Read(A_speedR);
         int dirR    = (MyCyclone_Read(A_dirR))*(-2)+1; // == 1 if going forward, == -1 otherwise
-        cvs->inputs->r_wheel_speed = (double) dirR*speedR*(1.0/315.0); 
+        cvs->inputs->r_wheel_speed = (double) dirR*speedR*(1.0/255.0); //1/315
 
         unsigned int speedL = MyCyclone_Read(A_speedL);
         int dirL    = (MyCyclone_Read(A_dirL))*(2)-1; // == 1 if going forward, == -1 otherwise
-        cvs->inputs->l_wheel_speed = (double) dirL*speedL*(1.0/135.0); 
+        cvs->inputs->l_wheel_speed = (double) dirL*speedL*(1.0/109.0);//1/135 
     #endif
    
     #ifdef ROBINSUN

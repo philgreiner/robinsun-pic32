@@ -2,8 +2,8 @@
 * \file map_design.h
 * \brief File description
 */
-#ifndef MAP_DESIGN_H_INCLUDED
-#define MAP_DESIGN_H_INCLUDED
+#ifndef _MAP_DESIGN_H_
+#define _MAP_DESIGN_H_
 
 #include "CtrlStruct_gr1.h"
 

@@ -7,6 +7,9 @@
 #define _CTRL_STRATEGY_GR1_H_
 
 #include "CtrlStruct_gr1.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
 
 NAMESPACE_INIT(ctrlGr1);
 

@@ -9,21 +9,29 @@
 #include "ctrl_io.h"
 #include "namespace_ctrl.h"
 #include <stddef.h>
+#include <stdlib.h>
+
+/* --- KALMAN or ODOMETRY or TRIANGULATION --- */
+//#define KALMAN
+#define ODO_ONLY
+//#define TRIANG_ONLY
+
+/* --- POTENTIAL or ASTAR --- */
 #define POTENTIAL
 //#define ASTAR
 
 NAMESPACE_INIT(ctrlGr1);
 
-typedef enum { CALIBRATEY, GOTOY, TURN, CALIBRATEX, GOHOMEX, GOHOMETURN, GOHOMEY} calibratestate;
+typedef enum {CALIBRATEY, GOTOY, TURN, CALIBRATEX, GOHOMEX, GOHOMETURN, GOHOMEY} calibratestate;
 typedef enum {WAIT_FOR_START, GOTO_OBJ, WAIT_TO_TAKE, WAIT_FOR_DESTINATION} strategystate_t;
-typedef enum {OBJ0, OBJ4, OBJ2, OBJ1, OBJ3, OBJ6, OBJ5, BASE } objectives;
+typedef enum {OBJ0, OBJ4, OBJ2, OBJ1, OBJ3, OBJ5, OBJ6, BASE} objectives;
 typedef enum {NOTDONE, DONE} STATUS;
 
 typedef struct CtrlState
 {
     double omegaref[2];
 	double errorIntR, errorIntL;
-    double lastMesR[10], lastMesL[10];
+	double lastMesR[10], lastMesL[10];
     double avSpeedR, avSpeedL;
 	double lastT;
 
@@ -33,9 +41,10 @@ typedef struct CtrlState
 	double opponent_position[4];
 	double goal_position[3];
 
-	//Potential field orientation error
+	//Potential field & Astar orientation error
 	double errorAngle;
 	double lastT_pot;
+	double lastT_astar;
 
 	//Kalman filter parameters
 	double covariance[3][3];
@@ -55,10 +64,8 @@ typedef struct CtrlState
 	calibratestate    calibration;
 } CtrlState;
 
-typedef struct CtrlParam
-{
+typedef struct CtrlParam{
 	// Parameters of the playing area
-	double R_beacon;				// Radius of the beacons
 	double initial_pos[3];
 	double beacons[6];
 
@@ -68,51 +75,52 @@ typedef struct CtrlParam
 
 	// Wheel controller parameters
 	double Ki, Kp;
-#ifdef POTENTIAL
-    double Ki_pot, Kp_pot;
-	double obstacle_center[846];    // Coordinates of the central obstacle
-	int nb_center;                  // Number of points in center
-	double k_center;
-	double rho_center;
-	double k_att;
+	#ifdef POTENTIAL
+	    double Ki_pot, Kp_pot;
+		double obstacle_center[818];    // Coordinates of the central obstacle
+		int nb_center;                  // Number of points in center
+		double k_center;
+		double rho_center;
+		double k_att;
 
-	double obstacle_edges[2082];    // Coordinates of the table edges, under the format (x,y). Precision of 1 cm
-	int nb_edges;                   // Number of points in edges
-	double k_edge;
-	double rho_edge;
+		double obstacle_edges[2082];    // Coordinates of the table edges, under the format (x,y). Precision of 1 cm
+		int nb_edges;                   // Number of points in edges
+		double k_edge;
+		double rho_edge;
 
-	double obstacle_purpleZone[132];
-	int nb_purple;                   // Number of points in edges
-	double k_purple;
-	double rho_purple;
+		double obstacle_purpleZone[132];
+		int nb_purple;                   // Number of points in edges
+		double k_purple;
+		double rho_purple;
 
-	double obstacle_greenZone[132];
-	int nb_green;                   // Number of points in edges
-	double k_green;
-	double rho_green;
+		double obstacle_greenZone[132];
+		int nb_green;                   // Number of points in edges
+		double k_green;
+		double rho_green;
 
-	double K_SpeedX;                 // Coefficients of proportionnality between speed and force for the potential field approach
-	double K_SpeedRot;
+		double K_SpeedX;                 // Coefficients of proportionnality between speed and force for the potential field approach
+		double K_SpeedRot;
 
-	double k_att_conic;
-	double k_att_quad;
-	double rho_att;
-#endif
+		double k_att_conic;
+		double k_att_quad;
+		double rho_att;
+	#endif
 
-#ifdef ASTAR
+	#ifdef ASTAR
+		int game_map[43][63];			//Game map draws as a table. game_map[x=0][y=0] = bottom left corner near to violet cabin
 
-	int game_map[213][313]; //Game map draws as a table. game_map[x=0][y=0] = bottom left corner near to violet cabin
+		int ready_start_astar;			// To be sure to have an objective define
+		int path[100];					// Stack used to save all the path steps
+		int index_path;					// Show in which path[] position we have to write/read the top stack item
+		int Astar_path_active;			// =0 when no path was calculated, =1 when path is calculated
 
-	int path[526];					// Stack used to save all the path steps
-	int index_path;				// Show in which path[] position we have to write/read the top stack item
-
-#endif
+		double Ki_astar, Kp_astar;
+	#endif
 
 } CtrlParam;
 
 /// Main controller structure
-typedef struct CtrlStruct
-{
+typedef struct CtrlStruct {
 	CtrlIn *inputs;   ///< controller inputs
 	CtrlOut *outputs; ///< controller outputs
 	CtrlState *state; ///< controller state

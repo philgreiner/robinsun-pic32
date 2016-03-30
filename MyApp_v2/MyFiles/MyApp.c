@@ -104,7 +104,7 @@ int main(void)
     MyMiniProject_Update(cvs);
     controller_init(cvs);
     // Execute forever
-    unsigned int tWait=(SYS_FREQ/2000)*10;
+    unsigned int tWait=(SYS_FREQ/2000)*1;
     unsigned int tStart = ReadCoreTimer();
     while (1)
     {

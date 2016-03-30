@@ -7,10 +7,22 @@
 
 #include "namespace_ctrl.h"
 #include "CtrlStruct_gr1.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+
+#ifdef SIMU_PROJECT
+    #include "set_output.h"
+    #include "user_realtime.h"
+    #include "robot_id.h"
+#endif
+
+#define TAU_LOWPASS 0.5
 
 NAMESPACE_INIT(ctrlGr1);
 
 void triangulation(CtrlStruct *cvs);
+double lowpass(double old, double current, double tau, CtrlStruct *cvs);
 
 NAMESPACE_CLOSE();
 
