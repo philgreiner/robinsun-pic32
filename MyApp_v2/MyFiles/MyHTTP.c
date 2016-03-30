@@ -1520,7 +1520,6 @@ void HTTPPrint_buttonR(void)
     TCPPutString(sktHTTP, theStr);
 }
 
-#ifdef ROBINSUN
 void HTTPPrint_omegaref_R(void)
 {
     BYTE theStr[64];
@@ -1535,6 +1534,7 @@ void HTTPPrint_omegaref_L(void)
     TCPPutString(sktHTTP, theStr);
 }
 
+#ifdef ROBINSUN
 void HTTPPrint_sonar1(void)
 {
     BYTE theStr[64];

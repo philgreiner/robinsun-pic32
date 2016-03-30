@@ -171,10 +171,10 @@ void controller_loop(CtrlStruct *cvs)
 	ivs = cvs->inputs;
 	ovs = cvs->outputs;
 
-//    if(fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 7)
-//        ivs->r_wheel_speed = cvs->state->avSpeedR;
-//    if(fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 7)
-//        ivs->l_wheel_speed = cvs->state->avSpeedL;
+    if(fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 2)
+        ivs->r_wheel_speed = cvs->state->avSpeedR;
+    if(fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 2)
+        ivs->l_wheel_speed = cvs->state->avSpeedL;
     
     // Computation of the average speed
     int i;
