@@ -77,8 +77,9 @@ int main(void)
     MyIO_Init();
     MyFlash_Init();
     MyTemperature_Init();
+    MyAnalog_Init();
     //MyMIWI_Init();
-    //MyWIFI_Init();
+    MyWIFI_Init();
 
     // Configure for multi-vectored mode
     INTConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
@@ -91,7 +92,7 @@ int main(void)
 
     // Start Wireless and Camera connections
     //MyMIWI_Start();
-    //MyWIFI_Start();
+    MyWIFI_Start();
     //MyCamera_Start();
 
     MyMiniProject_Init();
@@ -103,6 +104,7 @@ int main(void)
     MyMiniProject_tStart = (ReadCoreTimer()/(SYS_FREQ/2.0));
     MyMiniProject_Update(cvs);
     controller_init(cvs);
+    unsigned int AN1, AN3; 
     // Execute forever
     unsigned int tWait=(SYS_FREQ/2000)*1;
     unsigned int tStart = ReadCoreTimer();
@@ -111,8 +113,11 @@ int main(void)
         MyRTCC_Task();
         MyConsole_Task();
         MyCAN_Task();
+        MyAnalog_Read(&AN1, &AN3);
+        cvs->inputs->sonars[0] = AN1;
+        cvs->inputs->sonars[1] = AN3;
         //MyMIWI_Task();
-        //MyWIFI_Task();
+        MyWIFI_Task();
         if(ReadCoreTimer() - tStart > tWait)
         {
             MyMiniProject_Update(cvs);

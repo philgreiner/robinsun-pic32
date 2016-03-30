@@ -110,8 +110,8 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         unsigned int sonar12 = MyCyclone_Read(A_sonar12);
         unsigned int sonar34 = MyCyclone_Read(A_sonar34);
         unsigned int sonar56 = MyCyclone_Read(A_sonar56);
-        cvs->inputs->sonars[0] = (sonar12 & 0xff00) >> 8;
-        cvs->inputs->sonars[1] = (sonar12 & 0x00ff);
+        //cvs->inputs->sonars[0] = (sonar12 & 0xff00) >> 8;
+        //cvs->inputs->sonars[1] = (sonar12 & 0x00ff);
         cvs->inputs->sonars[2] = (sonar34 & 0xff00) >> 8;
         cvs->inputs->sonars[3] = (sonar34 & 0x00ff);
         cvs->inputs->sonars[4] = (sonar56 & 0xff00) >> 8;

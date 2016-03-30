@@ -48,11 +48,11 @@ void MyAnalog_Init(void)
 }
 
 void MyAnalog_Read(unsigned int * AN1, unsigned int * AN3)
-{
-    while ( ! mAD1GetIntFlag() ) 
+{ 
+    if (mAD1GetIntFlag() ) 
     { 
         // wait for the first conversion to complete so there will be vaild data in ADC result registers
-    }
+    
     unsigned int offset;	// buffer offset to point to the base of the idle buffer
 
     // the results of the conversions are available in channel4 and channel5
@@ -61,5 +61,15 @@ void MyAnalog_Read(unsigned int * AN1, unsigned int * AN3)
     *AN1 = ReadADC10(offset);  		// read the result of channel AN1 conversion from the idle buffer
     *AN3 = ReadADC10(offset + 1);  	// read the result of channel AN3 conversion from the idle buffer
 
+    char msg[1024];
+    sprintf(msg, "AN1: %d, AN3: %d\n", *AN1, *AN3);
+    MyConsole_SendMsg(msg);
+    
     mAD1ClearIntFlag();
+    }
+    else 
+    {
+        *AN1 = 42;
+        *AN3 = 42;
+    }
 }
