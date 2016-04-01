@@ -5,6 +5,9 @@
 
 // Basic includes
 #include "ctrl_main_gr1.h"
+#include "MyApp.h"
+
+//#define ROBOTCONSOLE
 
 NAMESPACE_INIT(ctrlGr1);
 
@@ -57,8 +60,8 @@ void controller_init(CtrlStruct *cvs)
             cvs->param->Kp = 0.09;
             cvs->param->Ki = 1.18; 
         #else
-            cvs->param->Kp = 0.0435;//0.0038;//-0.031;
-            cvs->param->Ki = 11.3523;//4.7691;//5.5626;//2.1729;
+            cvs->param->Kp = -0.031;
+            cvs->param->Ki = 2.1729;
         #endif
 
         // Kalman filter uncertainties
@@ -81,7 +84,7 @@ void controller_init(CtrlStruct *cvs)
     #endif
 
     cvs->state->lastT = cvs->inputs->t;
-
+  
 	/* Sets the beacon position, beginning by the one which is alone on its side, for both robot starting configurations */
 
     #ifdef SIMU_GAME
@@ -168,11 +171,11 @@ void controller_loop(CtrlStruct *cvs)
 
 	ivs = cvs->inputs;
 	ovs = cvs->outputs;
-
-    if(fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 2)
-        ivs->r_wheel_speed = cvs->state->avSpeedR;
-    if(fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 2)
-        ivs->l_wheel_speed = cvs->state->avSpeedL;
+    
+    if(fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 3*M_PI)
+        ivs->r_wheel_speed = cvs->state->lastMesR[0];
+    if(fabs(ivs->l_wheel_speed - cvs->state->lastMesL[0]) > 3*M_PI)
+        ivs->l_wheel_speed = cvs->state->lastMesL[0];
     
     // Computation of the average speed
     int i;
@@ -257,7 +260,7 @@ void controller_loop(CtrlStruct *cvs)
 
 	/* Path planning through potential field computation */
     // Choice of the path planning algorithm
-	if (cvs->inputs->t >= 0 && cvs->inputs->t < 89)
+	if (cvs->inputs->t >= 0)
 	{
 		strategy_objective(cvs);
         
@@ -289,19 +292,39 @@ void controller_loop(CtrlStruct *cvs)
 	}
 
     // Constant speed references for wheel calibrations
-    #ifdef ROBINSUN
+    #ifdef TEST_ROBINSUN
         cvs->state->omegaref[R_ID] = (ivs->t > 5)? .30/.0325 : 0;
         cvs->state->omegaref[L_ID] = (ivs->t > 5)? .30/.0325 : 0;
     #endif
-    #ifdef MINIBOT
-        cvs->state->omegaref[R_ID] = 3*M_PI*sin(2*M_PI*ivs->t);
-        cvs->state->omegaref[L_ID] = -2*M_PI*cos(2*M_PI*ivs->t);
+    #ifdef TEST_MINIBOT
+        cvs->state->omegaref[R_ID] = 4*M_PI*sin(M_PI*ivs->t);
+        cvs->state->omegaref[L_ID] = 4*M_PI*cos(M_PI*ivs->t);
+    #endif
+
+    // Tests to calibrate the odometry
+    //#define TEST_ODO
+    #ifdef TEST_ODO
+//        if((cvs->state->position_odo[1]<1.85) && (ivs->t > 5.0)){
+//            cvs->state->omegaref[R_ID] = 3*M_PI;
+//            cvs->state->omegaref[L_ID] = 3*M_PI;
+//        }
+//        else {
+//            cvs->state->omegaref[R_ID] = 0;
+//            cvs->state->omegaref[L_ID] = 0;
+//        }
+        if((cvs->state->position_odo[2]> -M_PI_2) && (ivs->t > 5.0)){
+            cvs->state->omegaref[R_ID] = -2*M_PI;
+            cvs->state->omegaref[L_ID] = 2*M_PI;
+        }
+        else {
+            cvs->state->omegaref[R_ID] = 0;
+            cvs->state->omegaref[L_ID] = 0;
+        }
     #endif
 
 	/* Computation of the motor voltages */
 	double wheels[2];
 	motors_control(cvs, wheels);
-    
     #ifdef MINIBOT
         ovs->wheel_commands[R_ID] = wheels[L_ID];
         ovs->wheel_commands[L_ID] = wheels[R_ID];
@@ -319,6 +342,12 @@ void controller_loop(CtrlStruct *cvs)
 
 	ovs->tower_command = 15;
 	cvs->state->lastT = ivs->t;
+    
+    #ifdef ROBOTCONSOLE
+        char msg[1024];
+        sprintf(msg, "x: %.3f; y: %.3f; theta: %.3f\n", cvs->state->position_odo[0], cvs->state->position_odo[1],cvs->state->position_odo[2]*(180.0/M_PI));
+        MyConsole_SendMsg(msg);
+    #endif
 }
 
 /*! \brief last controller operations (called once)
@@ -344,8 +373,8 @@ void motors_control(CtrlStruct *cvs, double * wheels)
 
 	// Get values for current speed and reference speed
     #ifdef ROBINSUN
-        double rspeed = cvs->state->avSpeedR;
-        double lspeed = cvs->state->avSpeedL;
+        double rspeed = ivs->r_wheel_speed;
+        double lspeed = ivs->l_wheel_speed;
     #else
         #ifdef MINIBOT
             double rspeed = -ivs->r_wheel_speed;
@@ -366,78 +395,82 @@ void motors_control(CtrlStruct *cvs, double * wheels)
         MyConsole_SendMsg(msg);
     #endif
 
-#ifdef SIMU_PROJECT
-	// Limit the integral error (anti-windup)
-	cvs->state->errorIntR = (14 * cvs->state->errorIntR*cvs->param->Ki>24.0) ? (24.0 / (14 * cvs->param->Ki)) : (cvs->state->errorIntR);
-	cvs->state->errorIntL = (14 * cvs->state->errorIntL*cvs->param->Ki>24.0) ? (24.0 / (14 * cvs->param->Ki)) : (cvs->state->errorIntL);
-	cvs->state->errorIntR = (14 * cvs->state->errorIntR*cvs->param->Ki<-24.0) ? (-24.0 / (14 * cvs->param->Ki)) : (cvs->state->errorIntR);
-	cvs->state->errorIntL = (14 * cvs->state->errorIntL*cvs->param->Ki<-24.0) ? (-24.0 / (14 * cvs->param->Ki)) : (cvs->state->errorIntL);
+    #ifdef SIMU_PROJECT
+        // Limit the integral error (anti-windup)
+        cvs->state->errorIntR = (14 * cvs->state->errorIntR*cvs->param->Ki>24.0) ? (24.0 / (14 * cvs->param->Ki)) : (cvs->state->errorIntR);
+        cvs->state->errorIntL = (14 * cvs->state->errorIntL*cvs->param->Ki>24.0) ? (24.0 / (14 * cvs->param->Ki)) : (cvs->state->errorIntL);
+        cvs->state->errorIntR = (14 * cvs->state->errorIntR*cvs->param->Ki<-24.0) ? (-24.0 / (14 * cvs->param->Ki)) : (cvs->state->errorIntR);
+        cvs->state->errorIntL = (14 * cvs->state->errorIntL*cvs->param->Ki<-24.0) ? (-24.0 / (14 * cvs->param->Ki)) : (cvs->state->errorIntL);
 
-	// PI controller
-	UconsigneR = (omegaref[R_ID] - rspeed) * 14 * cvs->param->Kp + cvs->state->errorIntR * 14 * cvs->param->Ki;
-	UconsigneL = (omegaref[L_ID] - lspeed) * 14 * cvs->param->Kp + cvs->state->errorIntL * 14 * cvs->param->Ki;
+        // PI controller
+        UconsigneR = (omegaref[R_ID] - rspeed) * 14 * cvs->param->Kp + cvs->state->errorIntR * 14 * cvs->param->Ki;
+        UconsigneL = (omegaref[L_ID] - lspeed) * 14 * cvs->param->Kp + cvs->state->errorIntL * 14 * cvs->param->Ki;
 
-	UconsigneR = (UconsigneR>0.9*24) ? (0.9*24) : (UconsigneR);
-	UconsigneL = (UconsigneL>0.9*24) ? (0.9*24) : (UconsigneL);
+        UconsigneR = (UconsigneR>0.9*24) ? (0.9*24) : (UconsigneR);
+        UconsigneL = (UconsigneL>0.9*24) ? (0.9*24) : (UconsigneL);
 
-	wheels[R_ID] = UconsigneR*(100/(0.9*24));
-	wheels[L_ID] = UconsigneL*(100/(0.9*24));
-#else
-    // Limit the integral error (anti-windup)
-    cvs->state->errorIntR = (cvs->state->errorIntR*cvs->param->Ki>Valim) ? ( Valim/(cvs->param->Ki)) : (cvs->state->errorIntR);
-    cvs->state->errorIntL = (cvs->state->errorIntL*cvs->param->Ki>Valim) ? ( Valim/(cvs->param->Ki)) : (cvs->state->errorIntL);
-    cvs->state->errorIntR = (cvs->state->errorIntR*cvs->param->Ki<-Valim)? (-Valim/(cvs->param->Ki)) : (cvs->state->errorIntR);
-    cvs->state->errorIntL = (cvs->state->errorIntL*cvs->param->Ki<-Valim)? (-Valim/(cvs->param->Ki)) : (cvs->state->errorIntL);
-
-    // PI controller
-    UconsigneR = (omegaref[R_ID]-rspeed)*cvs->param->Kp + cvs->state->errorIntR*cvs->param->Ki;
-    UconsigneL = (omegaref[L_ID]-lspeed)*cvs->param->Kp + cvs->state->errorIntL*cvs->param->Ki;
-    
-    if (UconsigneR > 0.9 * 24)
-	{
-		float delta = 0.9 * 24 - UconsigneR;
-		UconsigneR = 0.9 * 24;
-		UconsigneL += delta;
-	}
-	if (UconsigneR < -0.9 * 24)
-	{
-		float delta = -0.9 * 24 - UconsigneR;
-		UconsigneR = -0.9 * 24;
-		UconsigneL += delta;
-	}
-	if (UconsigneL > 0.9 * 24)
-	{
-		float delta = 0.9 * 24 - UconsigneL;
-		UconsigneL = 0.9 * 24;
-		UconsigneR += delta;
-	}
-	if (UconsigneL < -0.9 * 24)
-	{
-		float delta = -0.9 * 24 - UconsigneL;
-		UconsigneL = -0.9 * 24;
-		UconsigneR += delta;
-	}
-//    UconsigneR = (UconsigneR>Valim) ? ( Valim) : (UconsigneR);
-//    UconsigneR = (UconsigneR<-Valim)? (-Valim) : (UconsigneR);
-//    UconsigneL = (UconsigneL>Valim) ? ( Valim) : (UconsigneL);
-//    UconsigneL = (UconsigneL<-Valim)? (-Valim) : (UconsigneL);
-    
-    #ifdef ROBOTCONSOLE
-        sprintf(msg, "Right speed: %.3f; omegaref: %.3f; UconsigneR: %.3f, errorIntR = %.3f\n", rspeed, omegaref[R_ID], UconsigneR, cvs->state->errorIntR);
-        MyConsole_SendMsg(msg);
-        sprintf(msg, "Left speed: %.3f; omegaref: %.3f; UconsigneL: %.3f, errorIntL = %.3f\n", lspeed, omegaref[L_ID], UconsigneL, UconsigneR, cvs->state->errorIntL);
-        MyConsole_SendMsg(msg);
-    #endif
-
-    // Update command values
-    #ifdef ROBINSUN
-        wheels[R_ID] = -100.0*UconsigneR/26.0;
-        wheels[L_ID] = 100.0*UconsigneL/26.0;
+        wheels[R_ID] = UconsigneR*(100/(0.9*24));
+        wheels[L_ID] = UconsigneL*(100/(0.9*24));
     #else
-        wheels[R_ID] = 100.0*UconsigneR/Valim;
-        wheels[L_ID] = 100.0*UconsigneL/Valim;
+        // Limit the integral error (anti-windup)
+        cvs->state->errorIntR = (cvs->state->errorIntR*cvs->param->Ki>Valim) ? ( Valim/(cvs->param->Ki)) : (cvs->state->errorIntR);
+        cvs->state->errorIntL = (cvs->state->errorIntL*cvs->param->Ki>Valim) ? ( Valim/(cvs->param->Ki)) : (cvs->state->errorIntL);
+        cvs->state->errorIntR = (cvs->state->errorIntR*cvs->param->Ki<-Valim)? (-Valim/(cvs->param->Ki)) : (cvs->state->errorIntR);
+        cvs->state->errorIntL = (cvs->state->errorIntL*cvs->param->Ki<-Valim)? (-Valim/(cvs->param->Ki)) : (cvs->state->errorIntL);
+
+        // PI controller
+        UconsigneR = (omegaref[R_ID]-rspeed)*cvs->param->Kp + cvs->state->errorIntR*cvs->param->Ki;
+        UconsigneL = (omegaref[L_ID]-lspeed)*cvs->param->Kp + cvs->state->errorIntL*cvs->param->Ki;
+    
+        if (UconsigneR > 0.9 * 24)
+        {
+            float delta = 0.9 * 24 - UconsigneR;
+            UconsigneR = 0.9 * 24;
+            UconsigneL += delta;
+        }
+        if (UconsigneR < -0.9 * 24)
+        {
+            float delta = -0.9 * 24 - UconsigneR;
+            UconsigneR = -0.9 * 24;
+            UconsigneL += delta;
+        }
+        if (UconsigneL > 0.9 * 24)
+        {
+            float delta = 0.9 * 24 - UconsigneL;
+            UconsigneL = 0.9 * 24;
+            UconsigneR += delta;
+        }
+        if (UconsigneL < -0.9 * 24)
+        {
+            float delta = -0.9 * 24 - UconsigneL;
+            UconsigneL = -0.9 * 24;
+            UconsigneR += delta;
+        }
+    
+        #ifdef ROBOTCONSOLE
+            char msg[1024];
+            sprintf(msg, "Right speed: %.3f; omegaref: %.3f; UconsigneR: %.3f, errorIntR = %.3f\n", rspeed, omegaref[R_ID], UconsigneR, cvs->state->errorIntR);
+            MyConsole_SendMsg(msg);
+            sprintf(msg, "Left speed: %.3f; omegaref: %.3f; UconsigneL: %.3f, errorIntL = %.3f\n", lspeed, omegaref[L_ID], UconsigneL, cvs->state->errorIntL);
+            MyConsole_SendMsg(msg);
+        #endif
+
+        // Update command values
+        #ifdef ROBINSUN
+            wheels[R_ID] = -100.0*UconsigneR/26.0;
+            wheels[L_ID] = 100.0*UconsigneL/26.0;
+            
+//            double f = (ivs->t - cvs->state->lastT) / 0.1;
+//            double frac = 1.0 / (1.0 + f);
+//
+//            // filtered_value = { old_value * (dt/tau)/(1+dt/tau) } + { dt/tau * current }
+//            wheels[R_ID] = (f * frac * wheels[R_ID]) + (frac * cvs->outputs->wheel_commands[R_ID]);
+//            wheels[L_ID] = (f * frac * wheels[L_ID]) + (frac * cvs->outputs->wheel_commands[L_ID]);
+        #else
+            wheels[R_ID] = 100.0*UconsigneR/Valim;
+            wheels[L_ID] = 100.0*UconsigneL/Valim;
+        #endif
     #endif
-#endif
 }
 
 NAMESPACE_CLOSE();

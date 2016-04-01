@@ -294,7 +294,7 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 {
 #ifdef ASTAR
 	CtrlIn *ivs = cvs->inputs;
-	double omega, vlin, omega_R, omega_L;
+	double omega, vlin;
 
 	/* A. Goal data */
 	int actual_step = cvs->param->path[cvs->param->index_path];
@@ -322,7 +322,7 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 
 	int PRECISION;
 	if (cvs->param->index_path == 0) PRECISION = 0;
-	else PRECISION = 1;
+	else PRECISION = 2;
 	double dist = sqrt((delta_x*delta_x) + (delta_y*delta_y));
 
 	/* B. Check if on position and act accordingly  */
@@ -359,62 +359,29 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 		}
 
 		double delta_theta = theta_required - theta;
-
+		double omega = -0.6*M_PI*delta_theta;
+        
         #ifdef DEBUG
             printf("delta_x= %lf, delta_y=%lf, theta_req =%lf, delta_theta = %lf\n", delta_x, delta_y, theta_required, delta_theta);
         #endif
 
-		//PI controller for the orientation
-		if (ivs->t < 0.0) {
-			cvs->state->errorAngle = 0.0;
-		}
-		cvs->state->errorAngle += -delta_theta*(ivs->t - cvs->state->lastT_astar);
-		cvs->state->lastT_astar = ivs->t;
-
-		//Limit the integral error (anti-windup)
-		cvs->state->errorAngle = (cvs->state->errorAngle*cvs->param->Ki_astar> 15.0) ? (15.0 / cvs->param->Ki) : (cvs->state->errorAngle);
-		cvs->state->errorAngle = (cvs->state->errorAngle*cvs->param->Ki_astar < -15.0) ? (-15.0 / cvs->param->Ki) : (cvs->state->errorAngle);
-
-		// PI control
-		omega = (-delta_theta) * cvs->param->Kp_astar + cvs->state->errorAngle * cvs->param->Ki_astar;
-		omega = (omega > 15) ? (15) : (omega);
-		omega = (omega < -15) ? (-15) : (omega);
-		omega = -12 * delta_theta;
-
-		vlin = 17;
-		if (cvs->param->index_path == 0) vlin = dist * 3;
-		if (fabs(delta_theta) < M_PI_4) {
-			//vlin *= 1;
-			vlin = (vlin > 13.0) ? (13.0) : (vlin);
-			vlin = (vlin < -13.0) ? (-13.0) : (vlin);
-			if (fabs(vlin) <= 3) {
-				vlin = (vlin / (fabs(vlin)))*2.5;
+		vlin = 2.45*M_PI;
+		if (cvs->param->index_path == 0) vlin = dist*0.75*M_PI;
+		if (fabs(delta_theta) < 0.75*M_PI_4) {
+			vlin = (vlin > 2.45*M_PI) ? (2.45*M_PI) : (vlin);
+			vlin = (vlin < -2.45*M_PI) ? (-2.45*M_PI) : (vlin);
+			if (fabs(vlin) <= M_PI_2) {
+				vlin = (vlin /(fabs(vlin)))*M_PI_2;
 			}
 		}
 		else {
 			vlin = 0;
-			vlin = (vlin > 6.0) ? (6.0) : (vlin);
-			vlin = (vlin < -6.0) ? (-6.0) : (vlin);
 		}
 
-		omega_R = vlin - 1.3*omega;
-		omega_L = vlin + 1.3*omega;
+		cvs->state->omegaref[R_ID] = vlin - omega;
+		cvs->state->omegaref[L_ID] = vlin + omega;
 
-		if (isnan(omega_R) || (dist < 0.05))
-		{
-			cvs->state->omegaref[R_ID] = 0.0;
-		}
-		else {
-			cvs->state->omegaref[R_ID] = omega_R;
-		}
 
-		if (isnan(omega_L) || (dist < 0.05))
-		{
-			cvs->state->omegaref[L_ID] = 0.0;
-		}
-		else {
-			cvs->state->omegaref[L_ID] = omega_L;
-		}
 	} // end else (not on position)
 #endif 
 

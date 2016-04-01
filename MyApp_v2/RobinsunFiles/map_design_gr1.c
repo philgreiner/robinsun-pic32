@@ -38,7 +38,7 @@ void game_map_drawing(CtrlStruct *cvs)
 			}
             
 		 // *** 1/ Block bar ***
-			else if (x <= (6+radius_robot) ) { // Close to violet cabin
+			else if (x <= (3+radius_robot) ) { // Close to violet cabin
 				if (y >= (17 - radius_robot) && y <= (18 + radius_robot)) {	
 						cvs->param->game_map[x][y] = 0;	
 					}// end if 

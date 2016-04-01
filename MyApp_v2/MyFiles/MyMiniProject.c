@@ -59,53 +59,53 @@ void MyMiniProject_Init(void)
         MyCAN_TxMsg(FishSID,LSBR);
     
     /* \brief Initialize blocks motor */   
-        char BLOCKSinit[3] = {0x1e, 0x70, 0x40}; //Turn ON LED (GP6) and turn OFF brakes (GP4)
-        MyCAN_TxMsg(BlockSID, BLOCKSinit);
-    
-        char T1CONtow[3] = {0x21,0xb3,0x83}; //T1CON: TMR1ON = 1, -, Prescale1 = 00, --, DC1LSBs = 11
-        char PR1tow[3] = {0x23,0xff,0x3f}; //PR1:   PR1 = 0x3F (f=78kHz)
-        MyCAN_TxMsg(BlockSID,T1CONtow);
-        MyCAN_TxMsg(BlockSID,PR1tow);
-    
-        unsigned LSBtow, MSBtow;
-        DutyToInf(0.0, &MSBtow, &LSBtow);
-        char LSBt[3] = {0x21, 0x03, LSBtow};
-        char MSBt[3] = {0x25, 0x3f, MSBtow};
-        MyCAN_TxMsg(BlockSID, LSBt);
-        MyCAN_TxMsg(BlockSID, MSBt);
+//        char BLOCKSinit[3] = {0x1e, 0x70, 0x40}; //Turn ON LED (GP6) and turn OFF brakes (GP4)
+//        MyCAN_TxMsg(BlockSID, BLOCKSinit);
+//    
+//        char T1CONtow[3] = {0x21,0xb3,0x83}; //T1CON: TMR1ON = 1, -, Prescale1 = 00, --, DC1LSBs = 11
+//        char PR1tow[3] = {0x23,0xff,0x3f}; //PR1:   PR1 = 0x3F (f=78kHz)
+//        MyCAN_TxMsg(BlockSID,T1CONtow);
+//        MyCAN_TxMsg(BlockSID,PR1tow);
+//    
+//        unsigned LSBtow, MSBtow;
+//        DutyToInf(0.0, &MSBtow, &LSBtow);
+//        char LSBt[3] = {0x21, 0x03, LSBtow};
+//        char MSBt[3] = {0x25, 0x3f, MSBtow};
+//        MyCAN_TxMsg(BlockSID, LSBt);
+//        MyCAN_TxMsg(BlockSID, MSBt);
     #endif
 }
 
 void    MyMiniProject_Update(CtrlStruct *cvs)
 {
     #ifdef ROBINSUN
-        unsigned int speedR = MyCyclone_Read(A_speedR);
-        int dirR    = (MyCyclone_Read(A_dirR))*(-2)+1; // == 1 if going forward, == -1 otherwise
-        cvs->inputs->r_wheel_speed = (double) dirR*speedR*2*M_PI*1.03/(53242*0.015); // 53242 in rad/s 
+        int speedR = MyCyclone_Read(A_speedR);
+        speedR = ((speedR >> 15) == 1)? speedR-65535 : speedR;
+        cvs->inputs->r_wheel_speed = (double) 30.0/22.0*speedR*2*M_PI*1.05/(53242*0.025); // 53242 in rad/s 
 
-        unsigned int speedL = MyCyclone_Read(A_speedL);
-        int dirL    = (MyCyclone_Read(A_dirL))*(2)-1; // == 1 if going forward, == -1 otherwise
-        cvs->inputs->l_wheel_speed = (double) dirL*speedL*2*M_PI/(47283*0.015); 
+        int speedL = MyCyclone_Read(A_speedL);
+        speedL = ((speedL >> 15) == 1)? speedL-65535 : speedL;
+        cvs->inputs->l_wheel_speed = (double) -30.0/24.0*speedL*2*M_PI/(47283*0.025); 
     #endif
     
     #ifdef MINIBOT
         unsigned int speedR = MyCyclone_Read(A_speedR);
         int dirR    = (MyCyclone_Read(A_dirR))*(-2)+1; // == 1 if going forward, == -1 otherwise
-        cvs->inputs->r_wheel_speed = (double) dirR*speedR*(1.0/255.0); //1/315
+        cvs->inputs->r_wheel_speed = (double) dirR*speedR*(1.0/255.0);
 
         unsigned int speedL = MyCyclone_Read(A_speedL);
         int dirL    = (MyCyclone_Read(A_dirL))*(2)-1; // == 1 if going forward, == -1 otherwise
-        cvs->inputs->l_wheel_speed = (double) dirL*speedL*(1.0/109.0);//1/135 
+        cvs->inputs->l_wheel_speed = (double) dirL*speedL*(1.0/112.5);
     #endif
    
     #ifdef ROBINSUN
-        unsigned int speedOdoR = MyCyclone_Read(A_speedOdoR);
-        int dirOdoR = (MyCyclone_Read(A_dirOdoR))*(2)-1; // == 1 if going forward, == -1 otherwise
-        cvs->inputs->odo_r_speed = (double) dirOdoR*speedOdoR*2*M_PI/(8192*.025);
-    
-        unsigned int speedOdoL = MyCyclone_Read(A_speedOdoL);
-        int dirOdoL = (MyCyclone_Read(A_dirOdoL))*(-2)+1; // == 1 if going forward, == -1 otherwise
-        cvs->inputs->odo_l_speed = (double) dirOdoL*speedOdoL*2*M_PI/(8192*.025);
+        int speedOdoR = MyCyclone_Read(A_speedOdoR);
+        speedOdoR = ((speedOdoR >> 15) == 1)? speedOdoR-65535 : speedOdoR;
+        cvs->inputs->odo_r_speed = (double) -speedOdoR*2*M_PI/(8192*.025);
+        
+        int speedOdoL = MyCyclone_Read(A_speedOdoL);
+        speedOdoL = ((speedOdoL >> 15) == 1)? speedOdoL-65535 : speedOdoL;
+        cvs->inputs->odo_l_speed = (double) speedOdoL*2*M_PI/(8192*.025);
     
         unsigned int sonar12 = MyCyclone_Read(A_sonar12);
         unsigned int sonar34 = MyCyclone_Read(A_sonar34);
@@ -118,6 +118,11 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         cvs->inputs->sonars[5] = (sonar56 & 0x00ff);
     #endif
     cvs->inputs->t = (ReadCoreTimer()/(SYS_FREQ/2.0)) - MyMiniProject_tStart; // time in seconds
+    while (cvs->inputs->t < cvs->state->lastT) cvs->inputs->t += 107.3741823075;
+    
+    char msg[1024];
+    sprintf(msg, "current time: %.10f\n", cvs->inputs->t);
+    MyConsole_SendMsg(msg);
 }
 
 
@@ -155,11 +160,11 @@ void    MyMiniProject_Send(CtrlStruct *cvs)
     MyCAN_TxMsg(FishSID,LSBFH);
     
     // Blocks motor
-    DutyToInf(cvs->outputs->command_blocks, &MSB0, &LSB0);
-    char MSBB[3] = {0x25, 0x3f, MSB0};
-    char LSBB[3] = {0x21, 0x03, LSB0};
-    MyCAN_TxMsg(BlockSID,MSBB);
-    MyCAN_TxMsg(BlockSID,LSBB);
+//    DutyToInf(cvs->outputs->command_blocks, &MSB0, &LSB0);
+//    char MSBB[3] = {0x25, 0x3f, MSB0};
+//    char LSBB[3] = {0x21, 0x03, LSB0};
+//    MyCAN_TxMsg(BlockSID,MSBB);
+//    MyCAN_TxMsg(BlockSID,LSBB);
     #endif
 }
 

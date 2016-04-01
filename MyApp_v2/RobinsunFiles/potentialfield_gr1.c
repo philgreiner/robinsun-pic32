@@ -11,6 +11,8 @@
 #include "potentialfield_gr1.h"
 #include "triangulation_gr1.h"
 
+//#define POTENTIAL_CONSOLE
+
 #ifdef SIMU_PROJECT
 // Simulation and results
     #include "robot_id.h"
@@ -83,7 +85,7 @@ int diag_allocate(double *obstacle, double qstartx, double qendx, double qstarty
 void potential_Field_Init(CtrlStruct *cvs)
 {
     /* Allocation of the obstacles coordinates */
-	cvs->param->nb_edges = 147;
+	cvs->param->nb_edges = 153;
 	double* edges = cvs->param->obstacle_edges;
 	int start_ind = 0;
 	int last_ind = 0;
@@ -97,11 +99,11 @@ void potential_Field_Init(CtrlStruct *cvs)
 	start_ind = last_ind;
 	last_ind = edge_allocate(edges, 1.5, 0.7, 0.1, -1.0, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -1.0, -0.8, 0.1, 0.7, 0, start_ind);
+	last_ind = edge_allocate(edges, -1.0, -0.75, 0.05, 0.7, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, 0.7, -0.7, 0.1, -0.8, 1, start_ind);
+	last_ind = edge_allocate(edges, 0.7, -0.7, 0.1, -0.75, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -0.8, -1.0, 0.1, -0.7, 0, start_ind);
+	last_ind = edge_allocate(edges, -0.75, -1.0, 0.05, -0.7, 0, start_ind);
 	start_ind = last_ind;
 	last_ind = edge_allocate(edges, -0.7, -1.5, 0.1, -1.0, 1, start_ind);
 	start_ind = last_ind;
@@ -111,33 +113,33 @@ void potential_Field_Init(CtrlStruct *cvs)
 	start_ind = last_ind;
 	last_ind = edge_allocate(edges, 0.75, 1.0, 0.05, -1.25, 0, start_ind);
 
-    cvs->param->nb_center = 48;
+    cvs->param->nb_center = 70;
     double* center = cvs->param->obstacle_center;
 
 	start_ind = 0;
 	last_ind = 0;
-	last_ind = edge_allocate(center, 0.65, -0.65, 0.1, -0.28, 1, start_ind);
+	last_ind = edge_allocate(center, 0.75, -0.75, 0.1, -0.28, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.28, -0.2, 0.02, -0.65, 0, start_ind);
+	last_ind = edge_allocate(center, -0.28, -0.18, 0.02, -0.75, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.65, 0.65, 0.1, -0.2, 1, start_ind);
+	last_ind = edge_allocate(center, -0.75, 0.75, 0.1, -0.18, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.2, -0.28, 0.02, 0.65, 0, start_ind);
+	last_ind = edge_allocate(center, -0.18, -0.28, 0.02, 0.75, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.25, 0.35, 0.1, 0.05, 0, start_ind);
+	last_ind = edge_allocate(center, -0.25, 0.4, 0.05, 0.15, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.05, 0.05, 0.05, 0.35, 1, start_ind);
+	last_ind = edge_allocate(center, -0.15, 0.15, 0.1, 0.4, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, 0.35, -0.25, 0.1, -0.05, 0, start_ind);
+	last_ind = edge_allocate(center, 0.4, -0.25, 0.05, -0.15, 0, start_ind);
 	start_ind = last_ind;
 
-	cvs->param->nb_purple = 13;
+	cvs->param->nb_purple = 14;
     double* purple = cvs->param->obstacle_purpleZone;
     start_ind = 0;
 	last_ind = 0;
 	last_ind = diag_allocate(purple, -0.2, 0.45, -0.65, 0.0, 0.05, start_ind);
 
-	cvs->param->nb_green = 13;
+	cvs->param->nb_green = 14;
     double* green = cvs->param->obstacle_greenZone;
     start_ind = 0;
 	last_ind = 0;
@@ -145,32 +147,29 @@ void potential_Field_Init(CtrlStruct *cvs)
 
 	/* Moving obstacles (opponents) */
     #ifdef SIMU_PROJECT
-        cvs->param->nb_robot1 = 20;
-        cvs->param->k_robot1 = 17.0;
-        cvs->param->rho_robot1 = 0.2;
-        cvs->param->nb_robot2 = 20;
-        cvs->param->k_robot2 = 17.0;
-        cvs->param->rho_robot2 = 0.2;
+        cvs->param->nb_robot1 = 21;
+        cvs->param->k_robot1 = 25.0;
+        cvs->param->rho_robot1 = 0.25;
+        cvs->param->nb_robot2 = 21;
+        cvs->param->k_robot2 = 25.0;
+        cvs->param->rho_robot2 = 0.25;
     #endif
 
 	/* Initialization of the parameters of the potential field path planning */
-	cvs->param->k_edge = 8.5;
-	cvs->param->rho_edge = 0.25;
-	cvs->param->k_center = 13.5;
-	cvs->param->rho_center = 0.25;
-	cvs->param->k_purple = 15;
-	cvs->param->rho_purple = 0.3;
-	cvs->param->k_green = 15;
-	cvs->param->rho_green = 0.3;
+	cvs->param->k_edge = 4.0;
+	cvs->param->rho_edge = 0.175;
+	cvs->param->k_center = 5.0;
+	cvs->param->rho_center = 0.15;
+	cvs->param->k_purple = 3.5;
+	cvs->param->rho_purple = 0.15;
+	cvs->param->k_green = 3.5;
+	cvs->param->rho_green = 0.15;
 
 	cvs->param->rho_att = 0.1;
-	cvs->param->k_att_conic = 200.0;
-	cvs->param->k_att_quad = 200.0/0.1;
+	cvs->param->k_att_conic = 165.0;
+	cvs->param->k_att_quad = 165.0/0.1;
 
-	cvs->param->K_SpeedX = 0.035;
-	cvs->param->K_SpeedRot = 7.5;
-
-    cvs->param->Kp_pot = 3.57;
+    cvs->param->Kp_pot = 1.75;//2.75;
 	cvs->param->Ki_pot = 0.85;
 
 	cvs->state->errorAngle = 0.0;
@@ -362,29 +361,29 @@ void potential_Field(CtrlStruct *cvs)
 
     // Variation of the repulsive fields according to the position
     if((cvs->state->next_objective == BASE) && (x > -0.05)) {
-        cvs->param->k_center = 11.5;
-        cvs->param->rho_center = 0.1;
+        cvs->param->k_center = 2.5;
+        cvs->param->rho_center = 0.25;
     }
     else if (x > 0.3) {
-        cvs->param->k_center = 9.0;
-        cvs->param->rho_center = 0.125;
+        cvs->param->k_center = 2.0;
+        cvs->param->rho_center = 0.225;
     }
     else {
-        cvs->param->k_center = 12.5;
-        cvs->param->rho_center = 0.275;
+        cvs->param->k_center = 5.0;
+        cvs->param->rho_center = 0.25;
     }
 
     if((cvs->state->next_objective == BASE) && (x > -0.05)) {
-        cvs->param->k_edge = 11.0;
+        cvs->param->k_edge = 1.5;
         cvs->param->rho_edge = 0.15;
     }
     else if((x > 0.4) && (fabs(y) > 0.75)) {
-        cvs->param->k_edge = 11.0;
+        cvs->param->k_edge = 7.0;
         cvs->param->rho_edge = 0.225;
     }
     else {
-        cvs->param->k_edge = 9.0;
-        cvs->param->rho_edge = 0.325;
+        cvs->param->k_edge = 6.0;
+        cvs->param->rho_edge = 0.2;
     }
 
     // Forces
@@ -474,8 +473,6 @@ void potential_Field(CtrlStruct *cvs)
 
 	double Fx, Fy;      // Forces in the inertial frame
 	double FxR, FyR;    // Forces in the robot frame
-	double K_SpeedX = cvs->param->K_SpeedX;
-	double K_SpeedRot = cvs->param->K_SpeedRot;
 	double angle;
 	double omega, vlin, omega_R, omega_L;
     
@@ -489,19 +486,18 @@ void potential_Field(CtrlStruct *cvs)
 
 	FxR = Fx*cos(orientation) + Fy*sin(orientation);
 	FyR = -Fx*sin(orientation) + Fy*cos(orientation);
-
-	if((FxR < 0)&&(FyR > 0)) { // 2nd quadrant
-        angle = atan(FyR/FxR) + M_PI;
-    }
-    else if ((FxR < 0)&&(FyR < 0)) { // 3rd quadrant
-        angle = atan(FyR/FxR) - M_PI;
-    }
-    else {
-        angle = atan(FyR/FxR);
-    }
+    
+    angle = atan2(FyR, FxR);
+    
+    double beginTime;
+    #ifdef SIMU_PROJECT
+        beginTime = 0.1;
+    #else
+        beginTime = 20.1;
+    #endif
 
     //PI controller for the orientation
-    if (ivs->t < 0.1) {
+    if (ivs->t < beginTime) {
         cvs->state->errorAngle = 0.0;
         angle = 0;
     }
@@ -512,8 +508,8 @@ void potential_Field(CtrlStruct *cvs)
     cvs->state->lastT_pot = ivs->t;
 
 	//Limit the integral error (anti-windup)
-	cvs->state->errorAngle = (cvs->state->errorAngle*cvs->param->Ki_pot> 3*M_PI) ? (3*M_PI/cvs->param->Ki_pot) : (cvs->state->errorAngle);
-	cvs->state->errorAngle = (cvs->state->errorAngle*cvs->param->Ki_pot< -3*M_PI) ? (-3*M_PI/cvs->param->Ki_pot) : (cvs->state->errorAngle);
+	cvs->state->errorAngle = (cvs->state->errorAngle> M_PI) ? (M_PI) : (cvs->state->errorAngle);
+	cvs->state->errorAngle = (cvs->state->errorAngle< -M_PI) ? (-M_PI) : (cvs->state->errorAngle);
 
 	#ifdef POTENTIAL_CONSOLE
         char msg[1024];
@@ -522,28 +518,47 @@ void potential_Field(CtrlStruct *cvs)
     #endif
 
 	// PI control
-	omega = (-angle*cvs->param->Kp_pot) + cvs->state->errorAngle*cvs->param->Ki_pot;
-	omega = (omega > 3*M_PI) ? (3*M_PI) : (omega);
-	omega = (omega < -3*M_PI) ? (-3*M_PI) : (omega);
+	omega = -angle*cvs->param->Kp_pot;// + cvs->state->errorAngle*cvs->param->Ki_pot;
+	omega = (omega > 2.25*M_PI) ? (2.25*M_PI) : (omega);
+	omega = (omega < -2.25*M_PI) ? (-2.25*M_PI) : (omega);
 
-	vlin = 3.5*M_PI*(fabs(FxR)/200.0);
-	vlin = (vlin > 2*M_PI) ? (2*M_PI) : (vlin);
-	vlin = (vlin < -2*M_PI) ? (-2*M_PI) : (vlin);
-	if(fabs(vlin) < M_PI) {
-        vlin = M_PI;
+	vlin = 2.5*M_PI*(fabs(FxR)/200.0);
+	vlin = (vlin > 2.5*M_PI) ? (2.5*M_PI) : (vlin);
+	if(fabs(vlin) < M_PI_2) {
+        vlin = M_PI_2;
 	}
 
-    if(FxR < 0)
+    if(fabs(angle) > 3.2*M_PI_4)
     {
-        omega_R = M_PI_4 - omega;
-        omega_L = M_PI_4 + omega;
+        if(FyR < 0) {
+            omega_R = -0.75*M_PI;  omega_L = M_PI;
+        }
+        else {
+            omega_R = M_PI;     omega_L = -0.75*M_PI;
+        } 
+    }
+    else if(FxR > 0.0) {
+        if((fabs(omega) - vlin*cos(angle)) > M_PI_2) {
+            float sign = omega/fabs(omega);
+            omega_R = vlin*(0.15 + cos(angle)) - sign*(vlin*cos(angle)+M_PI_2);
+            omega_L = vlin*(0.15 + cos(angle)) + sign*(vlin*cos(angle)+M_PI_2);
+        }
+        else {
+            omega_R = vlin*cos(angle) - omega;
+            omega_L = vlin*cos(angle) + omega;
+        }
     }
     else {
-        omega_R = vlin - omega;
-        omega_L = vlin + omega;
+        if(FyR < 0) {
+            omega_R = M_PI_4;  omega_L = M_PI;
+        }
+        else {
+            omega_R = M_PI;     omega_L = M_PI_4;
+        } 
     }
 
-	if (isnan(omega_R) || (d < 0.05))
+
+	if (isnan(omega_R) || (d < 0.1))
 	{
 		cvs->state->omegaref[R_ID] = 0.0;
 	}
@@ -551,7 +566,7 @@ void potential_Field(CtrlStruct *cvs)
 		cvs->state->omegaref[R_ID] = lowpass(cvs->state->omegaref[R_ID], omega_R, TAU_POT, cvs);
 	}
 
-	if (isnan(omega_L) || (d < 0.05))
+	if (isnan(omega_L) || (d < 0.1))
 	{
 		cvs->state->omegaref[L_ID] = 0.0;
 	}

@@ -25,10 +25,10 @@ CtrlStruct* init_CtrlStruct(CtrlIn *inputs, CtrlOut *outputs)
         param = (CtrlParam*) malloc(sizeof(CtrlParam));
         cvs->param = param;
     #else
-        //cvs->param = &param; // to store in the heap memory instead of in the stack
-        CtrlParam *param;
-        param = (CtrlParam*) malloc(sizeof(CtrlParam));
-        cvs->param = param;
+        cvs->param = &param; // to store in the heap memory instead of in the stack
+//        CtrlParam *param;
+//        param = (CtrlParam*) malloc(sizeof(CtrlParam));
+//        cvs->param = param;
     #endif
 
 	cvs->inputs  = inputs;

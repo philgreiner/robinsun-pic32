@@ -17,15 +17,37 @@ void odometry_estimate(CtrlStruct * cvs)
 		R = 0.03;	// Wheel radius [m]
 		b = 0.225;	// Distance between left and right wheels [m]
 	#else
-		R = 0.03;
-		b = 0.129;
+        #ifdef ROBINSUN
+            int wheels = 0;
+            R = (wheels) ? 0.0325 : 0.02215;
+            b = (wheels) ? 0.129 : 0.22;
+        #else
+            R = 0.03;
+            b = 0.225;
+        #endif
 	#endif
 
 	// Total distance moved for each wheel (30mm = wheel radius)
-	drivenR = cvs->inputs->r_wheel_speed * deltaT * R;
-	drivenL = cvs->inputs->l_wheel_speed * deltaT * R;
+    #ifdef MINIBOT
+        drivenR = -cvs->inputs->r_wheel_speed * deltaT * R;
+        drivenL = -cvs->inputs->l_wheel_speed * deltaT * R;
+    #else
+        #ifdef ROBINSUN
+            drivenR = cvs->inputs->odo_r_speed * deltaT * R;
+            drivenL = cvs->inputs->odo_l_speed * deltaT * R;
+        #else
+            drivenR = cvs->inputs->r_wheel_speed * deltaT * R;
+            drivenL = cvs->inputs->l_wheel_speed * deltaT * R;
+        #endif  
+    #endif
+
 	drivenCenter = (drivenR + drivenL) / 2.0;
-	angleDiff = (drivenR - drivenL) / b;
+    
+    #ifdef MINIBOT
+        angleDiff = 1.21*(drivenR - drivenL) / b;
+    #else
+        angleDiff = (drivenR - drivenL) / b;
+    #endif
 
 	// We consider the whole movement is done in the new direction
 	// Update of the mean

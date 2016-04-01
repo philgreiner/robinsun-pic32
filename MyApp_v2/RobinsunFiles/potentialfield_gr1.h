@@ -8,7 +8,7 @@
 #include "namespace_ctrl.h"
 #include "CtrlStruct_gr1.h"
 
-#define TAU_POT 0.075
+#define TAU_POT 0.05
 
 NAMESPACE_INIT(ctrlGr1);
 

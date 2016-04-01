@@ -37,7 +37,7 @@ void strategy_objective(CtrlStruct *cvs)
                 cvs->state->strategy_state = GOTO_OBJ;
             }
         #else
-            if (cvs->inputs->t > 20.0)
+            if (cvs->inputs->t > 5.0)
             {
                 cvs->state->strategy_state = GOTO_OBJ;
             }
@@ -76,7 +76,7 @@ void strategy_objective(CtrlStruct *cvs)
         #endif
 
         #ifdef POTENTIAL
-            accuracy = 0.04;
+            accuracy = 0.1;
         #endif
 
 		if (d < accuracy && cvs->state->next_objective != BASE)
@@ -117,7 +117,7 @@ void objective_selection(CtrlStruct *cvs)
         #ifdef SIMU_PROJECT
             timeout = (cvs->inputs->t >= 70);
         #else
-            timeout = (cvs->inputs->t >= 90);
+            timeout = (cvs->inputs->t >= 300);
         #endif
             
 		if (cvs->state->objectives_on_robot > 1 || timeout)
@@ -251,8 +251,8 @@ void objective_selection(CtrlStruct *cvs)
                                 cvs->state->goal_position[2] = -M_PI;
                             }
                         #else
-                            cvs->state->goal_position[0] = 0.1;
-                            cvs->state->goal_position[1] = -0.25;
+                            cvs->state->goal_position[0] = 0.175;//0.1
+                            cvs->state->goal_position[1] = -0.325;//-0.25
                             cvs->state->goal_position[2] = -M_PI;
                         #endif
 					break;

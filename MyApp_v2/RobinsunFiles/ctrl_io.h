@@ -5,9 +5,9 @@
  */
 #ifndef _CTRL_IO_H_
 #define _CTRL_IO_H_
-#define MINIBOT
-//#define ROBOTCONSOLE
-//#define ROBINSUN
+
+//#define MINIBOT
+#define ROBINSUN
 
 // number of micro-switches
 #define NB_U_SWITCH 2

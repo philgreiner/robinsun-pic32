@@ -12,11 +12,7 @@
 * Constants                                                                    *
 *******************************************************************************/
 
-#ifdef ROBINSUN
-    #define CAN_BUS_SPEED 500000
-#else
-    #define CAN_BUS_SPEED 125000
-#endif
+#define CAN_BUS_SPEED 500000
 
 /*******************************************************************************
 * Functions Prototypes                                                         *
