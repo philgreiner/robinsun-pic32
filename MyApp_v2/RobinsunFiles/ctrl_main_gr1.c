@@ -57,8 +57,8 @@ void controller_init(CtrlStruct *cvs)
     #else
         // Controller parameters
         #ifdef ROBINSUN
-            cvs->param->Kp = 0.09;
-            cvs->param->Ki = 1.18; 
+            cvs->param->Kp = -0.1029; //0.09;
+            cvs->param->Ki = 2.0414; //1.18; 
         #else
             cvs->param->Kp = -0.031;
             cvs->param->Ki = 2.1729;
@@ -138,6 +138,7 @@ void controller_init(CtrlStruct *cvs)
 	cvs->state->position_triang[0] = cvs->state->position[0];
 	cvs->state->position_triang[1] = cvs->state->position[1];
 	cvs->state->position_triang[2] = cvs->state->position[2];
+    cvs->state->direction = 0;
     // Path planning strategy selection
     #ifdef POTENTIAL
         potential_Field_Init(cvs);
@@ -460,12 +461,12 @@ void motors_control(CtrlStruct *cvs, double * wheels)
             wheels[R_ID] = -100.0*UconsigneR/26.0;
             wheels[L_ID] = 100.0*UconsigneL/26.0;
             
-//            double f = (ivs->t - cvs->state->lastT) / 0.1;
-//            double frac = 1.0 / (1.0 + f);
-//
-//            // filtered_value = { old_value * (dt/tau)/(1+dt/tau) } + { dt/tau * current }
-//            wheels[R_ID] = (f * frac * wheels[R_ID]) + (frac * cvs->outputs->wheel_commands[R_ID]);
-//            wheels[L_ID] = (f * frac * wheels[L_ID]) + (frac * cvs->outputs->wheel_commands[L_ID]);
+            double f = (ivs->t - cvs->state->lastT) / 0.05;
+            double frac = 1.0 / (1.0 + f);
+
+            // filtered_value = { old_value * (dt/tau)/(1+dt/tau) } + { dt/tau * current }
+            wheels[R_ID] = (f * frac * wheels[R_ID]) + (frac * cvs->outputs->wheel_commands[R_ID]);
+            wheels[L_ID] = (f * frac * wheels[L_ID]) + (frac * cvs->outputs->wheel_commands[L_ID]);
         #else
             wheels[R_ID] = 100.0*UconsigneR/Valim;
             wheels[L_ID] = 100.0*UconsigneL/Valim;

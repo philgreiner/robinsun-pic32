@@ -322,7 +322,7 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 
 	int PRECISION;
 	if (cvs->param->index_path == 0) PRECISION = 0;
-	else PRECISION = 2;
+	else PRECISION = 1;
 	double dist = sqrt((delta_x*delta_x) + (delta_y*delta_y));
 
 	/* B. Check if on position and act accordingly  */
@@ -359,7 +359,18 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 		}
 
 		double delta_theta = theta_required - theta;
-		double omega = -0.6*M_PI*delta_theta;
+        if(delta_theta > M_PI_2)
+        {
+            //delta_theta -= M_PI;
+            cvs->state->direction = (cvs->state->direction) ? 1 : 0;
+        }
+        if(delta_theta < -M_PI_2)
+        {
+            //delta_theta += M_PI;
+            cvs->state->direction = (cvs->state->direction) ? 1 : 0;
+        }
+        
+        double omega = 0.6*M_PI*delta_theta;
         
         #ifdef DEBUG
             printf("delta_x= %lf, delta_y=%lf, theta_req =%lf, delta_theta = %lf\n", delta_x, delta_y, theta_required, delta_theta);
@@ -378,8 +389,8 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 			vlin = 0;
 		}
 
-		cvs->state->omegaref[R_ID] = vlin - omega;
-		cvs->state->omegaref[L_ID] = vlin + omega;
+		cvs->state->omegaref[R_ID] = vlin + omega;
+		cvs->state->omegaref[L_ID] = vlin - omega;
 
 
 	} // end else (not on position)

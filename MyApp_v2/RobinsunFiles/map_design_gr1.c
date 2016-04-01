@@ -59,7 +59,7 @@ void game_map_drawing(CtrlStruct *cvs)
 			} // end else if *** 2/ central bar vertical ***
 
 	   // *** 3/ central bar horizontal ***
-			else if (x >= (16 - radius_robot) && x <= (27 + radius_robot)) {
+			else if (x >= (16 - radius_robot) && x <= (28 + radius_robot)) {
 				if (y >= (31 - radius_robot) && y <= (32 + radius_robot)) {
 					cvs->param->game_map[x][y] = 0;
 				}
