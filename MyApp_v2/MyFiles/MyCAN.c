@@ -224,12 +224,12 @@ void MyCAN_Task(void) {
 
         sprintf(theStr, "Receive CAN Msg 0x%x '%s'\n>", theSID, theData);
         MyConsole_SendMsg(theStr);
-        if(theSID==0x302){
-            //char msg[1024];
-            //sprintf(msg,"0 %i, 1: %i, 2: %i, 3: %i, 4: %i, 5: %i, 6: %i, 7: %i;\n > ",in0, in1, in2, in3, in4, in5, in6, in7);
+        if(theSID==0x402){
+            char msg[1024];
+            sprintf(msg,"0 %i, 1: %i, 2: %i, 3: %i, 4: %i, 5: %i, 6: %i, 7: %i;\n > ",in0, in1, in2, in3, in4, in5, in6, in7);
             cvs->inputs->u_switch[1] = in1 + 1; // left
             cvs->inputs->u_switch[0] = in3 + 1; // right
-            //MyConsole_SendMsg(msg);  
+            MyConsole_SendMsg(msg);  
         }
         if (theSID == 0x200)
             MyCAN_TxMsg(0x201, theData);
@@ -279,7 +279,7 @@ void __ISR(_CAN_1_VECTOR, My_INT_CAN_1_IPL) _CAN1InterruptHandler(void)
 
             CANEnableChannelEvent(CAN1, CAN_CHANNEL1, CAN_RX_CHANNEL_NOT_EMPTY, FALSE);
             isCAN1MsgReceived = TRUE;
-            MyConsole_SendMsg("Interrupt received from CAN1 - Msg received \n>");
+            //MyConsole_SendMsg("Interrupt received from CAN1 - Msg received \n>");
         }
     }
 

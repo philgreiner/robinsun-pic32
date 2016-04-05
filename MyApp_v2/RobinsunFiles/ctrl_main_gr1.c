@@ -335,7 +335,7 @@ void controller_loop(CtrlStruct *cvs)
     #endif
 
     #ifdef ROBINSUN
-        ovs->command_blocks = 50;
+        //ovs->command_blocks = 100;
     #endif
 
 	/* Locate the opponent */
