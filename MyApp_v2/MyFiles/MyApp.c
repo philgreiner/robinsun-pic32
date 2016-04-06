@@ -85,7 +85,7 @@ int main(void)
     MyFlash_Init();
     MyTemperature_Init();
     //MyMIWI_Init();
-    //MyWIFI_Init();
+    MyWIFI_Init();
 
     // Configure for multi-vectored mode
     INTConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
@@ -98,7 +98,7 @@ int main(void)
 
     // Start Wireless and Camera connections
     //MyMIWI_Start();
-    //MyWIFI_Start();
+    MyWIFI_Start();
     //MyCamera_Start();
 
 //    MyMiniProject_Init();
@@ -106,15 +106,12 @@ int main(void)
     CtrlIn *inputs = (CtrlIn*) malloc(sizeof(CtrlIn));
     CtrlOut *outputs = (CtrlOut*) malloc(sizeof(CtrlOut));
     cvs = init_CtrlStruct(inputs, outputs);
-    unsigned int AN1, AN3;
-    MyAnalog_Init();
     
     MyMiniProject_tStart = (ReadCoreTimer()/(SYS_FREQ/2.0));
     MyMiniProject_Update(cvs);
     controller_init(cvs);
-    // Execute forever
-    char msgan[1024];
     
+    // Execute forever    
     while (1)
     {
         THREAD_START(1);
@@ -122,8 +119,6 @@ int main(void)
         THREAD_BREAK
             MyWIFI_Task();
         THREAD_END(1);
-        //MyAnalog_Read(&AN1, &AN3);
-        //sprintf(msgan,"Reading: %d, %f\n", (float) *AN1, (float) *AN3);
         THREAD_START(0);
             MyRTCC_Task();            
             MyMiniProject_Update(cvs);
@@ -131,7 +126,6 @@ int main(void)
             MyMiniProject_Send(cvs);
             MyCAN_Task();
         THREAD_END(0);
-        //MyConsole_SendMsg(msgan);
     }
 }
 

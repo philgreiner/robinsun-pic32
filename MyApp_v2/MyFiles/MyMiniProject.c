@@ -17,46 +17,46 @@ void MyMiniProject_Init(void)
 //     Turn LED on (GP6)
 //     Turn off the brakes (via the relevant GPIO's)
 //     Use the mask to write only the needed registers (GP4, GP5 and GP6) 
-//    char GPLAT[3] = {0x1e, 0x70, 0x40};
-//    MyCAN_TxMsg(MotorSID, GPLAT);
-//
-//    //Configure PWM Channels as desired
-//    char T1CON[3] = {0x21,0xb3,0x80}; //T1CON: TMR1ON = 1, -, Prescale1 = 00, --, DC1LSBs = 11
-//    char T2CON[3] = {0x22,0xb3,0x80}; //T2CON: TMR2ON = 1, -, Prescale2 = 00, --, DC2LSBs = 11
-//    char PR1[3] = {0x23,0xff,0x3f}; //PR1:   PR1 = 0x3F (f=78kHz)
-//    char PR2[3] = {0x24,0xff,0x3f}; //PR2:   PR2 = 0x3F (f=78kHz)
-//
-//    MyCAN_TxMsg(MotorSID,T1CON);
-//    MyCAN_TxMsg(MotorSID,T2CON);
-//    MyCAN_TxMsg(MotorSID,PR1);
-//    MyCAN_TxMsg(MotorSID,PR2);
-//    
-//    unsigned MSB0, LSB0;
-//    DutyToInf(0, &MSB0, &LSB0);
-//    char MSBL[3] = {0x26, 0x3f, MSB0};
-//    char LSBL[3] = {0x22, 0x03, LSB0};
-//    MyCAN_TxMsg(MotorSID,MSBL);
-//    MyCAN_TxMsg(MotorSID,LSBL);
-//        
-//    char MSBR[3] = {0x25, 0x3f, MSB0};
-//    char LSBR[3] = {0x21, 0x03, LSB0};
-//    MyCAN_TxMsg(MotorSID,MSBR);
-//    MyCAN_TxMsg(MotorSID,LSBR);
+    char GPLAT[3] = {0x1e, 0x70, 0x40};
+    MyCAN_TxMsg(MotorSID, GPLAT);
+
+    //Configure PWM Channels as desired
+    char T1CON[3] = {0x21,0xb3,0x80}; //T1CON: TMR1ON = 1, -, Prescale1 = 00, --, DC1LSBs = 11
+    char T2CON[3] = {0x22,0xb3,0x80}; //T2CON: TMR2ON = 1, -, Prescale2 = 00, --, DC2LSBs = 11
+    char PR1[3] = {0x23,0xff,0x3f}; //PR1:   PR1 = 0x3F (f=78kHz)
+    char PR2[3] = {0x24,0xff,0x3f}; //PR2:   PR2 = 0x3F (f=78kHz)
+
+    MyCAN_TxMsg(MotorSID,T1CON);
+    MyCAN_TxMsg(MotorSID,T2CON);
+    MyCAN_TxMsg(MotorSID,PR1);
+    MyCAN_TxMsg(MotorSID,PR2);
+    
+    unsigned MSB0, LSB0;
+    DutyToInf(0.0, &MSB0, &LSB0);
+    char MSBL[3] = {0x26, 0x3f, MSB0};
+    char LSBL[3] = {0x22, 0x03, LSB0};
+    MyCAN_TxMsg(MotorSID,MSBL);
+    MyCAN_TxMsg(MotorSID,LSBL);
+        
+    char MSBR[3] = {0x25, 0x3f, MSB0};
+    char LSBR[3] = {0x21, 0x03, LSB0};
+    MyCAN_TxMsg(MotorSID,MSBR);
+    MyCAN_TxMsg(MotorSID,LSBR);
 
     #ifdef ROBINSUN
         /* \brief Initialize fish motors */   
-//        MyCAN_TxMsg(FishSID, GPLAT);
-//
-//        MyCAN_TxMsg(FishSID,T1CON);
-//        MyCAN_TxMsg(FishSID,T2CON);
-//        MyCAN_TxMsg(FishSID,PR1);
-//        MyCAN_TxMsg(FishSID,PR2);
-//    
-//        MyCAN_TxMsg(FishSID,MSBL);
-//        MyCAN_TxMsg(FishSID,LSBL);
-//        
-//        MyCAN_TxMsg(FishSID,MSBR);
-//        MyCAN_TxMsg(FishSID,LSBR);
+        MyCAN_TxMsg(FishSID, GPLAT);
+
+        MyCAN_TxMsg(FishSID,T1CON);
+        MyCAN_TxMsg(FishSID,T2CON);
+        MyCAN_TxMsg(FishSID,PR1);
+        MyCAN_TxMsg(FishSID,PR2);
+    
+        MyCAN_TxMsg(FishSID,MSBL);
+        MyCAN_TxMsg(FishSID,LSBL);
+        
+        MyCAN_TxMsg(FishSID,MSBR);
+        MyCAN_TxMsg(FishSID,LSBR);
     
     /* \brief Initialize blocks motor */   
         char BLOCKSinit[3] = {0x1e, 0x70, 0x40}; //Turn ON LED (GP6) and turn OFF brakes (GP4)
@@ -139,7 +139,6 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
     cvs->inputs->t = (ReadCoreTimer()/(SYS_FREQ/2.0)) - MyMiniProject_tStart; // time in seconds
     while (cvs->inputs->t < cvs->state->lastT) cvs->inputs->t += 107.3741823075;
 }
-
 
 void    MyMiniProject_Send(CtrlStruct *cvs)
 {

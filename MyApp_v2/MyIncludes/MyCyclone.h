@@ -52,13 +52,9 @@
 #define CYCLONE_IO_D_Data       0x40
 #define CYCLONE_IO_D_Enable_Out 0x41
 
-#define A_dirR					0x21
 #define A_speedR				0x22
-#define A_dirL					0x31
 #define A_speedL				0x32
-#define A_dirOdoR				0x25
 #define A_speedOdoR			    0x26
-#define A_dirOdoL				0x35
 #define A_speedOdoL             0x36
 
 #define A_sonar12				0x41
@@ -66,11 +62,11 @@
 #define A_sonar56				0x43
 
 #define A_speedB                0x50
-#define A_dirB                  0x51
 #define A_speedFH               0x52
-#define A_dirFH                 0x53
 #define A_speedFV               0x54
-#define A_dirFV                 0x55
+
+#define A_PICtoFPGA             0x10
+#define A_lt24                  0x12
 
 #define CYCLONE_ENABLE_INT_KEY0 0x01
 #define CYCLONE_ENABLE_INT_KEY1 0x02
