@@ -7,7 +7,7 @@
 NAMESPACE_INIT(ctrlGr1);
 
 
-AMESPACE_CLOSE();
+NAMESPACE_CLOSE();
 
 /*
 3 points :
