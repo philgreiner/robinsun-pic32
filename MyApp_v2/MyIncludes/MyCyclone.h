@@ -67,6 +67,7 @@
 
 #define A_PICtoFPGA             0x10
 #define A_lt24                  0x12
+#define A_adc                   0x19
 
 #define CYCLONE_ENABLE_INT_KEY0 0x01
 #define CYCLONE_ENABLE_INT_KEY1 0x02

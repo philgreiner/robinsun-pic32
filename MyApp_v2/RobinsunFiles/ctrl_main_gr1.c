@@ -179,26 +179,32 @@ void controller_loop(CtrlStruct *cvs)
         ivs->l_wheel_speed = cvs->state->lastMesL[0];
     
     // Computation of the average speed
-    int i;
+    int i, j;
+    cvs->state->avSpeedR = cvs->state->lastMesR[0];
+    cvs->state->avSpeedL = cvs->state->lastMesL[0];
+    for(j = 0; j<6; j++)
+        cvs->state->avSonar[j] = cvs->state->lastMesSonar[j][0];
+    
     for(i = 0; i<9; i++)
     {
+        for(j = 0; j<6; j++)
+        {
+            cvs->state->avSonar[j] += cvs->state->lastMesSonar[j][i+1];
+            cvs->state->lastMesSonar[j][i+1] = cvs->state->lastMesSonar[j][i];
+        }
+        cvs->state->avSpeedR += cvs->state->lastMesR[i+1];
+        cvs->state->avSpeedL += cvs->state->lastMesL[i+1];
         cvs->state->lastMesR[i+1] = cvs->state->lastMesR[i];
         cvs->state->lastMesL[i+1] = cvs->state->lastMesL[i];
     }
     cvs->state->lastMesR[0] = ivs->r_wheel_speed;
     cvs->state->lastMesL[0] = ivs->l_wheel_speed;
     
-    cvs->state->avSpeedR = 0.0;
-    cvs->state->avSpeedL = 0.0;
-    
-    for(i = 0; i<10; i++)
-    {
-        cvs->state->avSpeedR += cvs->state->lastMesR[i];
-        cvs->state->avSpeedL += cvs->state->lastMesL[i];
-    }
     cvs->state->avSpeedR = cvs->state->avSpeedR/10.0;
     cvs->state->avSpeedL = cvs->state->avSpeedL/10.0;
-    
+    for(j = 0; j<6; j++)
+        cvs->state->avSonar[j] = cvs->state->avSonar[j]/10.0;
+
     #ifdef SIMU_PROJECT
         set_plot(ivs->r_wheel_speed, "r_wheel_speed");
         set_plot(ivs->l_wheel_speed, "l_wheel_speed");

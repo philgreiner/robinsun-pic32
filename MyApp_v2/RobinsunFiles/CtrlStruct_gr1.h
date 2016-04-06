@@ -34,7 +34,9 @@ typedef struct CtrlState
 	double lastMesR[10], lastMesL[10];
     double avSpeedR, avSpeedL;
 	double lastT;
-
+    double avSonar[6];
+    double lastMesSonar[6][10];
+    
 	double position[3];
 	double position_odo[3];
 	double position_triang[3];

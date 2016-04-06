@@ -10,7 +10,7 @@
 
 #include "MyApp.h"
 #include <math.h>
-int index;
+
 void MyMiniProject_Init(void)
 {
 /* \brief Initialize mobility */   
@@ -77,7 +77,6 @@ void MyMiniProject_Init(void)
         MyCAN_TxMsg(BlockSID, LSBt);
         MyCAN_TxMsg(BlockSID, MSBt);
     #endif
-        index = 0;
 }
 
 void    MyMiniProject_Update(CtrlStruct *cvs)
@@ -111,30 +110,19 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         speedOdoL = ((speedOdoL >> 15) == 1)? speedOdoL-65535 : speedOdoL;
         cvs->inputs->odo_l_speed = (double) speedOdoL*2*M_PI/(8192*.025);
     
+        unsigned int ADC = MyCyclone_Read(A_adc);
+        cvs->inputs->irR = ((float) ((ADC & 0xff00) >> 8)) * 3.3/255.0;
+        cvs->inputs->irL = ((float) (ADC & 0x00ff))        * 3.3/255.0;
+        
         unsigned int sonar12 = MyCyclone_Read(A_sonar12);
         unsigned int sonar34 = MyCyclone_Read(A_sonar34);
         unsigned int sonar56 = MyCyclone_Read(A_sonar56);
-        cvs->inputs->sonars[0] += (sonar12 & 0xff00) >> 8;
-        cvs->inputs->sonars[1] += (sonar12 & 0x00ff);
-        cvs->inputs->sonars[2] += (sonar34 & 0xff00) >> 8;
-        cvs->inputs->sonars[3] += (sonar34 & 0x00ff);
-        cvs->inputs->sonars[4] += (sonar56 & 0xff00) >> 8;
-        cvs->inputs->sonars[5] += (sonar56 & 0x00ff);
-        index++;
-        
-        char msg[1024];
-        if(index == 10)
-        {
-            sprintf(msg, "Sonars : \n 1) %.2f  2) %.2f  3) %.2f  \n 6) %.2f  5) %.2f  4) %.2f  \n\n", cvs->inputs->sonars[0]/10.0, cvs->inputs->sonars[1]/10.0, cvs->inputs->sonars[2]/10.0, cvs->inputs->sonars[5]/10.0, cvs->inputs->sonars[4]/10.0, cvs->inputs->sonars[3]/10.0);
-            MyConsole_SendMsg(msg);
-            cvs->inputs->sonars[0] = 0.0;
-            cvs->inputs->sonars[1] = 0.0;
-            cvs->inputs->sonars[2] = 0.0;
-            cvs->inputs->sonars[3] = 0.0;
-            cvs->inputs->sonars[4] = 0.0;
-            cvs->inputs->sonars[5] = 0.0;
-            index = 0;
-        }
+        cvs->inputs->sonars[0] = (sonar12 & 0xff00) >> 8;
+        cvs->inputs->sonars[1] = (sonar12 & 0x00ff);
+        cvs->inputs->sonars[2] = (sonar34 & 0xff00) >> 8;
+        cvs->inputs->sonars[3] = (sonar34 & 0x00ff);
+        cvs->inputs->sonars[4] = (sonar56 & 0xff00) >> 8;
+        cvs->inputs->sonars[5] = (sonar56 & 0x00ff);        
     #endif
     cvs->inputs->t = (ReadCoreTimer()/(SYS_FREQ/2.0)) - MyMiniProject_tStart; // time in seconds
     while (cvs->inputs->t < cvs->state->lastT) cvs->inputs->t += 107.3741823075;

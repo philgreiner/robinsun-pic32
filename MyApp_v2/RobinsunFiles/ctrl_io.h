@@ -129,6 +129,8 @@ typedef struct CtrlIn
     double speed_blocks;
     double speed_fish_horizontal;
     double speed_fish_vertical;
+    
+    double irR, irL;
 #endif
 
 } CtrlIn;
