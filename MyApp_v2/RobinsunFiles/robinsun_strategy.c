@@ -7,7 +7,7 @@
 NAMESPACE_INIT(ctrlGr1);
 
 void robinsun_main(CtrlStruct *cvs) {
-    switch (cvs->state->strategy_state) {
+    switch (cvs->state->current_objective) {
         case CALIBRATE:
             calibrate(cvs);
 

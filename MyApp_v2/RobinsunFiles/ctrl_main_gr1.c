@@ -153,12 +153,18 @@ void controller_init(CtrlStruct *cvs)
     cvs->state->objectives_on_robot = 0;
     for (i=0; i<7; i=i+1)
 	   cvs->state->done_objectives[i] = NOTDONE;
+    
+    for (i=0; i<10; i++)
+        cvs->state->objectives[i] = NOTDONE1;
 
     #ifdef SIMU_PROJECT
         cvs->outputs->flag_release = 0;
     #endif
 	cvs->state->strategy_state = WAIT_FOR_START;
 	cvs->state->calibration = CALIBRATEY;
+    
+    cvs->state->current_objective = CALIBRATE;
+    cvs->state->current_action_progress = 0;
 }
 
 /*! \brief controller loop (called eveiry timestep)
@@ -269,7 +275,8 @@ void controller_loop(CtrlStruct *cvs)
     // Choice of the path planning algorithm
 	if (cvs->inputs->t >= 0)
 	{
-		strategy_objective(cvs);
+		//strategy_objective(cvs);
+        robinsun_main(cvs);
         
         #ifdef POTENTIAL
             potential_Field(cvs);
