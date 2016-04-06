@@ -85,7 +85,7 @@ int main(void)
     MyFlash_Init();
     MyTemperature_Init();
     //MyMIWI_Init();
-    MyWIFI_Init();
+    //MyWIFI_Init();
 
     // Configure for multi-vectored mode
     INTConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
@@ -98,7 +98,7 @@ int main(void)
 
     // Start Wireless and Camera connections
     //MyMIWI_Start();
-    MyWIFI_Start();
+    //MyWIFI_Start();
     //MyCamera_Start();
 
 //    MyMiniProject_Init();
@@ -125,9 +125,11 @@ int main(void)
         //MyAnalog_Read(&AN1, &AN3);
         //sprintf(msgan,"Reading: %d, %f\n", (float) *AN1, (float) *AN3);
         THREAD_START(0);
+            MyRTCC_Task();            
             MyMiniProject_Update(cvs);
             controller_loop(cvs);
             MyMiniProject_Send(cvs);
+            MyCAN_Task();
         THREAD_END(0);
         //MyConsole_SendMsg(msgan);
     }

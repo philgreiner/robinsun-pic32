@@ -40,7 +40,8 @@ void Astar_get_path(CtrlStruct *cvs)
 	int yi;
 
 	int G = 10;                         //General value of the cost of a single movement
-
+    int G_diag = 14;
+    
 	int empty = -42;
 	int astar_parent_table[43][63];     //Keeps the parent of each node
 	int astar_closed_list[43][63];      // Keeps the chosen nodes
@@ -114,15 +115,26 @@ void Astar_get_path(CtrlStruct *cvs)
 					int G_new;
 					int Replace_G_old = 0;
 
-					if (G_old != empty) {										//The node is already in the open list
-						if (G_old <= (G_parent + G)) { Replace_G_old = 0; }		// Check for smallest G value
-						else { Replace_G_old = 1; }
+					if (G_old != empty) {   //The node is already in the open list
+                         if((xi != x) && (yi != y)) {                                // Diagonal movement (G = 14)
+                            if (G_old <= (G_parent + G_diag)) Replace_G_old = 0;    // Check for smallest G value
+                            else Replace_G_old = 1;
+                        }
+                        else {                                                      // Linear movement (G = 10)
+                            if (G_old <= (G_parent + G)) Replace_G_old = 0;         // Check for smallest G value
+                            else Replace_G_old = 1;
+                        }
 					}
 					else { Replace_G_old = 1; }									//The node is not yet in the open list
 
 													// Step 2.1 Start the replacement of G value if needed + Step 2.4 Mother Node
 					if (Replace_G_old == 1) {
-						G_new = G + G_parent;
+						if((xi != x) && (yi != y)) {                // Diagonal movement
+                            G_new = G_diag + G_parent;
+					    }
+					    else {                                      // Linear movement
+                            G_new = G + G_parent;
+                        }
 						astar_open_list[xi][yi] = G_new;			// Add the node to the open list
 						astar_parent_table[xi][yi] = actual_node;	// save the parent node number in the table at the child cvs->state->position
 					}
@@ -348,41 +360,35 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 	else {
 		// Calculate angle divergence
 
-		double arcos = acos(delta_x / dist);	// Calculate the angle between the 0rad reference angle and the angle to go to the next point
+//		double arcos = acos(delta_x / dist);	// Calculate the angle between the 0rad reference angle and the angle to go to the next point
 		double theta_required;
 
-		if (delta_y >= 0) {					// positive angle between 0 and PI
-			theta_required = arcos;
-		}
-		else {								// negative angle between -0 and -PI
-			theta_required = -arcos;
-		}
+//		if (delta_y >= 0) {					// positive angle between 0 and PI
+//			theta_required = arcos;
+//		}
+//		else {								// negative angle between -0 and -PI
+//			theta_required = -arcos;
+//		}
+        
+        theta_required = atan2(delta_y,delta_x);
 
 		double delta_theta = theta_required - theta;
-        if(delta_theta > M_PI_2)
-        {
-            //delta_theta -= M_PI;
-            cvs->state->direction = (cvs->state->direction) ? 1 : 0;
-        }
-        if(delta_theta < -M_PI_2)
-        {
-            //delta_theta += M_PI;
-            cvs->state->direction = (cvs->state->direction) ? 1 : 0;
-        }
         
-        double omega = 0.6*M_PI*delta_theta;
+		double omega = 1.95*delta_theta;
+        omega = (omega > 2.75*M_PI) ? (2.75*M_PI) : omega;
+        omega = (omega < -2.75*M_PI) ? (-2.75*M_PI) : omega;
         
         #ifdef DEBUG
             printf("delta_x= %lf, delta_y=%lf, theta_req =%lf, delta_theta = %lf\n", delta_x, delta_y, theta_required, delta_theta);
         #endif
 
-		vlin = 2.45*M_PI;
+		vlin = 2.75*M_PI*((1.25+cos(delta_theta))/2.25);
 		if (cvs->param->index_path == 0) vlin = dist*0.75*M_PI;
-		if (fabs(delta_theta) < 0.75*M_PI_4) {
-			vlin = (vlin > 2.45*M_PI) ? (2.45*M_PI) : (vlin);
-			vlin = (vlin < -2.45*M_PI) ? (-2.45*M_PI) : (vlin);
-			if (fabs(vlin) <= M_PI_2) {
-				vlin = (vlin /(fabs(vlin)))*M_PI_2;
+		if (fabs(delta_theta) < 1.3*M_PI_4) {
+			vlin = (vlin > 2.75*M_PI) ? (2.75*M_PI) : (vlin);
+			vlin = (vlin < -2.75*M_PI) ? (-2.75*M_PI) : (vlin);
+			if (fabs(vlin) <= 0.85*M_PI_2) {
+				vlin = (vlin /(fabs(vlin)))*0.85*M_PI_2;
 			}
 		}
 		else {
