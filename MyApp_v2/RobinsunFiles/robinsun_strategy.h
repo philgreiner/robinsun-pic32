@@ -13,7 +13,7 @@
 
 NAMESPACE_INIT(ctrlGr1);
 
-void robinsun_objective(CtrlStruct *cvs);
+void robinsun_main(CtrlStruct *cvs);
 void robinsun_next(CtrlStruct *cvs);
 
 NAMESPACE_CLOSE();

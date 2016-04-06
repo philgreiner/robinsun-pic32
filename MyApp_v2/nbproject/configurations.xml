@@ -55,6 +55,7 @@
         <itemPath>RobinsunFiles/potentialfield_gr1.h</itemPath>
         <itemPath>RobinsunFiles/MyAnalog.h</itemPath>
         <itemPath>RobinsunFiles/robinsun_strategy.h</itemPath>
+        <itemPath>RobinsunFiles/competition_functions.h</itemPath>
       </logicalFolder>
       <itemPath>MyIncludes/MyApp.h</itemPath>
     </logicalFolder>
@@ -165,7 +166,6 @@
         <itemPath>MyFiles/MyCtrlIO.c</itemPath>
         <itemPath>MyFiles/MyMiniProject.c</itemPath>
         <itemPath>MyFiles/MySubroutines.c</itemPath>
-        <itemPath>RobinsunFiles/MyAnalog.c</itemPath>
       </logicalFolder>
       <logicalFolder name="RobinsunFiles"
                      displayName="RobinsunFiles"
@@ -182,6 +182,7 @@
         <itemPath>RobinsunFiles/triangulation_gr1.c</itemPath>
         <itemPath>RobinsunFiles/calibrate_gr1.c</itemPath>
         <itemPath>RobinsunFiles/robinsun_strategy.c</itemPath>
+        <itemPath>RobinsunFiles/competition_functions.c</itemPath>
       </logicalFolder>
       <itemPath>MyFiles/MyApp.c</itemPath>
     </logicalFolder>

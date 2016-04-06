@@ -23,6 +23,7 @@ typedef struct CtrlIn
 {
 	/*! \brief time reference
 	 */
+    int start_signal;
 	double t; ///< time [s]
 
 	/*! \brief wheel speeds

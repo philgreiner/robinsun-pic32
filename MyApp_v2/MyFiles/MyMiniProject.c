@@ -114,6 +114,9 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         cvs->inputs->irR = ((float) ((ADC & 0xff00) >> 8)) * 3.3/255.0;
         cvs->inputs->irL = ((float) (ADC & 0x00ff))        * 3.3/255.0;
         
+        unsigned int lt24 = MyCyclone_Read(A_lt24);
+        cvs->inputs->start_signal = lt24 >> 15;
+        
         unsigned int sonar12 = MyCyclone_Read(A_sonar12);
         unsigned int sonar34 = MyCyclone_Read(A_sonar34);
         unsigned int sonar56 = MyCyclone_Read(A_sonar56);

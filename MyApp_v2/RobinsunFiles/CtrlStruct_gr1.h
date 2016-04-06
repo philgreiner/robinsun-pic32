@@ -17,13 +17,16 @@
 //#define TRIANG_ONLY
 
 /* --- POTENTIAL or ASTAR --- */
-#define POTENTIAL
-//#define ASTAR
+//#define POTENTIAL
+#define ASTAR
 
 NAMESPACE_INIT(ctrlGr1);
 
 typedef enum {CALIBRATEY, GOTOY, TURN, CALIBRATEX, GOHOMEX, GOHOMETURN, GOHOMEY} calibratestate;
 typedef enum {WAIT_FOR_START, GOTO_OBJ, WAIT_TO_TAKE, WAIT_FOR_DESTINATION} strategystate_t;
+typedef enum {CALIBRATE, WAIT_FOR_START1, BLOCKS_FRONT, CABINS, BLOCKS_DUNE_1, BLOCKS_DUNE_2, BLOCKS_CABINS, FISH, PARASOL, STOP} robinsun_competition;
+typedef enum {NOTDONE1, DELAYED, DONE1} state;
+
 typedef enum {OBJ0, OBJ4, OBJ2, OBJ1, OBJ3, OBJ5, OBJ6, BASE} objectives;
 typedef enum {NOTDONE, DONE} STATUS;
 
@@ -58,6 +61,9 @@ typedef struct CtrlState
 	// Strategy parameters
 	strategystate_t   strategy_state;
 	objectives		  next_objective;
+    state             objectives[10];
+    robinsun_competition current_objective;
+    int               current_action_progress;
 	int				  done_objectives[7];
 	int				  objectives_on_robot;
 	double			  timer;
