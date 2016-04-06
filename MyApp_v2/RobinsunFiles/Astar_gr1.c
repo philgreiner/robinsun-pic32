@@ -237,8 +237,15 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 //		}
         
         theta_required = atan2(delta_y,delta_x);
-
 		double delta_theta = theta_required - theta;
+        
+        int reversed = 1;
+        if (delta_theta > M_PI_2)
+            delta_theta = delta_theta - M_PI;
+        else if (delta_theta < -M_PI_2)
+            delta_theta = delta_theta + M_PI;
+        else
+            reversed = 0;
         
 		double omega = 1.95*delta_theta;
         omega = (omega > 2.75*M_PI) ? (2.75*M_PI) : omega;
@@ -260,6 +267,8 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 		else {
 			vlin = 0;
 		}
+
+        vlin = (reversed) ? -vlin : vlin;
 
 		cvs->state->omegaref[R_ID] = vlin + omega;
 		cvs->state->omegaref[L_ID] = vlin - omega;

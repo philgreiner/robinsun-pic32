@@ -89,6 +89,7 @@ void blocks_front(CtrlStruct *cvs) {
         case MOVE_BACK:
             // TURN OFF A*
             cvs->param->ready_start_astar = 0;
+            MyCyclone_Write(A_PICtoFPGA, 0x0001 & 1);
 
             // MOVE BACKWARD
             cvs->state->omegaref[R_ID] = -2.75 * M_PI;
