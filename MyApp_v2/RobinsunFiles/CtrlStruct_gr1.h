@@ -17,8 +17,8 @@
 //#define TRIANG_ONLY
 
 /* --- POTENTIAL or ASTAR --- */
-//#define POTENTIAL
-#define ASTAR
+#define POTENTIAL
+//#define ASTAR
 
 NAMESPACE_INIT(ctrlGr1);
 
@@ -59,6 +59,7 @@ typedef struct CtrlState
 	int				  done_objectives[7];
 	int				  objectives_on_robot;
 	double			  timer;
+    int               direction;
 
 	// Calibrate initially
 	calibratestate    calibration;

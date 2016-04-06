@@ -34,6 +34,13 @@
 #pragma config ICESEL   = ICS_PGx1      // ICE/ICD Comm Channel Select : PGEC1/PGED1 pair is used
 #pragma config DEBUG    = OFF           // Background Debugger Enable
 
+// My PIC-thread macros and vars below
+unsigned char seq[2];  // will handle 2 threads
+unsigned char thseq;
+unsigned char thseqtemp;
+#define THREAD_START(A) thseq=seq[A]; thseqtemp=0; if(thseq==thseqtemp) {
+#define THREAD_BREAK } thseqtemp++; if(thseq==thseqtemp) {
+#define THREAD_END(B) } seq[B]++; if(seq[B]>thseqtemp) seq[B]=0;
 
 const char startMsg[] =
 {
@@ -94,32 +101,37 @@ int main(void)
     //MyWIFI_Start();
     //MyCamera_Start();
 
-    MyMiniProject_Init();
+//    MyMiniProject_Init();
 
     CtrlIn *inputs = (CtrlIn*) malloc(sizeof(CtrlIn));
     CtrlOut *outputs = (CtrlOut*) malloc(sizeof(CtrlOut));
     cvs = init_CtrlStruct(inputs, outputs);
-
+    unsigned int AN1, AN3;
+    MyAnalog_Init();
+    
     MyMiniProject_tStart = (ReadCoreTimer()/(SYS_FREQ/2.0));
     MyMiniProject_Update(cvs);
     controller_init(cvs);
     // Execute forever
-    unsigned int tWait=(SYS_FREQ/2000)*20;
-    unsigned int tStart = ReadCoreTimer();
+    char msgan[1024];
+    
     while (1)
     {
-        MyRTCC_Task();
-        MyConsole_Task();
-        MyCAN_Task();
-        //MyMIWI_Task();
-        //MyWIFI_Task();
-        if(ReadCoreTimer() - tStart > tWait)
-        {
+        THREAD_START(1);
+            MyConsole_Task();
+        THREAD_BREAK
+            MyWIFI_Task();
+        THREAD_END(1);
+        //MyAnalog_Read(&AN1, &AN3);
+        //sprintf(msgan,"Reading: %d, %f\n", (float) *AN1, (float) *AN3);
+        THREAD_START(0);
+            MyRTCC_Task();            
             MyMiniProject_Update(cvs);
             controller_loop(cvs);
             MyMiniProject_Send(cvs);
-            tStart = ReadCoreTimer();
-        }
+            MyCAN_Task();
+        THREAD_END(0);
+        //MyConsole_SendMsg(msgan);
     }
 }
 

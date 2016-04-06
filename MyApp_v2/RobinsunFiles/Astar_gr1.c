@@ -334,7 +334,7 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 
 	int PRECISION;
 	if (cvs->param->index_path == 0) PRECISION = 0;
-	else PRECISION = 2;
+	else PRECISION = 1;
 	double dist = sqrt((delta_x*delta_x) + (delta_y*delta_y));
 
 	/* B. Check if on position and act accordingly  */
@@ -373,6 +373,7 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
         theta_required = atan2(delta_y,delta_x);
 
 		double delta_theta = theta_required - theta;
+        
 		double omega = 1.95*delta_theta;
         omega = (omega > 2.75*M_PI) ? (2.75*M_PI) : omega;
         omega = (omega < -2.75*M_PI) ? (-2.75*M_PI) : omega;
