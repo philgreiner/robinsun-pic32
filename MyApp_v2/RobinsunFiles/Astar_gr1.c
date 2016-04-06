@@ -208,7 +208,6 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 
 	// 1. ***** ON POSITION *****
 	if (fabs(dist) <= PRECISION) {
-		printf("Next node. Nodes remaining: %d \n", cvs->param->index_path);
 		if (cvs->param->index_path == 0)				// at final destination
 		{
 			cvs->state->omegaref[R_ID] = 0.0;
