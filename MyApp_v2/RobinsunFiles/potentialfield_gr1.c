@@ -85,52 +85,52 @@ int diag_allocate(double *obstacle, double qstartx, double qendx, double qstarty
 void potential_Field_Init(CtrlStruct *cvs)
 {
     /* Allocation of the obstacles coordinates */
-	cvs->param->nb_edges = 153;
+	cvs->param->nb_edges = 130;
 	double* edges = cvs->param->obstacle_edges;
 	int start_ind = 0;
 	int last_ind = 0;
-	last_ind = edge_allocate(edges, -1.25, 1.25, 0.1, 1.0, 1, start_ind);
+	last_ind = edge_allocate(edges, -1.15, 1.15, 0.1, 0.9, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, 1.0, 0.75, 0.05, 1.25, 0, start_ind);
+	last_ind = edge_allocate(edges, 0.9, 0.65, 0.05, 1.15, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, 1.25, 1.5, 0.05, 0.75, 1, start_ind);
+	last_ind = edge_allocate(edges, 1.15, 1.4, 0.05, 0.65, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, 0.75, -1.0, 0.05, 1.5, 0, start_ind);
+	last_ind = edge_allocate(edges, 0.65, -0.9, 0.05, 1.4, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, 1.5, 0.7, 0.1, -1.0, 1, start_ind);
+	last_ind = edge_allocate(edges, 1.4, 0.8, 0.1, -0.9, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -1.0, -0.75, 0.05, 0.7, 0, start_ind);
+	last_ind = edge_allocate(edges, -0.9, -0.75, 0.05, 0.8, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, 0.7, -0.7, 0.1, -0.75, 1, start_ind);
+	last_ind = edge_allocate(edges, 0.8, -0.8, 0.1, -0.75, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -0.75, -1.0, 0.05, -0.7, 0, start_ind);
+	last_ind = edge_allocate(edges, -0.75, -0.9, 0.05, -0.8, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -0.7, -1.5, 0.1, -1.0, 1, start_ind);
+	last_ind = edge_allocate(edges, -0.8, -1.4, 0.1, -0.9, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -1.0, 0.75, 0.05, -1.5, 0, start_ind);
+	last_ind = edge_allocate(edges, -0.9, 0.65, 0.05, -1.4, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, -1.5, -1.25, 0.05, 0.75, 1, start_ind);
+	last_ind = edge_allocate(edges, -1.4, -1.15, 0.05, 0.65, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(edges, 0.75, 1.0, 0.05, -1.25, 0, start_ind);
+	last_ind = edge_allocate(edges, 0.65, 0.9, 0.05, -1.15, 0, start_ind);
 
-    cvs->param->nb_center = 70;
+    cvs->param->nb_center = 50;
     double* center = cvs->param->obstacle_center;
 
 	start_ind = 0;
 	last_ind = 0;
-	last_ind = edge_allocate(center, 0.75, -0.75, 0.1, -0.28, 1, start_ind);
+	last_ind = edge_allocate(center, 0.7, -0.7, 0.1, -0.35, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.28, -0.18, 0.02, -0.75, 0, start_ind);
+	last_ind = edge_allocate(center, -0.35, -0.15, 0.1, -0.7, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.75, 0.75, 0.1, -0.18, 1, start_ind);
+	last_ind = edge_allocate(center, -0.7, 0.7, 0.1, -0.15, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.18, -0.28, 0.02, 0.75, 0, start_ind);
+	last_ind = edge_allocate(center, -0.15, -0.3, 0.1, 0.7, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.25, 0.4, 0.05, 0.15, 0, start_ind);
+	last_ind = edge_allocate(center, -0.25, 0.45, 0.1, 0.15, 0, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, -0.15, 0.15, 0.1, 0.4, 1, start_ind);
+	last_ind = edge_allocate(center, -0.15, 0.15, 0.1, 0.45, 1, start_ind);
 	start_ind = last_ind;
-	last_ind = edge_allocate(center, 0.4, -0.25, 0.05, -0.15, 0, start_ind);
+	last_ind = edge_allocate(center, 0.45, -0.25, 0.1, -0.15, 0, start_ind);
 	start_ind = last_ind;
 
 	cvs->param->nb_purple = 14;
@@ -361,16 +361,16 @@ void potential_Field(CtrlStruct *cvs)
 
     // Variation of the repulsive fields according to the position
     if((cvs->state->next_objective == BASE) && (x > -0.05)) {
-        cvs->param->k_center = 2.5;
-        cvs->param->rho_center = 0.25;
+        cvs->param->k_center = 6.5;
+        cvs->param->rho_center = 0.15;
     }
     else if (x > 0.3) {
         cvs->param->k_center = 2.0;
         cvs->param->rho_center = 0.225;
     }
     else {
-        cvs->param->k_center = 5.0;
-        cvs->param->rho_center = 0.25;
+        cvs->param->k_center = 7.5;
+        cvs->param->rho_center = 0.2;
     }
 
     if((cvs->state->next_objective == BASE) && (x > -0.05)) {
@@ -382,8 +382,8 @@ void potential_Field(CtrlStruct *cvs)
         cvs->param->rho_edge = 0.225;
     }
     else {
-        cvs->param->k_edge = 6.0;
-        cvs->param->rho_edge = 0.2;
+        cvs->param->k_edge = 8.0;
+        cvs->param->rho_edge = 0.125;
     }
 
     // Forces
@@ -522,8 +522,8 @@ void potential_Field(CtrlStruct *cvs)
 	omega = (omega > 2.25*M_PI) ? (2.25*M_PI) : (omega);
 	omega = (omega < -2.25*M_PI) ? (-2.25*M_PI) : (omega);
 
-	vlin = 2.5*M_PI*(fabs(FxR)/200.0);
-	vlin = (vlin > 2.5*M_PI) ? (2.5*M_PI) : (vlin);
+	vlin = 2.65*M_PI*(fabs(FxR)/200.0);
+	vlin = (vlin > 2.65*M_PI) ? (2.65*M_PI) : (vlin);
 	if(fabs(vlin) < M_PI_2) {
         vlin = M_PI_2;
 	}
@@ -550,10 +550,10 @@ void potential_Field(CtrlStruct *cvs)
     }
     else {
         if(FyR < 0) {
-            omega_R = M_PI_4;  omega_L = M_PI;
+            omega_R = 0.5*M_PI_4;  omega_L = M_PI;
         }
         else {
-            omega_R = M_PI;     omega_L = M_PI_4;
+            omega_R = 0.5*M_PI;     omega_L = M_PI_4;
         } 
     }
 

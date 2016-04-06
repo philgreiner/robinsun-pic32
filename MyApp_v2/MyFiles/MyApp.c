@@ -78,7 +78,7 @@ int main(void)
     MyFlash_Init();
     MyTemperature_Init();
     //MyMIWI_Init();
-    MyWIFI_Init();
+    //MyWIFI_Init();
 
     // Configure for multi-vectored mode
     INTConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
@@ -91,7 +91,7 @@ int main(void)
 
     // Start Wireless and Camera connections
     //MyMIWI_Start();
-    MyWIFI_Start();
+    //MyWIFI_Start();
     //MyCamera_Start();
 
     MyMiniProject_Init();
@@ -112,7 +112,7 @@ int main(void)
         MyConsole_Task();
         MyCAN_Task();
         //MyMIWI_Task();
-        MyWIFI_Task();
+        //MyWIFI_Task();
         if(ReadCoreTimer() - tStart > tWait)
         {
             MyMiniProject_Update(cvs);

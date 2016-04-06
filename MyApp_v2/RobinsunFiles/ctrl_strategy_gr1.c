@@ -72,7 +72,7 @@ void strategy_objective(CtrlStruct *cvs)
 
 		double accuracy;
         #ifdef ASTAR
-            accuracy = 0.1;
+            accuracy = 0.08;
         #endif
 
         #ifdef POTENTIAL
@@ -190,7 +190,7 @@ void objective_selection(CtrlStruct *cvs)
                         #ifdef SIMU_PROJECT
                             printf("Going to objective 1. \n");
                         #endif
-                        cvs->state->goal_position[0] = 0.8;
+                        cvs->state->goal_position[0] = 0.75;
                         cvs->state->goal_position[1] = -0.8;
                         cvs->state->goal_position[2] = -M_PI;
                         break;
@@ -198,7 +198,7 @@ void objective_selection(CtrlStruct *cvs)
                         #ifdef SIMU_PROJECT
                             printf("Going to objective 2. \n");
                         #endif
-                        cvs->state->goal_position[0] = 0.8;
+                        cvs->state->goal_position[0] = 0.75;
                         cvs->state->goal_position[1] = 0.8;
                         cvs->state->goal_position[2] = -M_PI;
                         break;
@@ -215,7 +215,7 @@ void objective_selection(CtrlStruct *cvs)
                             printf("Going to objective 4. \n");
                         #endif
                         cvs->state->goal_position[0] = -0.6;
-                        cvs->state->goal_position[1] = -1.2;
+                        cvs->state->goal_position[1] = -1.15;
                         cvs->state->goal_position[2] = -M_PI;
                         break;
                     case OBJ5:
@@ -231,7 +231,7 @@ void objective_selection(CtrlStruct *cvs)
                             printf("Going to objective 6. \n");
                         #endif
                         cvs->state->goal_position[0] = -0.6;
-                        cvs->state->goal_position[1] = 1.2;
+                        cvs->state->goal_position[1] = 1.15;
                         cvs->state->goal_position[2] = -M_PI;
                         break;
                     case BASE:
