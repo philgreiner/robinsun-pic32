@@ -23,7 +23,7 @@ void wait(CtrlStruct *cvs) {
 }
 
 typedef enum {
-    GOTO, WAIT_FOR_POSITION, TURN1, PUSH, MOVE_BACK
+    GOTO, WAIT_FOR_POSITION, TURN1, FORWARD, CLAMP, PUSH, UNCLAMP, MOVE_BACK
 } blocks_front_t;
 
 void blocks_front(CtrlStruct *cvs) {
@@ -70,6 +70,37 @@ void blocks_front(CtrlStruct *cvs) {
 
             // GO TO WAIT 
             if (M_PI_2 - theta < 0.1)
+                cvs->state->current_action_progress = FORWARD;
+            break;
+        
+        case FORWARD:
+            // TURN OFF A*
+            cvs->param->ready_start_astar = 0;
+
+            // MOVE FORWARD
+            cvs->state->omegaref[R_ID] = 2 * M_PI;
+            cvs->state->omegaref[L_ID] = 2 * M_PI;
+
+            // GO TO WAIT 
+            if (0.75 - fabs(y) < 0.05)
+            {
+                cvs->state->current_action_progress = CLAMP;
+                cvs->state->timer = cvs->inputs->t;
+            }
+            break;
+        
+        case CLAMP:
+            // TURN OFF A*
+            cvs->param->ready_start_astar = 0;
+
+            // DON'T MOVE
+            cvs->state->omegaref[R_ID] = 0.0;
+            cvs->state->omegaref[L_ID] = 0.0;
+            
+            cvs->outputs->command_blocks = 25.0;
+
+            // GO TO WAIT 
+            if (cvs->inputs->t - cvs->state->timer > 2)
                 cvs->state->current_action_progress = PUSH;
             break;
 
@@ -83,7 +114,28 @@ void blocks_front(CtrlStruct *cvs) {
 
             // GO TO MOVE_BACK
             if (0.30 - fabs(y) < 0.03)
+            {
+                cvs->state->current_action_progress = UNCLAMP;
+                cvs->state->timer = cvs->inputs->t;
+            }
+            break;
+            
+        case UNCLAMP:
+            // TURN OFF A*
+            cvs->param->ready_start_astar = 0;
+
+            // DON'T MOVE
+            cvs->state->omegaref[R_ID] = 0.0;
+            cvs->state->omegaref[L_ID] = 0.0;
+            
+            cvs->outputs->command_blocks = -25.0;
+
+            // GO TO WAIT 
+            if (cvs->inputs->t - cvs->state->timer > 2)
+            {
                 cvs->state->current_action_progress = MOVE_BACK;
+                cvs->outputs->command_blocks = 0.0;
+            }
             break;
 
         case MOVE_BACK:

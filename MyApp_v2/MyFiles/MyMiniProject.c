@@ -62,9 +62,6 @@ void MyMiniProject_Init(void)
         char BLOCKSinit[3] = {0x1e, 0x70, 0x40}; //Turn ON LED (GP6) and turn OFF brakes (GP4)
         MyCAN_TxMsg(BlockSID, BLOCKSinit);
     
-        //char T2CONtow[3] = {0x22,0xb3,0x80}; //T2CON: TMR2ON = 1, -, Prescale2 = 00, --, DC2LSBs = 11
-        //char PR2tow[3] = {0x24,0xff,0x3f}; //PR2:   PR2 = 0x3F (f=78kHz)
-
         char T1CONtow[3] = {0x21,0xb3,0x83}; //T1CON: TMR1ON = 1, -, Prescale1 = 00, --, DC1LSBs = 11
         char PR1tow[3] = {0x23,0xff,0x3f}; //PR1:   PR1 = 0x3F (f=78kHz)
         MyCAN_TxMsg(BlockSID,T1CONtow);
@@ -136,36 +133,36 @@ void    MyMiniProject_Send(CtrlStruct *cvs)
     unsigned MSB0, LSB0;
     
     // Right motor
-//    DutyToInf(cvs->outputs->wheel_commands[R_ID], &MSB0, &LSB0);
-//    char MSBR[3] = {0x25, 0x3f, MSB0};
-//    char LSBR[3] = {0x21, 0x03, LSB0};
-//    MyCAN_TxMsg(MotorSID,MSBR);
-//    MyCAN_TxMsg(MotorSID,LSBR);
-//
-//    // Left motor
-//    DutyToInf(cvs->outputs->wheel_commands[L_ID], &MSB0, &LSB0);
-//    char MSBL[3] = {0x26, 0x3f, MSB0};
-//    char LSBL[3] = {0x22, 0x03, LSB0};
-//    MyCAN_TxMsg(MotorSID,MSBL);
-//    MyCAN_TxMsg(MotorSID,LSBL);
+    DutyToInf(cvs->outputs->wheel_commands[R_ID], &MSB0, &LSB0);
+    char MSBR[3] = {0x25, 0x3f, MSB0};
+    char LSBR[3] = {0x21, 0x03, LSB0};
+    MyCAN_TxMsg(MotorSID,MSBR);
+    MyCAN_TxMsg(MotorSID,LSBR);
+
+    // Left motor
+    DutyToInf(cvs->outputs->wheel_commands[L_ID], &MSB0, &LSB0);
+    char MSBL[3] = {0x26, 0x3f, MSB0};
+    char LSBL[3] = {0x22, 0x03, LSB0};
+    MyCAN_TxMsg(MotorSID,MSBL);
+    MyCAN_TxMsg(MotorSID,LSBL);
     
     #ifdef ROBINSUN
     // Vertical fish motor
-//    DutyToInf(cvs->outputs->command_fish_vertical, &MSB0, &LSB0);
-//    char MSBFV[3] = {0x25, 0x3f, MSB0};
-//    char LSBFV[3] = {0x21, 0x03, LSB0};
-//    MyCAN_TxMsg(FishSID,MSBFV);
-//    MyCAN_TxMsg(FishSID,LSBFV);
-//    
-//    // Horizontal fish motor
-//    DutyToInf(cvs->outputs->command_fish_horizontal, &MSB0, &LSB0);
-//    char MSBFH[3] = {0x26, 0x3f, MSB0};
-//    char LSBFH[3] = {0x22, 0x03, LSB0};
-//    MyCAN_TxMsg(FishSID,MSBFH);
-//    MyCAN_TxMsg(FishSID,LSBFH);
+    DutyToInf(cvs->outputs->command_fish_vertical, &MSB0, &LSB0);
+    char MSBFV[3] = {0x25, 0x3f, MSB0};
+    char LSBFV[3] = {0x21, 0x03, LSB0};
+    MyCAN_TxMsg(FishSID,MSBFV);
+    MyCAN_TxMsg(FishSID,LSBFV);
+    
+    // Horizontal fish motor
+    DutyToInf(cvs->outputs->command_fish_horizontal, &MSB0, &LSB0);
+    char MSBFH[3] = {0x26, 0x3f, MSB0};
+    char LSBFH[3] = {0x22, 0x03, LSB0};
+    MyCAN_TxMsg(FishSID,MSBFH);
+    MyCAN_TxMsg(FishSID,LSBFH);
     
     // Blocks motor
-    DutyToInf(/*cvs->outputs->command_blocks*/50, &MSB0, &LSB0);
+    DutyToInf(cvs->outputs->command_blocks, &MSB0, &LSB0);
     char MSBB[3] = {0x25, 0x3f, MSB0};
     char LSBB[3] = {0x21, 0x03, LSB0};
     MyCAN_TxMsg(BlockSID,MSBB);
