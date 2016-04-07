@@ -24,6 +24,8 @@
 #include "MyMiniProject.h"
 #include "CtrlStruct_gr1.h"
 #include "ctrl_io.h"
+#include "robinsun_strategy.h"
+#include "competition_functions.h"
 
 /*******************************************************************************
 * Constants                                                                    *

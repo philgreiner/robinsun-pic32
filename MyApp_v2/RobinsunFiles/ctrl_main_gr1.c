@@ -190,6 +190,9 @@ void controller_loop(CtrlStruct *cvs)
         cvs->state->clamp = OPEN;
     else
         cvs->state->clamp = UNCLAMPED;
+    char msg[1024];
+    sprintf("Clamp opening: %f; Clamp state: %d\n", cvs->state->clamp_opening, (int) cvs->state->clamp);
+    MyConsole_SendMsg(msg);
     
     if(fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 3*M_PI)
         ivs->r_wheel_speed = cvs->state->lastMesR[0];
@@ -288,7 +291,7 @@ void controller_loop(CtrlStruct *cvs)
 	if (cvs->inputs->t >= 0)
 	{
 		//strategy_objective(cvs);
-        robinsun_main(cvs);
+        //robinsun_main(cvs);
         
         #ifdef POTENTIAL
             potential_Field(cvs);
