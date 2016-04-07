@@ -181,7 +181,7 @@ void controller_loop(CtrlStruct *cvs)
 	ivs = cvs->inputs;
 	ovs = cvs->outputs;
     
-    cvs->state->clamp_opening += ivs->speed_blocks * (ivs->t - cvs->state->lastT) / 30000;
+    cvs->state->clamp_opening += ivs->speed_blocks * (ivs->t - cvs->state->lastT);
     if(cvs->state->clamp_opening < 10)
         cvs->state->clamp = CLOSED;
     else if(ovs->command_blocks > 5 && ivs->speed_blocks < 1)

@@ -126,7 +126,7 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         
         int speedClamp = MyCyclone_Read(A_speedB);
         speedClamp = ((speedClamp >> 15) == 1)? speedClamp-65535 : speedClamp;
-        cvs->inputs->speed_blocks = (double) speedClamp;
+        cvs->inputs->speed_blocks = (double) speedClamp/30000.0;
         
     #endif
     cvs->inputs->t = (ReadCoreTimer()/(SYS_FREQ/2.0)) - MyMiniProject_tStart; // time in seconds
