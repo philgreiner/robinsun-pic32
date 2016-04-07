@@ -74,6 +74,7 @@ typedef struct CtrlState
 	calibratestate    calibration;
     
     // State of functional modules
+    double            clamp_opening;
     clampstate_t      clamp;
 } CtrlState;
 

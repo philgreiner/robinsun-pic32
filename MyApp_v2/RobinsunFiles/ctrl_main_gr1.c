@@ -165,7 +165,8 @@ void controller_init(CtrlStruct *cvs)
     
     cvs->state->current_objective = CALIBRATE;
     cvs->state->current_action_progress = 0;
-    cvs->state->clamp = UNCLAMPED;
+    cvs->state->clamp = CLOSED;
+    cvs->state->clamp_opening = 9.2;
 }
 
 /*! \brief controller loop (called eveiry timestep)
@@ -179,6 +180,16 @@ void controller_loop(CtrlStruct *cvs)
 
 	ivs = cvs->inputs;
 	ovs = cvs->outputs;
+    
+    cvs->state->clamp_opening += ivs->speed_blocks * (ivs->t - cvs->state->lastT) / 30000;
+    if(cvs->state->clamp_opening < 10)
+        cvs->state->clamp = CLOSED;
+    else if(ovs->command_blocks > 5 && ivs->speed_blocks < 1)
+        cvs->state->clamp = CLAMPED;
+    else if(cvs->state->clamp_opening > 28.5)
+        cvs->state->clamp = OPEN;
+    else
+        cvs->state->clamp = UNCLAMPED;
     
     if(fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 3*M_PI)
         ivs->r_wheel_speed = cvs->state->lastMesR[0];
