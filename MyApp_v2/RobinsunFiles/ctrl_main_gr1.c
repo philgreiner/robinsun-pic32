@@ -181,7 +181,7 @@ void controller_loop(CtrlStruct *cvs)
 	ivs = cvs->inputs;
 	ovs = cvs->outputs;
     
-    cvs->state->clamp_opening += ivs->speed_blocks * (ivs->t - cvs->state->lastT);
+    cvs->state->clamp_opening += ivs->speed_blocks;
     if(cvs->state->clamp_opening < 10)
         cvs->state->clamp = CLOSED;
     else if(ovs->command_blocks > 5 && ivs->speed_blocks < 1)
@@ -191,7 +191,7 @@ void controller_loop(CtrlStruct *cvs)
     else
         cvs->state->clamp = UNCLAMPED;
     char msg[1024];
-    sprintf("Clamp opening: %f; Clamp state: %d\n", cvs->state->clamp_opening, (int) cvs->state->clamp);
+    sprintf(msg, "Clamp opening: %f; Clamp state: %d\n\n", cvs->state->clamp_opening, (int) cvs->state->clamp);
     MyConsole_SendMsg(msg);
     
     if(fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 3*M_PI)

@@ -125,8 +125,15 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         cvs->inputs->sonars[5] = (sonar56 & 0x00ff);
         
         int speedClamp = MyCyclone_Read(A_speedB);
+        char msg[1024];
+        sprintf(msg, "Measured ticks: %d\n", speedClamp);
+        MyConsole_SendMsg(msg);
         speedClamp = ((speedClamp >> 15) == 1)? speedClamp-65535 : speedClamp;
-        cvs->inputs->speed_blocks = (double) speedClamp/30000.0;
+        sprintf(msg, "Measured ticks: %d\n", speedClamp);
+        MyConsole_SendMsg(msg);
+        cvs->inputs->speed_blocks = (double) -speedClamp/(300.0);
+        sprintf(msg, "Measured speed: %d\n", cvs->inputs->speed_blocks);
+        MyConsole_SendMsg(msg);
         
     #endif
     cvs->inputs->t = (ReadCoreTimer()/(SYS_FREQ/2.0)) - MyMiniProject_tStart; // time in seconds
