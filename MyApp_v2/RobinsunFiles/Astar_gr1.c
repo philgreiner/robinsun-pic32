@@ -239,6 +239,9 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
         theta_required = atan2(delta_y,delta_x);
 		double delta_theta = theta_required - theta;
         
+        if (delta_theta > M_PI) delta_theta -= 2 * M_PI;
+		if (delta_theta < -M_PI) delta_theta += 2 * M_PI;
+        
         int reversed = 1;
         if (delta_theta > M_PI_2)
             delta_theta = delta_theta - M_PI;

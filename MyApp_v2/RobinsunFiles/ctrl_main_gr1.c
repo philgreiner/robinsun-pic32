@@ -165,6 +165,7 @@ void controller_init(CtrlStruct *cvs)
     
     cvs->state->current_objective = CALIBRATE;
     cvs->state->current_action_progress = 0;
+    cvs->state->clamp = UNCLAMPED;
 }
 
 /*! \brief controller loop (called eveiry timestep)

@@ -22,7 +22,6 @@
 #include "MyMDDFS.h"
 #include "MyCamera.h"
 #include "MyMiniProject.h"
-#include "MyCtrlIO.h"
 #include "CtrlStruct_gr1.h"
 #include "ctrl_io.h"
 

@@ -26,6 +26,7 @@ typedef enum {CALIBRATEY, GOTOY, TURN, CALIBRATEX, GOHOMEX, GOHOMETURN, GOHOMEY}
 typedef enum {WAIT_FOR_START, GOTO_OBJ, WAIT_TO_TAKE, WAIT_FOR_DESTINATION} strategystate_t;
 typedef enum {CALIBRATE, WAIT_FOR_START1, BLOCKS_FRONT, CABINS, BLOCKS_DUNE_1, BLOCKS_DUNE_2, BLOCKS_CABINS, FISH, PARASOL, STOP} robinsun_competition;
 typedef enum {NOTDONE1, DELAYED, DONE1} state;
+typedef enum {UNCLAMPED, CLAMPED, OPEN, CLOSED} clampstate_t;
 
 typedef enum {OBJ0, OBJ4, OBJ2, OBJ1, OBJ3, OBJ5, OBJ6, BASE} objectives;
 typedef enum {NOTDONE, DONE} STATUS;
@@ -71,6 +72,9 @@ typedef struct CtrlState
 
 	// Calibrate initially
 	calibratestate    calibration;
+    
+    // State of functional modules
+    clampstate_t      clamp;
 } CtrlState;
 
 typedef struct CtrlParam{

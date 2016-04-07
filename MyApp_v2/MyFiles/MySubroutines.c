@@ -5,6 +5,7 @@
  *          and simplify the robot control.
  */
 
+#ifndef MySubroutines
 #define MySubroutines
 
 #include "MyApp.h"
@@ -65,3 +66,4 @@ void    omegaRef(double *omegaref)
      }
     
 }
+#endif

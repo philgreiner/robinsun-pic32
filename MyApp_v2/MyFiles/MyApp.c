@@ -101,7 +101,8 @@ int main(void)
     MyWIFI_Start();
     //MyCamera_Start();
 
-//    MyMiniProject_Init();
+    MyMiniProject_Init();
+    MyCAN_Task();
 
     CtrlIn *inputs = (CtrlIn*) malloc(sizeof(CtrlIn));
     CtrlOut *outputs = (CtrlOut*) malloc(sizeof(CtrlOut));

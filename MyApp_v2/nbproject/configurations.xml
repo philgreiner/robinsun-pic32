@@ -36,7 +36,6 @@
         <itemPath>MyIncludes/MyWIFI.h</itemPath>
         <itemPath>MyIncludes/MyCamera.h</itemPath>
         <itemPath>MyIncludes/MyMiniProject.h</itemPath>
-        <itemPath>MyIncludes/MyCtrlIO.h</itemPath>
       </logicalFolder>
       <logicalFolder name="RobinsunFiles"
                      displayName="RobinsunFiles"
@@ -53,7 +52,6 @@
         <itemPath>RobinsunFiles/robot_detect_gr1.h</itemPath>
         <itemPath>RobinsunFiles/triangulation_gr1.h</itemPath>
         <itemPath>RobinsunFiles/potentialfield_gr1.h</itemPath>
-        <itemPath>RobinsunFiles/MyAnalog.h</itemPath>
         <itemPath>RobinsunFiles/robinsun_strategy.h</itemPath>
         <itemPath>RobinsunFiles/competition_functions.h</itemPath>
       </logicalFolder>

@@ -68,7 +68,7 @@ void MyMiniProject_Init(void)
         MyCAN_TxMsg(BlockSID,PR1tow);
     
         unsigned LSBtow, MSBtow;
-        DutyToInf(50.0, &MSBtow, &LSBtow);
+        DutyToInf(0.0, &MSBtow, &LSBtow);
         char LSBt[3] = {0x21, 0x03, LSBtow};
         char MSBt[3] = {0x25, 0x3f, MSBtow};
         MyCAN_TxMsg(BlockSID, LSBt);
@@ -122,7 +122,12 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         cvs->inputs->sonars[2] = (sonar34 & 0xff00) >> 8;
         cvs->inputs->sonars[3] = (sonar34 & 0x00ff);
         cvs->inputs->sonars[4] = (sonar56 & 0xff00) >> 8;
-        cvs->inputs->sonars[5] = (sonar56 & 0x00ff);        
+        cvs->inputs->sonars[5] = (sonar56 & 0x00ff);
+        
+        int speedClamp = MyCyclone_Read(A_speedB);
+        speedClamp = ((speedClamp >> 15) == 1)? speedClamp-65535 : speedClamp;
+        cvs->inputs->speed_blocks = (double) speedClamp;
+        
     #endif
     cvs->inputs->t = (ReadCoreTimer()/(SYS_FREQ/2.0)) - MyMiniProject_tStart; // time in seconds
     while (cvs->inputs->t < cvs->state->lastT) cvs->inputs->t += 107.3741823075;
@@ -160,7 +165,7 @@ void    MyMiniProject_Send(CtrlStruct *cvs)
     char LSBFH[3] = {0x22, 0x03, LSB0};
     MyCAN_TxMsg(FishSID,MSBFH);
     MyCAN_TxMsg(FishSID,LSBFH);
-    
+//    
     // Blocks motor
     DutyToInf(cvs->outputs->command_blocks, &MSB0, &LSB0);
     char MSBB[3] = {0x25, 0x3f, MSB0};
