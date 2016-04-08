@@ -42,7 +42,7 @@ void    MyCAN_Task(void);
  * 2 (Channels) * 20 (Messages Buffers)
  * 16 (bytes/per message buffer) bytes. */
 
-BYTE CAN1MemoryBuffer[2 * 50 * CAN_TX_RX_MESSAGE_SIZE_BYTES];
+BYTE CAN1MemoryBuffer[2 * 100 * CAN_TX_RX_MESSAGE_SIZE_BYTES];
 
 
 #endif /* MyCAN_H_ */

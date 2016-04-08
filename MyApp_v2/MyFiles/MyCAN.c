@@ -223,7 +223,7 @@ void MyCAN_Task(void) {
         unsigned int in7 = (theData[1]>>7)%2;
 
         sprintf(theStr, "Receive CAN Msg 0x%x '%s'\n>", theSID, theData);
-        MyConsole_SendMsg(theStr);
+       //MyConsole_SendMsg(theStr);
         if(theSID==0x402){
             char msg[1024];
             sprintf(msg,"0 %i, 1: %i, 2: %i, 3: %i, 4: %i, 5: %i, 6: %i, 7: %i;\n > ",in0, in1, in2, in3, in4, in5, in6, in7);

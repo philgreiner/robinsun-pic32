@@ -247,12 +247,13 @@ HTTP_IO_RESULT HTTPExecuteGet(void)
             }
             else if(strcmppgm2ram((char*)ptr,(ROM char*)"openblocks") == 0){
                 #ifdef ROBINSUN
-                    cvs->outputs->command_blocks = 10;
+                    cvs->outputs->command_blocks = -10;
+                    MyConsole_SendMsg("Kikou\n");
                 #endif
             }
             else if(strcmppgm2ram((char*)ptr,(ROM char*)"closeblocks") == 0){
                 #ifdef ROBINSUN
-                    cvs->outputs->command_blocks = -10;
+                    cvs->outputs->command_blocks = 10;
                 #endif
             }
             else if(strcmppgm2ram((char*)ptr,(ROM char*)"fishlift") == 0){

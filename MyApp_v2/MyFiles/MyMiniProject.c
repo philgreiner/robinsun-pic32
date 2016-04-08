@@ -45,18 +45,18 @@ void MyMiniProject_Init(void)
 
     #ifdef ROBINSUN
         /* \brief Initialize fish motors */   
-        MyCAN_TxMsg(FishSID, GPLAT);
-
-        MyCAN_TxMsg(FishSID,T1CON);
-        MyCAN_TxMsg(FishSID,T2CON);
-        MyCAN_TxMsg(FishSID,PR1);
-        MyCAN_TxMsg(FishSID,PR2);
-    
-        MyCAN_TxMsg(FishSID,MSBL);
-        MyCAN_TxMsg(FishSID,LSBL);
-        
-        MyCAN_TxMsg(FishSID,MSBR);
-        MyCAN_TxMsg(FishSID,LSBR);
+//        MyCAN_TxMsg(FishSID, GPLAT);
+//
+//        MyCAN_TxMsg(FishSID,T1CON);
+//        MyCAN_TxMsg(FishSID,T2CON);
+//        MyCAN_TxMsg(FishSID,PR1);
+//        MyCAN_TxMsg(FishSID,PR2);
+//    
+//        MyCAN_TxMsg(FishSID,MSBL);
+//        MyCAN_TxMsg(FishSID,LSBL);
+//        
+//        MyCAN_TxMsg(FishSID,MSBR);
+//        MyCAN_TxMsg(FishSID,LSBR);
     
     /* \brief Initialize blocks motor */   
         char BLOCKSinit[3] = {0x1e, 0x70, 0x40}; //Turn ON LED (GP6) and turn OFF brakes (GP4)
@@ -126,14 +126,14 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         
         int speedClamp = MyCyclone_Read(A_speedB);
         char msg[1024];
-        sprintf(msg, "Measured ticks: %d\n", speedClamp);
-        MyConsole_SendMsg(msg);
+        sprintf(msg, "Measured ticks: %d (# of ticks)\n", speedClamp);
+//        MyConsole_SendMsg(msg);
         speedClamp = ((speedClamp >> 15) == 1)? speedClamp-65535 : speedClamp;
-        sprintf(msg, "Measured ticks: %d\n", speedClamp);
-        MyConsole_SendMsg(msg);
-        cvs->inputs->speed_blocks = (double) -speedClamp/(300.0);
-        sprintf(msg, "Measured speed: %d\n", cvs->inputs->speed_blocks);
-        MyConsole_SendMsg(msg);
+        sprintf(msg, "Measured ticks: %d (ticks + or -)\n", speedClamp);
+//        MyConsole_SendMsg(msg);
+        cvs->inputs->speed_blocks = (double) -speedClamp*2*M_PI/(4096.0*0.025);
+        sprintf(msg, "Measured speed: %f (cm/s)\n", cvs->inputs->speed_blocks);
+//        MyConsole_SendMsg(msg);
         
     #endif
     cvs->inputs->t = (ReadCoreTimer()/(SYS_FREQ/2.0)) - MyMiniProject_tStart; // time in seconds
@@ -172,7 +172,7 @@ void    MyMiniProject_Send(CtrlStruct *cvs)
     char LSBFH[3] = {0x22, 0x03, LSB0};
     MyCAN_TxMsg(FishSID,MSBFH);
     MyCAN_TxMsg(FishSID,LSBFH);
-//    
+
     // Blocks motor
     DutyToInf(cvs->outputs->command_blocks, &MSB0, &LSB0);
     char MSBB[3] = {0x25, 0x3f, MSB0};
