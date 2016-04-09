@@ -26,6 +26,7 @@
 	<h3> Right switch: <span id="buttonright" style="font-weight:normal">-</span> </h3>
 </div>
 <div id="charts">
+<button class="button" id='chartsbutton' style="vertical-align:middle"><span>Play/Pause </span></button>
 <div id="left">
 	<h3> Left wheel speed: <span id="l_wheel_speed" style="font-weight:normal">-</span> [cm/s] - Reference Value: <span id="omegaref_L" style="font-weight:normal">-</span> [cm/s]</h3>
 	<h3> Left odometer: <span id="odometer_L" style="font-weight:normal">-</span> [cm/s] </h3>
@@ -88,6 +89,28 @@ setInterval(function() {
 	leftwheel.addTimeSeries(leftwheelspeed, { strokeStyle: 'rgb(0, 114, 189)', lineWidth: 3 });
 	leftwheel.addTimeSeries(omegaref_L, { strokeStyle: 'rgb(217, 83, 25)', lineWidth: 3 });
 	leftwheel.streamTo(document.getElementById("leftwheel"), 250);
+
+	var isRunning = true;
+	document.getElementById('chartsbutton').onclick = function()
+	{
+		if (isRunning)
+		{
+			rightwheel.stop();
+			leftwheel.stop();
+			document.getElementById("chartsbutton").style.background='#e7e7e7';
+			document.getElementById("chartsbutton").style.color='black';
+		}
+		else
+		{
+			rightwheel.start();
+			leftwheel.start();			
+			document.getElementById("chartsbutton").style.background='#555555';
+			document.getElementById("chartsbutton").style.color='white';
+		}
+		isRunning = !isRunning;
+	};
+
+	
 //-->
 </script>
 	

@@ -86,11 +86,11 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
     #ifdef ROBINSUN
         int speedR = MyCyclone_Read(A_speedR);
         speedR = ((speedR >> 15) == 1)? speedR-65535 : speedR;
-        cvs->inputs->r_wheel_speed = (double) 30.0/22.0*speedR*2*M_PI*1.05/(53242*0.025); // 53242 in rad/s 
+        cvs->inputs->r_wheel_speed = (double) 60.0/61.92*30.0/22.0*speedR*2*M_PI*1.05/(53242*0.025); // 53242 in rad/s 
 
         int speedL = MyCyclone_Read(A_speedL);
         speedL = ((speedL >> 15) == 1)? speedL-65535 : speedL;
-        cvs->inputs->l_wheel_speed = (double) -30.0/24.0*speedL*2*M_PI/(47283*0.025); 
+        cvs->inputs->l_wheel_speed = (double) -60.0/60.74*30.0/24.0*speedL*2*M_PI/(47283*0.025); 
     #endif
     
     #ifdef MINIBOT

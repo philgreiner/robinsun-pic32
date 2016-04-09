@@ -88,7 +88,7 @@ typedef struct CtrlParam{
 	double kl;
 
 	// Wheel controller parameters
-	double Ki, Kp;
+	double Ki[2], Kp[2];
 	#ifdef POTENTIAL
 	    double Ki_pot, Kp_pot;
 		double obstacle_center[100];    // Coordinates of the central obstacle

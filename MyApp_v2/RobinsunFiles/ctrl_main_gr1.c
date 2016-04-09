@@ -55,8 +55,12 @@ void controller_init(CtrlStruct *cvs) {
 #else
     // Controller parameters
 #ifdef ROBINSUN
-    cvs->param->Kp = -0.1029; //0.09;
-    cvs->param->Ki = 2.0414; //1.18; 
+    //cvs->param->Kp = -0.1029; //0.09;
+    //cvs->param->Ki = 2.0414; //1.18; 
+    cvs->param->Kp[L_ID] = -0.1423;
+    cvs->param->Ki[L_ID] = 0.8599;
+    cvs->param->Kp[R_ID] = -0.1301;
+    cvs->param->Ki[R_ID] = 1.2266;
 #else
     cvs->param->Kp = -0.031;
     cvs->param->Ki = 2.1729;
@@ -280,10 +284,11 @@ void controller_loop(CtrlStruct *cvs) {
 
     /* Path planning through potential field computation */
     // Choice of the path planning algorithm
-    if (cvs->inputs->t >= 0) {
+    if (cvs->inputs->t >= 5 & cvs->inputs->t < 5.5) {
         //strategy_objective(cvs);
-        robinsun_main(cvs);
-
+        //robinsun_main(cvs);
+        cvs->state->omegaref[R_ID] = 2*(cvs->inputs->t-5)*.2/.0325;
+        cvs->state->omegaref[L_ID] = 2*(cvs->inputs->t-5)*.2/.0325;
 #ifdef POTENTIAL
         potential_Field(cvs);
 #endif
@@ -298,7 +303,9 @@ void controller_loop(CtrlStruct *cvs) {
         }
 #endif
 
-    } else if (cvs->inputs->t < 0) {
+    } else if (cvs->inputs->t > 5.5) {
+        cvs->state->omegaref[R_ID] = .2/.0325;
+        cvs->state->omegaref[L_ID] = .2/.0325;
 #ifdef SIMU_PROJECT
         calibrate_start(cvs);
 #endif
@@ -426,14 +433,14 @@ void motors_control(CtrlStruct *cvs, double * wheels) {
     wheels[L_ID] = UconsigneL * (100 / (0.9 * 24));
 #else
     // Limit the integral error (anti-windup)
-    cvs->state->errorIntR = (cvs->state->errorIntR * cvs->param->Ki > Valim) ? (Valim / (cvs->param->Ki)) : (cvs->state->errorIntR);
-    cvs->state->errorIntL = (cvs->state->errorIntL * cvs->param->Ki > Valim) ? (Valim / (cvs->param->Ki)) : (cvs->state->errorIntL);
-    cvs->state->errorIntR = (cvs->state->errorIntR * cvs->param->Ki<-Valim) ? (-Valim / (cvs->param->Ki)) : (cvs->state->errorIntR);
-    cvs->state->errorIntL = (cvs->state->errorIntL * cvs->param->Ki<-Valim) ? (-Valim / (cvs->param->Ki)) : (cvs->state->errorIntL);
+    cvs->state->errorIntR = (cvs->state->errorIntR * cvs->param->Ki[R_ID] > Valim) ? (Valim / (cvs->param->Ki[R_ID])) : (cvs->state->errorIntR);
+    cvs->state->errorIntL = (cvs->state->errorIntL * cvs->param->Ki[L_ID] > Valim) ? (Valim / (cvs->param->Ki[L_ID])) : (cvs->state->errorIntL);
+    cvs->state->errorIntR = (cvs->state->errorIntR * cvs->param->Ki[R_ID]<-Valim) ? (-Valim / (cvs->param->Ki[R_ID])) : (cvs->state->errorIntR);
+    cvs->state->errorIntL = (cvs->state->errorIntL * cvs->param->Ki[L_ID]<-Valim) ? (-Valim / (cvs->param->Ki[L_ID])) : (cvs->state->errorIntL);
 
     // PI controller
-    UconsigneR = (omegaref[R_ID] - rspeed) * cvs->param->Kp + cvs->state->errorIntR * cvs->param->Ki;
-    UconsigneL = (omegaref[L_ID] - lspeed) * cvs->param->Kp + cvs->state->errorIntL * cvs->param->Ki;
+    UconsigneR = (omegaref[R_ID] - rspeed) * cvs->param->Kp[R_ID] + cvs->state->errorIntR * cvs->param->Ki[R_ID];
+    UconsigneL = (omegaref[L_ID] - lspeed) * cvs->param->Kp[L_ID] + cvs->state->errorIntL * cvs->param->Ki[L_ID];
 
     if (UconsigneR > 0.9 * 24) {
         float delta = 0.9 * 24 - UconsigneR;
