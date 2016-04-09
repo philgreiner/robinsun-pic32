@@ -42,22 +42,26 @@ void MyMiniProject_Init(void)
     char LSBR[3] = {0x21, 0x03, LSB0};
     MyCAN_TxMsg(MotorSID,MSBR);
     MyCAN_TxMsg(MotorSID,LSBR);
+    
+    MyDelayMs(10);
 
     #ifdef ROBINSUN
         /* \brief Initialize fish motors */   
-//        MyCAN_TxMsg(FishSID, GPLAT);
-//
-//        MyCAN_TxMsg(FishSID,T1CON);
-//        MyCAN_TxMsg(FishSID,T2CON);
-//        MyCAN_TxMsg(FishSID,PR1);
-//        MyCAN_TxMsg(FishSID,PR2);
-//    
-//        MyCAN_TxMsg(FishSID,MSBL);
-//        MyCAN_TxMsg(FishSID,LSBL);
-//        
-//        MyCAN_TxMsg(FishSID,MSBR);
-//        MyCAN_TxMsg(FishSID,LSBR);
+        MyCAN_TxMsg(FishSID, GPLAT);
+
+        MyCAN_TxMsg(FishSID,T1CON);
+        MyCAN_TxMsg(FishSID,T2CON);
+        MyCAN_TxMsg(FishSID,PR1);
+        MyCAN_TxMsg(FishSID,PR2);
     
+        MyCAN_TxMsg(FishSID,MSBL);
+        MyCAN_TxMsg(FishSID,LSBL);
+        
+        MyCAN_TxMsg(FishSID,MSBR);
+        MyCAN_TxMsg(FishSID,LSBR);
+
+        MyDelayMs(10);
+        
     /* \brief Initialize blocks motor */   
         char BLOCKSinit[3] = {0x1e, 0x70, 0x40}; //Turn ON LED (GP6) and turn OFF brakes (GP4)
         MyCAN_TxMsg(BlockSID, BLOCKSinit);
@@ -73,6 +77,7 @@ void MyMiniProject_Init(void)
         char MSBt[3] = {0x25, 0x3f, MSBtow};
         MyCAN_TxMsg(BlockSID, LSBt);
         MyCAN_TxMsg(BlockSID, MSBt);
+        MyDelayMs(10);
     #endif
 }
 
@@ -110,6 +115,9 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         unsigned int ADC = MyCyclone_Read(A_adc);
         cvs->inputs->irR = ((float) ((ADC & 0xff00) >> 8)) * 3.3/255.0;
         cvs->inputs->irL = ((float) (ADC & 0x00ff))        * 3.3/255.0;
+        char msg[1024];
+//        sprintf(msg, "IR left: %f, IR right: %f\n", cvs->inputs->irR, cvs->inputs->irL);
+//        MyConsole_SendMsg(msg);
         
         unsigned int lt24 = MyCyclone_Read(A_lt24);
         cvs->inputs->start_signal = lt24 >> 15;
@@ -125,7 +133,6 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         cvs->inputs->sonars[5] = (sonar56 & 0x00ff);
         
         int speedClamp = MyCyclone_Read(A_speedB);
-        char msg[1024];
         sprintf(msg, "Measured ticks: %d (# of ticks)\n", speedClamp);
 //        MyConsole_SendMsg(msg);
         speedClamp = ((speedClamp >> 15) == 1)? speedClamp-65535 : speedClamp;

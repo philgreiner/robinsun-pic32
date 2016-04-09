@@ -28,6 +28,9 @@ void controller_init(CtrlStruct *cvs) {
     for (zeta = 0; zeta < 10; zeta++) {
         cvs->state->lastMesL[zeta] = 0;
         cvs->state->lastMesR[zeta] = 0;
+        for(i = 0; i < 6; i++) {
+            cvs->state->lastMesSonar[i][zeta] = 0.0;
+        }
     }
 
 #ifdef SIMU_GAME
@@ -207,6 +210,8 @@ void controller_loop(CtrlStruct *cvs) {
     }
     cvs->state->lastMesR[0] = ivs->r_wheel_speed;
     cvs->state->lastMesL[0] = ivs->l_wheel_speed;
+    for(i = 0; i < 6; i++)
+        cvs->state->lastMesSonar[i][0] = ivs->sonars[i];
 
     cvs->state->avSpeedR = cvs->state->avSpeedR / 10.0;
     cvs->state->avSpeedL = cvs->state->avSpeedL / 10.0;
@@ -302,8 +307,6 @@ void controller_loop(CtrlStruct *cvs) {
         cvs->state->omegaref[L_ID] = 0.0;
     }
 
-    cvs->state->omegaref[R_ID] = 0.0;
-    cvs->state->omegaref[L_ID] = 0.0;
     // Constant speed references for wheel calibrations
 #ifdef TEST_ROBINSUN
     cvs->state->omegaref[R_ID] = (ivs->t > 5) ? .30 / .0325 : 0;

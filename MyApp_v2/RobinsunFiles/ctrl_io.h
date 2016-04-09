@@ -125,7 +125,7 @@ typedef struct CtrlIn
     double odo_r_speed;
     double odo_l_speed;
     
-    double sonars[6];
+    int sonars[6];
     
     double speed_blocks;
     double speed_fish_horizontal;

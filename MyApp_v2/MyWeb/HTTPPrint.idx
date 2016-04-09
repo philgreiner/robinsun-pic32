@@ -95,8 +95,8 @@ MyVarFloat(24)
 MyVarFloat(27)
 MyVarFloat(25)
 MyVarFloat(26)
-+refspeed
-+maxspeed
+refspeed
+maxspeed
 +kp
 +ki
 +buttonL
@@ -120,3 +120,10 @@ MyVarFloat(26)
 +position0
 +position1
 +position2
++goal0
++goal1
++goal2
++competition_state
++clamp
++time
++current_progress

@@ -4,41 +4,54 @@
 <title>Live data from Robinsun!</title>
 
 <h1>Data from Robinsun:</h1>
-	<div id="leftB">
-		<img src="../images/button0.png" id="buttonL">
-		<p> Left switch: <span id="buttonleft" style="font-weight:normal">-</span> </p>
-	</div>
-	<div id="rightB">
-		<img src="../images/button1.png" id="buttonR">
-		<p> Right switch: <span id="buttonright" style="font-weight:normal">-</span> </p>
-	</div>
-<div id="charts">
-<div id="left">
-	<p> Left wheel speed: <span id="l_wheel_speed" style="font-weight:normal">-</span> [rad/s] - Reference Value: <span id="omegaref_L" style="font-weight:normal">-</span> [rad/s]</p>
-	<p> Left odometer: <span id="odometer_L" style="font-weight:normal">-</span> [rad/s] </p>
-	<canvas id="leftwheel" width="600" height="200"></canvas>
-</div>
-<div id="right">
-	<p> Right wheel speed: <span id="r_wheel_speed" style="font-weight:normal">-</span> [rad/s] - Reference Value: <span id="omegaref_R" style="font-weight:normal">-</span> [rad/s]</p>
-	<p> Right odometer: <span id="odometer_R" style="font-weight:normal">-</span> [rad/s] </p>
-	<canvas id="rightwheel" width="600" height="200"></canvas>
-</div>
-</div> <!-- charts !-->
+<h2>Current time: <span id="time" style="font-weight:normal">-</span></h2>
 
 <div>
-	<p> Sonars </p>
-	<p> 1) <span id="sonar1" style="font-weight:normal">-</span> [cm]; 2) <span id="sonar2" style="font-weight:normal">-</span> [cm]; 3) <span id="sonar3" style="font-weight:normal">-</span> [cm] </p>
-	<p> 4) <span id="sonar4" style="font-weight:normal">-</span> [cm]; 5) <span id="sonar5" style="font-weight:normal">-</span> [cm]; 6) <span id="sonar6" style="font-weight:normal">-</span> [cm] </p>
-	<p> Blocks: <span id="speed_blocks" style="font-weight:normal">-</span> [rad/s] - Command: <span id="command_blocks" style="font-weight:normal">-</span> [/100] </p>
-	<p> Fish horizontal: <span id="speed_fish_horizontal" style="font-weight:normal">-</span> [rad/s] - Command: <span id="command_fish_horizontal" style="font-weight:normal">-</span> [/100] </p>
-	<p> Fish vertical: <span id="speed_fish_vertical" style="font-weight:normal">-</span> [rad/s] - Command: <span id="command_fish_vertical" style="font-weight:normal">-</span> [/100] </p>
+	<h2> Sonars </h2>
+	<h3> 1) <span id="sonar1" style="font-weight:normal">-</span> [cm]; 2) <span id="sonar2" style="font-weight:normal">-</span> [cm]; 3) <span id="sonar3" style="font-weight:normal">-</span> [cm] </h3><br>
+	<h3> 4) <span id="sonar4" style="font-weight:normal">-</span> [cm]; 5) <span id="sonar5" style="font-weight:normal">-</span> [cm]; 6) <span id="sonar6" style="font-weight:normal">-</span> [cm] </h3><br>
+	<h3> Blocks: <span id="speed_blocks" style="font-weight:normal">-</span> [cm/s] - Command: <span id="command_blocks" style="font-weight:normal">-</span> [/100] </h3><br>
+	<h3> Fish horizontal: <span id="speed_fish_horizontal" style="font-weight:normal">-</span> [cm/s] - Command: <span id="command_fish_horizontal" style="font-weight:normal">-</span> [/100] </h3><br>
+	<h3> Fish vertical: <span id="speed_fish_vertical" style="font-weight:normal">-</span> [cm/s] - Command: <span id="command_fish_vertical" style="font-weight:normal">-</span> [/100] </h3><br>
 </div>
 
+<br>
+<br>
+<div id="leftB">
+	<img src="../images/button0.png" id="buttonL">
+	<h3> Left switch: <span id="buttonleft" style="font-weight:normal">-</span> </h3>
+</div>
+<div id="rightB">
+	<img src="../images/button1.png" id="buttonR">
+	<h3> Right switch: <span id="buttonright" style="font-weight:normal">-</span> </h3>
+</div>
+<div id="charts">
+<div id="left">
+	<h3> Left wheel speed: <span id="l_wheel_speed" style="font-weight:normal">-</span> [cm/s] - Reference Value: <span id="omegaref_L" style="font-weight:normal">-</span> [cm/s]</h3>
+	<h3> Left odometer: <span id="odometer_L" style="font-weight:normal">-</span> [cm/s] </h3>
+	<canvas id="leftwheel" width="600" height="300"></canvas>
+</div>
+<div id="right">
+	<h3> Right wheel speed: <span id="r_wheel_speed" style="font-weight:normal">-</span> [cm/s] - Reference Value: <span id="omegaref_R" style="font-weight:normal">-</span> [cm/s]</h3>
+	<h3> Right odometer: <span id="odometer_R" style="font-weight:normal">-</span> [cm/s] </h3>
+	<canvas id="rightwheel" width="600" height="300"></canvas>
+</div>
+</div> <!-- charts !-->
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
+<div>
+	<h2>Robot state</h2>
+	<h3> Competition state: <span id="competition_state" style="font-weight:normal">-</span> --> <span id="current_progress" style="font-weight:normal">-</span></h3>
+	<h3> Clamp state: <span id="clamp" style="font-weight:normal">-</span></h3>
+</div>
+<br>
 <div id="mapdiv">
-	<img src="images/positionmark.png" id="positionmark" style="display: none; position: absolute;"  height="25" />
-	<img src="../images/map.png" alt="map" id="map" onmousemove="move(event);" onclick="click(event);" height="360" width="480"/>
-	<p> Position X: <span id="position0" style="font-weight:normal">-</span> [m] - Y: <span id="position1" style="font-weight:normal">-</span> [m] - Theta: <span id="position2" style="font-weight:normal">-</span> [deg]</p>
+	<img src="images/positionmark.png" id="positionmark" style="display: none; position: absolute;"  height="96" />
+	<img src="images/goalgear.png" id="goalgear" style="display: none; position: absolute;"  height="80" />
+	<img src="../images/map.png" alt="map" id="map" onmousemove="move(event);" onclick="click(event);" height="720" width="960"/>
+	<h2> Position X: <span id="position0" style="font-weight:normal">-</span> [m] - Y: <span id="position1" style="font-weight:normal">-</span> [m] - Theta: <span id="position2" style="font-weight:normal">-</span> [deg]</h2>
+	<h3> Goal X: <span id="goal0" style="font-weight:normal">-</span> [m] - Y: <span id="goal1" style="font-weight:normal">-</span> [m] - Theta: <span id="goal2" style="font-weight:normal">-</span> [deg]</h3>
 </div> <!-- map !-->
 
 </div> <!-- content !-->
@@ -58,16 +71,22 @@ setInterval(function() {
         omegaref_L.append(new Date().getTime(), document.getElementById('omegaref_L').innerHTML);
       }, 250);
 	  
+	function constantrange(range) {
+	var min = -75;
+	var max = 75;
+		return {min: min, max: max};
+	}
+		
 	// Light blue: 153, 204, 204
 	// Robinsun: 79, 124, 164
-	var rightwheel = new SmoothieChart();
-	rightwheel.addTimeSeries(rightwheelspeed, { strokeStyle: 'rgb(79, 124, 164)', fillStyle: 'rgba(79, 124, 164, 0.4)', lineWidth: 3 });
-	rightwheel.addTimeSeries(omegaref_R, { strokeStyle: 'rgb(153, 204, 204)', fillStyle: 'rgba(153, 204, 204, 0.4)', lineWidth: 3 });
+	var rightwheel = new SmoothieChart({millisPerPixel:25,grid:{fillStyle:'#ffffff',strokeStyle:'#000000',sharpLines:true,millisPerLine:5000,verticalSections:6},labels:{fillStyle:'#000000',fontSize:14},yRangeFunction:constantrange,timestampFormatter:SmoothieChart.timeFormatter});
+	rightwheel.addTimeSeries(rightwheelspeed, { strokeStyle: 'rgb(0, 114, 189)', lineWidth: 3 });
+	rightwheel.addTimeSeries(omegaref_R, { strokeStyle: 'rgb(217, 83, 25)', lineWidth: 3 });
 	rightwheel.streamTo(document.getElementById("rightwheel"), 250);
 
-	var leftwheel = new SmoothieChart();
-	leftwheel.addTimeSeries(leftwheelspeed, { strokeStyle: 'rgb(79, 124, 164)', fillStyle: 'rgba(79, 124, 164, 0.4)', lineWidth: 3 });
-	leftwheel.addTimeSeries(omegaref_L, { strokeStyle: 'rgb(153, 204, 204)', fillStyle: 'rgba(153, 204, 204, 0.4)', lineWidth: 3 });
+	var leftwheel = new SmoothieChart({millisPerPixel:25,grid:{fillStyle:'#ffffff',strokeStyle:'#000000',sharpLines:true,millisPerLine:5000,verticalSections:6},labels:{fillStyle:'#000000',fontSize:14},yRangeFunction:constantrange,timestampFormatter:SmoothieChart.timeFormatter});
+	leftwheel.addTimeSeries(leftwheelspeed, { strokeStyle: 'rgb(0, 114, 189)', lineWidth: 3 });
+	leftwheel.addTimeSeries(omegaref_L, { strokeStyle: 'rgb(217, 83, 25)', lineWidth: 3 });
 	leftwheel.streamTo(document.getElementById("leftwheel"), 250);
 //-->
 </script>
@@ -105,6 +124,13 @@ function updateStatus(xmlData) {
 	document.getElementById('speed_fish_vertical').innerHTML = getXMLValue(xmlData, 'speed_fish_vertical');
 	document.getElementById('command_fish_horizontal').innerHTML = getXMLValue(xmlData, 'command_fish_horizontal');
 	document.getElementById('command_fish_vertical').innerHTML = getXMLValue(xmlData, 'command_fish_vertical');
+	
+	// Global
+	document.getElementById('time').innerHTML = getXMLValue(xmlData, 'time');
+	document.getElementById('competition_state').innerHTML = getXMLValue(xmlData, 'competition_state');
+	document.getElementById('current_progress').innerHTML = getXMLValue(xmlData, 'current_progress');
+	document.getElementById('clamp').innerHTML = getXMLValue(xmlData, 'clamp');
+
 }
 setTimeout("newAJAXCommand('status.xml', updateStatus, true)",250);
 //-->
@@ -185,13 +211,28 @@ function updatePos(xmlData){
 	document.getElementById('position1').innerHTML = pos1;
 	document.getElementById('position2').innerHTML = pos2;
 
+	var goal0 = getXMLValue(xmlData, 'goal0');
+	var goal1 = getXMLValue(xmlData, 'goal1');
+	var goal2 = getXMLValue(xmlData, 'goal2');
+
+	document.getElementById('goal0').innerHTML = goal0;
+	document.getElementById('goal1').innerHTML = goal1;
+	document.getElementById('goal2').innerHTML = goal2;
+	
 	var image_x = document.getElementById("map").offsetLeft;
 	var image_y = document.getElementById("map").offsetTop;
 	with(document.getElementById('positionmark'))
 	{
-		style.left = pos1*480/3+image_x+240+'px';
-		style.top = pos0*360/2+image_y+180+'px';
+		style.left = pos1*888/3+image_x+444+34-64+'px';
+		style.top = pos0*614/2+image_y+307+72-48+'px';
 		style.transform  = "rotate("+(180-pos2)+"deg)";
+		style.display = 'block';
+	}
+	with(document.getElementById('goalgear'))
+	{
+		style.left = goal1*888/3+image_x+444+34-40+'px';
+		style.top = goal0*614/2+image_y+307+72-39+'px';
+		style.transform  = "rotate("+(180-goal2)+"deg)";
 		style.display = 'block';
 	}
 }

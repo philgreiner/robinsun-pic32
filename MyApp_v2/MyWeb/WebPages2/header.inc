@@ -2,7 +2,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-	<title>ROBINSUNSON Control Panel</title>
+	<title>ROBINSUN Control Panel</title>
 	<link href="/mchp.css" rel="stylesheet" type="text/css" />
 	<script src="../js/mchp.js" type="text/javascript"></script>
 	<script src="../js/smoothie.js" type="text/javascript"></script>
@@ -13,7 +13,7 @@
 <div id="shadow-one"><div id="shadow-two"><div id="shadow-three"><div id="shadow-four">
 <div id="page">
 	
-	<div id="logo"> <a href="/index.htm"> <img style="width=50; height=10;" src="../images/robinsun.png" alt="ROBINSUNSON"/> </a> </div>
+	<div id="logo"> <a href="/index.htm"> <img style="width=50; height=10;" src="../images/robinsun.png" alt="ROBINSUN"/> </a> </div>
 	
 	<h2> Available modes: </h2>
 	<ul id="menu">

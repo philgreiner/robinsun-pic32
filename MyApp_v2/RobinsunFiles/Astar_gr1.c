@@ -243,11 +243,11 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 		if (delta_theta < -M_PI) delta_theta += 2 * M_PI;
         
         int reversed = 1;
-        if (delta_theta > M_PI_2)
-            delta_theta = delta_theta - M_PI;
-        else if (delta_theta < -M_PI_2)
-            delta_theta = delta_theta + M_PI;
-        else
+//        if (delta_theta > M_PI_2)
+//            delta_theta = delta_theta - M_PI;
+//        else if (delta_theta < -M_PI_2)
+//            delta_theta = delta_theta + M_PI;
+//        else
             reversed = 0;
         
 		double omega = 1.95*delta_theta;

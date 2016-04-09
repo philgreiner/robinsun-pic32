@@ -24,4 +24,11 @@
 <position0>~position0~</position0>
 <position1>~position1~</position1>
 <position2>~position2~</position2>
+<goal0>~goal0~</goal0>
+<goal1>~goal1~</goal1>
+<goal2>~goal2~</goal2>
+<competition_state>~competition_state~</competition_state>
+<current_progress>~current_progress~</current_progress>
+<clamp>~clamp~</clamp>
+<time>~time~</time>
 </response>

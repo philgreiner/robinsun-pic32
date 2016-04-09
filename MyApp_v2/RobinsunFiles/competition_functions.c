@@ -26,10 +26,6 @@ void wait(CtrlStruct *cvs) {
     }
 }
 
-typedef enum {
-    GOTO_BF, WAIT_FOR_POSITION_BF, TURN_BF, FORWARD_BF, CLAMP_BF, PUSH_BF, UNCLAMP_BF, MOVE_BACK_BF
-} blocks_front_t;
-
 void blocks_front(CtrlStruct *cvs) {
     double x, y, theta, x_goal, y_goal, theta_goal, d;
     x = cvs->state->position[0];
@@ -43,7 +39,7 @@ void blocks_front(CtrlStruct *cvs) {
         case GOTO_BF:
             // SET GOAL POSITION
             cvs->state->goal_position[0] = 0.092;
-            cvs->state->goal_position[1] = -1.162;
+            cvs->state->goal_position[1] = -1;
             cvs->state->goal_position[2] = M_PI_2;
 
             // ACTIVATE A*
@@ -71,12 +67,12 @@ void blocks_front(CtrlStruct *cvs) {
             double omega = (M_PI_2 - theta);
             if (omega > M_PI) omega -= 2 * M_PI;
             if (omega < -M_PI) omega += 2 * M_PI;
-            
-            cvs->state->omegaref[R_ID] = 2 * M_PI * omega / (fabs(omega));
-            cvs->state->omegaref[L_ID] = -2 * M_PI * omega / (fabs(omega));
+
+            cvs->state->omegaref[R_ID] = M_PI_4 * omega / (fabs(omega)) + omega;
+            cvs->state->omegaref[L_ID] = -M_PI_4 * omega / (fabs(omega)) - omega;
 
             // GO TO FORWARD 
-            if (omega < 0.1)
+            if (fabs(omega) < 0.01)
                 cvs->state->current_action_progress = FORWARD_BF;
             break;
         
@@ -85,11 +81,11 @@ void blocks_front(CtrlStruct *cvs) {
             cvs->param->ready_start_astar = 0;
 
             // MOVE FORWARD
-            cvs->state->omegaref[R_ID] = 2 * M_PI;
-            cvs->state->omegaref[L_ID] = 2 * M_PI;
+            cvs->state->omegaref[R_ID] = M_PI;
+            cvs->state->omegaref[L_ID] = M_PI;
 
             // GO TO CLAMP 
-            if (0.75 - fabs(y) < 0.05)
+            if (fabs(0.75 - fabs(y)) < 0.05)
             {
                 cvs->state->current_action_progress = CLAMP_BF;
                 cvs->state->timer = cvs->inputs->t;
@@ -120,7 +116,7 @@ void blocks_front(CtrlStruct *cvs) {
             cvs->state->omegaref[L_ID] = 2.75 * M_PI;
 
             // GO TO UNCLAMP
-            if (0.30 - fabs(y) < 0.03)
+            if (fabs(0.30 - fabs(y)) < 0.03)
             {
                 cvs->state->current_action_progress = UNCLAMP_BF;
                 cvs->state->timer = cvs->inputs->t;
@@ -154,14 +150,11 @@ void blocks_front(CtrlStruct *cvs) {
             cvs->state->omegaref[L_ID] = -2.75 * M_PI;
 
             // ACTION IS DONE
-            if (0.60 - fabs(y) < 0.03)
+            if (fabs(0.60 - fabs(y)) < 0.03)
                 cvs->state->objectives[cvs->state->current_objective] = DONE1;
             break;
     }
 }
-
-typedef enum {GOTO_C, WAIT_FOR_POSITION_C, TURN_C, BACKWARDS_C, SWITCHES_C
-} cabins_close_t;
 
 void cabins_close(CtrlStruct *cvs) {
     double x, y, theta, x_goal, y_goal, theta_goal, d;
@@ -206,8 +199,8 @@ void cabins_close(CtrlStruct *cvs) {
             if (omega > M_PI) omega -= 2 * M_PI;
             if (omega < -M_PI) omega += 2 * M_PI;
             
-            cvs->state->omegaref[R_ID] = 2 * M_PI * omega / (fabs(omega));
-            cvs->state->omegaref[L_ID] = -2 * M_PI * omega / (fabs(omega));
+            cvs->state->omegaref[R_ID] = M_PI_4 * omega / (fabs(omega));
+            cvs->state->omegaref[L_ID] = -M_PI_4 * omega / (fabs(omega));
 
             // GO TO FORWARD 
             if (omega < 0.1)
@@ -245,8 +238,6 @@ void cabins_close(CtrlStruct *cvs) {
     }
 }
 
-typedef enum {GOTO_BD1, WAIT_FOR_POSITION_BD1, TURN_BD1, FORWARD_BD1, CLAMP_BD1, MOVE_BACK_BD1, BRING_BD1, UNCLAMP_BD1, MOVE_BACK_BD1_END
-} blocks_dune_1_t;
 
 void blocks_dune_1(CtrlStruct *cvs) {
     double x, y, theta, x_goal, y_goal, theta_goal, d;
@@ -410,9 +401,6 @@ void blocks_dune_1(CtrlStruct *cvs) {
 void blocks_dune_2(CtrlStruct *cvs) {
     cvs->state->objectives[cvs->state->current_objective] = DONE1;
 }
-
-typedef enum {GOTO_BC, WAIT_FOR_POSITION_BC, TURN_BC, FORWARD_BC, CLAMP_BC, BACKWARDS_BC, BRING_BC, UNCLAMP_BC, MOVE_BACK_BC
-} blocks_cabins_t;
 
 void blocks_cabins(CtrlStruct *cvs) {
     double x, y, theta, x_goal, y_goal, theta_goal, d;

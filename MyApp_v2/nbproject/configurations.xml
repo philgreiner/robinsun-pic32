@@ -36,6 +36,7 @@
         <itemPath>MyIncludes/MyWIFI.h</itemPath>
         <itemPath>MyIncludes/MyCamera.h</itemPath>
         <itemPath>MyIncludes/MyMiniProject.h</itemPath>
+        <itemPath>MyWeb/myprints.h</itemPath>
       </logicalFolder>
       <logicalFolder name="RobinsunFiles"
                      displayName="RobinsunFiles"
@@ -164,6 +165,7 @@
         <itemPath>MyFiles/MyCtrlIO.c</itemPath>
         <itemPath>MyFiles/MyMiniProject.c</itemPath>
         <itemPath>MyFiles/MySubroutines.c</itemPath>
+        <itemPath>MyWeb/myprints.c</itemPath>
       </logicalFolder>
       <logicalFolder name="RobinsunFiles"
                      displayName="RobinsunFiles"

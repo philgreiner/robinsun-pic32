@@ -11,7 +11,6 @@
 #define __HTTPPRINT_H
 
 #include "TCPIP Stack/TCPIP.h"
-#include "MyApp.h"
 
 #if defined(STACK_USE_HTTP2_SERVER)
 
@@ -44,6 +43,13 @@ void HTTPPrint_odometer_L(void);
 void HTTPPrint_position0(void);
 void HTTPPrint_position1(void);
 void HTTPPrint_position2(void);
+void HTTPPrint_goal0(void);
+void HTTPPrint_goal1(void);
+void HTTPPrint_goal2(void);
+void HTTPPrint_competition_state(void);
+void HTTPPrint_clamp(void);
+void HTTPPrint_time(void);
+void HTTPPrint_current_progress(void);
 
 void HTTPPrint(DWORD callbackID)
 {
@@ -79,7 +85,6 @@ void HTTPPrint(DWORD callbackID)
         case 0x00000068:
 			HTTPPrint_omegaref_L();
 			break;
-#ifdef ROBINSUN
         case 0x00000069:
 			HTTPPrint_sonar1();
 			break;
@@ -122,7 +127,6 @@ void HTTPPrint(DWORD callbackID)
         case 0x00000076:
 			HTTPPrint_odometer_L();
 			break;
-#endif
         case 0x00000077:
 			HTTPPrint_position0();
 			break;
@@ -131,6 +135,27 @@ void HTTPPrint(DWORD callbackID)
 			break;
         case 0x00000079:
 			HTTPPrint_position2();
+			break;
+        case 0x0000007a:
+			HTTPPrint_goal0();
+			break;
+        case 0x0000007b:
+			HTTPPrint_goal1();
+			break;
+        case 0x0000007c:
+			HTTPPrint_goal2();
+			break;
+        case 0x0000007d:
+			HTTPPrint_competition_state();
+			break;
+        case 0x0000007e:
+			HTTPPrint_clamp();
+			break;
+        case 0x0000007f:
+			HTTPPrint_time();
+			break;
+        case 0x00000080:
+			HTTPPrint_current_progress();
 			break;
 		default:
 			// Output notification for undefined values
