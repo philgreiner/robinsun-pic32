@@ -14,7 +14,6 @@
 <div id="page">
 	
 	<div id="logo"> <a href="/index.htm"> <img style="width=50; height=10;" src="../images/robinsun.png" alt="ROBINSUN"/> </a> </div>
-	
 	<h2> Available modes: </h2>
 	<ul id="menu">
 		<li><a href="/charts.htm">Live Charts</a></li>
@@ -22,3 +21,4 @@
 		<li><a href="/manualcontroller.htm">Manual Controller</a></li>
 		<li><a href="http://www.robinsun.eu" target="_blank">Team Website</a></li>
 	</ul>
+	
