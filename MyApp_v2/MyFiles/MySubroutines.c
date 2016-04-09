@@ -34,36 +34,36 @@ void    DutyToInf(double duty, unsigned *MSB, unsigned *LSB)
     #endif
 }
 
-void    omegaRef(double *omegaref)
+void    gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
 {
-//    double beaconAngle = dataIN.angle;
-//    double beaconDistance = dataIN.distance;
-//    dataIN.tower_speed = beaconDistance; // to display on website
-//    
-//    double refspeed = speedREF/5.9; // SpeedREF is in cm/s; converted to rad/s
-//    double speed = (beaconDistance<=20)? (0) : (refspeed + refspeed*(beaconDistance - 20));
-//    if(beaconDistance < 10 && beaconDistance > 1) speed = -2*refspeed;
-//    
-//    speed = (speed > maxspeed)? (maxspeed) : (speed);
-//    omegaref[0] = speed + speed*beaconAngle/90.0;
-//    omegaref[1] = speed - speed*beaconAngle/90.0;
-//    
-//    //limitations
-//    omegaref[0] = (omegaref[0]>maxspeed)? (maxspeed) : (omegaref[0]);
-//    omegaref[1] = (omegaref[1]>maxspeed)? (maxspeed) : (omegaref[1]);
-//    omegaref[0] = (omegaref[0]<-maxspeed)? (-maxspeed) : (omegaref[0]);
-//    omegaref[1] = (omegaref[1]<-maxspeed)? (-maxspeed) : (omegaref[1]);
+    double x, y, theta, delta_theta, delta_x, delta_y;
+    x = cvs->state->position[0];
+    y = cvs->state->position[1];
+    theta = cvs->state->position[2];
+
+    delta_x = destination[0] - x;
+    delta_y = destination[1] - y;
+    delta_theta = destination[2] - theta;
+    if (delta_theta > M_PI) delta_theta -= 2 * M_PI;
+    if (delta_theta < -M_PI) delta_theta += 2 * M_PI;
+
+    double dist = sqrt((delta_x*delta_x) + (delta_y*delta_y));
+    double omega = 1.95*delta_theta;
+    omega = (omega > 2.75*M_PI) ? (2.75*M_PI) : omega;
+    omega = (omega < -2.75*M_PI) ? (-2.75*M_PI) : omega;
+
+    double vlin = 2.75*M_PI*((1.25+cos(delta_theta))/2.25);
+    if (cvs->param->index_path == 0) vlin = dist*15*M_PI;
+    if (fabs(delta_theta) < 1.3*M_PI_4) {
+        vlin = (vlin > 2.75*M_PI) ? (2.75*M_PI) : (vlin);
+        vlin = (vlin < -2.75*M_PI) ? (-2.75*M_PI) : (vlin);
+        /* REMOVED LOWER LIMIT ON VLIN (to allow for orientation) */
+    }
+    else {
+        vlin = 0;
+    }
     
-     if(sin(i*1.0/50.0) < 0)
-     {
-        omegaref[R_ID] = 6.3;
-        omegaref[L_ID] = 6.3;
-     }
-     else
-     {
-        omegaref[R_ID] = -6.3;
-        omegaref[L_ID] = -6.3;
-     }
-    
+    wheels[R_ID] = vlin + omega;
+    wheels[L_ID] = vlin - omega;
 }
 #endif
