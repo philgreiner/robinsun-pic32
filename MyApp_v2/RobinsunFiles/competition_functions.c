@@ -27,7 +27,7 @@ void wait(CtrlStruct *cvs) {
 }
 
 void blocks_front(CtrlStruct *cvs) {
-    double x, y, theta, x_goal, y_goal, theta_goal, d;
+    double x, y, theta, x_goal, y_goal, theta_goal, d, wheels[2], dest[3];
     x = cvs->state->position[0];
     y = cvs->state->position[1];
     theta = cvs->state->position[2];
@@ -38,7 +38,7 @@ void blocks_front(CtrlStruct *cvs) {
     switch (cvs->state->current_action_progress) {
         case GOTO_BF:
             // SET GOAL POSITION
-            cvs->state->goal_position[0] = 0.1 ;
+            cvs->state->goal_position[0] = -0.15 ;
             cvs->state->goal_position[1] = -1.17;
             cvs->state->goal_position[2] = M_PI_2;
 
@@ -58,7 +58,7 @@ void blocks_front(CtrlStruct *cvs) {
             d = sqrt((x - x_goal)*(x - x_goal) + (y - y_goal)*(y - y_goal));
 
             // GO TO TURN IF CLOSE ENOUGH
-            if (d < 0.04)
+            if (!cvs->param->ready_start_astar)
                 cvs->state->current_action_progress = TURN_BF;
             break;
 
@@ -66,7 +66,7 @@ void blocks_front(CtrlStruct *cvs) {
             // TURN OFF A*
             cvs->param->ready_start_astar = 0;
 
-            double dest[3] = {x, y, M_PI_2};;
+            dest[0] = x; dest[1] = y; dest[2] = M_PI_2;
             // Set correct orientation
             double omega = (M_PI_2 - theta);
             if (omega > M_PI) omega -= 2 * M_PI;
@@ -79,16 +79,23 @@ void blocks_front(CtrlStruct *cvs) {
 
             // GO TO FORWARD 
             if (fabs(omega) < 0.01)
+            {
                 cvs->state->current_action_progress = FORWARD_BF;
+                cvs->state->errorIntL = 0.0;
+                cvs->state->errorIntR = 0.0;
+            }
             break;
         
         case FORWARD_BF:
             // TURN OFF A*
             cvs->param->ready_start_astar = 0;
 
+            dest[0] = -0.1; dest[1] = -1.07; dest[2] = M_PI_2;
+            gotoPoint(cvs,dest,wheels);
+
             // MOVE FORWARD
-            cvs->state->omegaref[R_ID] = M_PI;
-            cvs->state->omegaref[L_ID] = M_PI;
+            cvs->state->omegaref[R_ID] = wheels[R_ID];
+            cvs->state->omegaref[L_ID] = wheels[L_ID];
 
             // GO TO CLAMP 
             if (fabs(1.07 - fabs(y)) < 0.05)
@@ -110,16 +117,22 @@ void blocks_front(CtrlStruct *cvs) {
 
             // GO TO PUSH 
             if (cvs->inputs->t - cvs->state->timer > 2)
+            {
                 cvs->state->current_action_progress = PUSH_BF;
+                cvs->state->errorIntL = 0.0;
+                cvs->state->errorIntR = 0.0;
+            }
             break;
 
         case PUSH_BF:
             // TURN OFF A*
             cvs->param->ready_start_astar = 0;
 
+            dest[0] = 0.1; dest[1] = -0.40; dest[2] = M_PI_2;
+            gotoPoint(cvs,dest,wheels);
             // MOVE FORWARD
-            cvs->state->omegaref[R_ID] = M_PI;
-            cvs->state->omegaref[L_ID] = M_PI;
+            cvs->state->omegaref[R_ID] = wheels[R_ID];
+            cvs->state->omegaref[L_ID] = wheels[L_ID];
 
             // GO TO UNCLAMP
             if (fabs(0.40 - fabs(y)) < 0.03)
@@ -144,6 +157,8 @@ void blocks_front(CtrlStruct *cvs) {
             {
                 cvs->state->current_action_progress = MOVE_BACK_BF;
                 cvs->outputs->command_blocks = 0.0;
+                cvs->state->errorIntL = 0.0;
+                cvs->state->errorIntR = 0.0;
             }
             break;
 

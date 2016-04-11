@@ -1504,7 +1504,7 @@ void HTTPPrint_status_fail(void)
 void HTTPPrint_r_wheel_speed(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%.3f", cvs->inputs->r_wheel_speed*.0325*100*3-75);
+    sprintf(theStr, "%.3f", cvs->inputs->r_wheel_speed*.0325*100);
     TCPPutString(sktHTTP, theStr);
 }
 
@@ -1532,7 +1532,7 @@ void HTTPPrint_buttonR(void)
 void HTTPPrint_omegaref_R(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%.3f", cvs->inputs->l_wheel_speed*.0325*100*3 - 75); //cvs->state->omegaref[R_ID]*.0325*100);
+    sprintf(theStr, "%.3f", cvs->state->omegaref[R_ID]*.0325*100); //cvs->state->omegaref[R_ID]*.0325*100);
     TCPPutString(sktHTTP, theStr);
 }
 

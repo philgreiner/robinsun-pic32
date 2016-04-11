@@ -76,8 +76,8 @@ setInterval(function() {
       }, 250);
 	  
 	function constantrange(range) {
-	var min = -75;
-	var max = 75;
+	var min = -50;
+	var max = 50;
 		return {min: min, max: max};
 	}
 		
@@ -210,21 +210,21 @@ function getScrollXY() {
 function move(event){
     var mouse_x = event.clientX;
     var mouse_y = event.clientY;
- 
+
     var image_x = document.getElementById("map").offsetLeft;
     var image_y = document.getElementById("map").offsetTop;
-     
+
     var scroll = getScrollXY();
 	var scroll_x = scroll[0];
     var scroll_y = scroll[1];
- 
+
     var point_x = mouse_x - image_x + scroll_x;
     var point_y = mouse_y - image_y + scroll_y;
-    
+
     position_x = point_x*3/880 - 1.63;
     position_y = point_y*2/605 - 1.12;
-    document.getElementById("mousepos").innerHTML = "Y = " + position_x.toFixed(3)  + " [m] - X = " + position_y.toFixed(3) + " [m]";
-    
+    document.getElementById("mousepos").innerHTML = "X = " + position_y.toFixed(3) + " [m]; Y = " + position_x.toFixed(3)  + " [m]";
+
     pixX = mouse_x + scroll_x;
     pixY = mouse_y + scroll_y;
 }

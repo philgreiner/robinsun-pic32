@@ -40,14 +40,15 @@ void    gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
     x = cvs->state->position[0];
     y = cvs->state->position[1];
     theta = cvs->state->position[2];
+    double dist = sqrt((delta_x*delta_x) + (delta_y*delta_y));
 
     delta_x = destination[0] - x;
     delta_y = destination[1] - y;
-    delta_theta = destination[2] - theta;
+    delta_theta = atan2(delta_y,delta_x) - theta;
+    if(dist < 0.05) delta_theta = destination[2] - theta;
     if (delta_theta > M_PI) delta_theta -= 2 * M_PI;
     if (delta_theta < -M_PI) delta_theta += 2 * M_PI;
 
-    double dist = sqrt((delta_x*delta_x) + (delta_y*delta_y));
     double omega = 1.95*delta_theta;
     omega = (omega > 2.75*M_PI) ? (2.75*M_PI) : omega;
     omega = (omega < -2.75*M_PI) ? (-2.75*M_PI) : omega;

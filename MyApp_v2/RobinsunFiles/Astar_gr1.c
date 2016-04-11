@@ -209,12 +209,12 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 	// 1. ***** ON POSITION *****
 	if (fabs(dist) <= PRECISION) {
 		if (cvs->param->index_path == 0)				// at final destination
-		{
-			cvs->state->omegaref[R_ID] = 0.0;
-			cvs->state->omegaref[L_ID] = 0.0;
+		{       
+                cvs->state->omegaref[R_ID] = 0.0;
+                cvs->state->omegaref[L_ID] = 0.0;
 
-			cvs->param->Astar_path_active = 0;
-			cvs->param->ready_start_astar = 0;
+                cvs->param->Astar_path_active = 0;
+                cvs->param->ready_start_astar = 0;
 		}
 		else {
 			cvs->param->index_path = cvs->param->index_path - 1;
@@ -250,7 +250,7 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 //        else
             reversed = 0;
         
-		double omega = 1.95*delta_theta;
+		omega = 1.95*delta_theta;
         omega = (omega > 2.75*M_PI) ? (2.75*M_PI) : omega;
         omega = (omega < -2.75*M_PI) ? (-2.75*M_PI) : omega;
         
@@ -263,9 +263,8 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 		if (fabs(delta_theta) < 1.3*M_PI_4) {
 			vlin = (vlin > 2.75*M_PI) ? (2.75*M_PI) : (vlin);
 			vlin = (vlin < -2.75*M_PI) ? (-2.75*M_PI) : (vlin);
-			if (fabs(vlin) <= 0.85*M_PI_2) {
+			if (fabs(vlin) <= 0.85*M_PI_2)
 				vlin = (vlin /(fabs(vlin)))*0.85*M_PI_2;
-			}
 		}
 		else {
 			vlin = 0;
