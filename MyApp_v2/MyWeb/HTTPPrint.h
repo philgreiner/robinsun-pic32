@@ -20,8 +20,7 @@ extern BYTE curHTTPID;
 void HTTPPrint(DWORD callbackID);
 void HTTPPrint_r_wheel_speed(void);
 void HTTPPrint_l_wheel_speed(void);
-void HTTPPrint_kp(void);
-void HTTPPrint_ki(void);
+void HTTPPrint_refspeed(void);
 void HTTPPrint_buttonL(void);
 void HTTPPrint_buttonR(void);
 void HTTPPrint_omegaref_R(void);
@@ -50,6 +49,14 @@ void HTTPPrint_competition_state(void);
 void HTTPPrint_clamp(void);
 void HTTPPrint_time(void);
 void HTTPPrint_current_progress(void);
+void HTTPPrint_kpleft(void);
+void HTTPPrint_kpright(void);
+void HTTPPrint_kileft(void);
+void HTTPPrint_kiright(void);
+void HTTPPrint_irL(void);
+void HTTPPrint_irR(void);
+void HTTPPrint_opponent0(void);
+void HTTPPrint_opponent1(void);
 
 void HTTPPrint(DWORD callbackID)
 {
@@ -67,11 +74,8 @@ void HTTPPrint(DWORD callbackID)
         case 0x0000004c:
 			HTTPPrint_l_wheel_speed();
 			break;
-        case 0x00000063:
-			HTTPPrint_kp();
-			break;
-        case 0x00000064:
-			HTTPPrint_ki();
+        case 0x00000061:
+			HTTPPrint_refspeed();
 			break;
         case 0x00000065:
 			HTTPPrint_buttonL();
@@ -156,6 +160,30 @@ void HTTPPrint(DWORD callbackID)
 			break;
         case 0x00000080:
 			HTTPPrint_current_progress();
+			break;
+        case 0x00000081:
+			HTTPPrint_kpleft();
+			break;
+        case 0x00000082:
+			HTTPPrint_kpright();
+			break;
+        case 0x00000083:
+			HTTPPrint_kileft();
+			break;
+        case 0x00000084:
+			HTTPPrint_kiright();
+			break;
+        case 0x00000085:
+			HTTPPrint_irL();
+			break;
+        case 0x00000086:
+			HTTPPrint_irR();
+			break;
+        case 0x00000087:
+			HTTPPrint_opponent0();
+			break;
+        case 0x00000088:
+			HTTPPrint_opponent1();
 			break;
 		default:
 			// Output notification for undefined values

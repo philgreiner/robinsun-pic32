@@ -4,31 +4,35 @@
 <h1 id="controller"> Automatic controller parameters </h1>
 <p id="top"> To modify the values of the controller parameters, just type in the desired values in the corresponding fields. Then, click on 'Update value' to update the value.</p>
 <p> After your modifications are finished, don't hesitate to go to <a href="/charts.htm"> the charts page</a> to visualize the live results. </p>
-
+<form method="post" id="form2">
 <table id="autocontrol">
 	<tr>
-		<th colspan="2"> Speed Parameters </th>
+		<th colspan="2"> Pi Parameters (left) </th>
 		<th></th>
-		<th colspan="2"> PI Parameters </th>
+		<th colspan="2"> PI Parameters (right) </th>
 	</tr>
 	<tr>
-		<td> Reference speed </td>
-		<td> Nope </td>
+		<td> Kp left </td>
+		<td> <input type="text" name="kpleft" id="kpleft" value="~kpleft~"> </td>
 		<td class="mid"> </td>
-		<td> Kp </td>
-		<td> <form method="post" id="form2"><input type="text" name="kp" id="kp" value="~kp~"><input type="submit" value="Update"></form> </td>
+		<td> Kp right</td>
+		<td> <input type="text" name="kpright" id="kpright" value="~kpright~"> </td>
 	</tr>
 	<tr>
-		<td> Maximum speed </td>
-		<td> nope </td>
+		<td> Ki left</td>
+		<td> <input type="text" name="kileft" id="kileft" value="~kileft~"> </td>
 		<td class="mid"> </td>
-		<td> Ki </td>
-		<td> <form method="post" id="form4"><input type="text" name="ki" id="ki" value="~ki~"><input type="submit" value="Update"></form> </td>
+		<td> Ki right</td>
+		<td> <input type="text" name="kiright" id="kiright" value="~kiright~"> </td>
 	</tr>
 </table>
-
-	<input type="submit" value="Update all values" form="form1 form2 form3 form4">
-
+<input type="submit" value="Update"></form>
+	<div>
+	<p>Reference speed (linear)</p>
+	<form method="post" id="form5"><input type="text" name="refspeed" id="refspeed" value="~refspeed~"><input type="submit" value="Update"></form>
+	</div>
+	
+	
 </div>
 
 ~inc:footer.inc~

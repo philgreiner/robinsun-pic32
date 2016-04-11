@@ -33,7 +33,7 @@ void game_map_drawing(CtrlStruct *cvs)
 		for (y = 0; y <= 62; y++)
 		{
 		// *** 0/ borders
-			if (x <= 3 || x >= 38 || y <= 1 || y >= 61) {
+			if (x <= 3 || x >= 38 || y < 1 || y >= 61) {
 				cvs->param->game_map[x][y] = 0;
 			}
             

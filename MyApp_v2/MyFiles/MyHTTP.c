@@ -1425,12 +1425,38 @@ static HTTP_IO_RESULT HTTPautocontrol(void)
             if (HTTPReadPostName(ptr, HTTP_MAX_DATA_LEN) == HTTP_READ_INCOMPLETE)
                 return HTTP_IO_NEED_DATA;
 
+            if (!strcmppgm2ram((char *) ptr, (ROM char*) "kileft"))
+                formInput = 1;
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "kpleft"))
+                formInput = 2;
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "kiright"))
+                formInput = 3;
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "kpright"))
+                formInput = 4;
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "refspeed"))
+                formInput = 5;
+
             if (HTTPReadPostValue(ptr, HTTP_MAX_DATA_LEN) == HTTP_READ_INCOMPLETE)
                 return HTTP_IO_NEED_DATA;
-            
+
+            if (formInput == 1) {
+                cvs->param->Ki[L_ID] = atof(ptr);
+            } else if (formInput == 2) {
+                cvs->param->Kp[L_ID] = atof(ptr);
+            } else if (formInput == 3) {
+                cvs->param->Ki[R_ID] = atof(ptr);
+            } else if (formInput == 4) {
+                cvs->param->Kp[R_ID] = atof(ptr);
+            } else if (formInput == 5) {
+                cvs->param->refspeed = atof(ptr);
+            }
+
             curHTTP.smPost = POST_READ;
             break;
         case POST_DONE:
+            cvs->state->errorIntL = 0.0;
+            cvs->state->errorIntR = 0.0;
+
             strcpypgm2ram((char*) ptr, "autocontroller.htm");
             curHTTP.httpStatus = HTTP_REDIRECT;
             return HTTP_IO_DONE;
@@ -1478,7 +1504,7 @@ void HTTPPrint_status_fail(void)
 void HTTPPrint_r_wheel_speed(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%.3f", cvs->inputs->r_wheel_speed*.0325*100*3);
+    sprintf(theStr, "%.3f", cvs->inputs->r_wheel_speed*.0325*100*3-75);
     TCPPutString(sktHTTP, theStr);
 }
 
@@ -1486,20 +1512,6 @@ void HTTPPrint_l_wheel_speed(void)
 {
     BYTE theStr[64];
     sprintf(theStr, "%.3f", cvs->inputs->l_wheel_speed*0.0325*100);
-    TCPPutString(sktHTTP, theStr);
-}
-
-void HTTPPrint_kp(void)
-{
-    BYTE theStr[64];
-    sprintf(theStr, "%f", cvs->param->Kp);
-    TCPPutString(sktHTTP, theStr);
-}
-
-void HTTPPrint_ki(void)
-{
-    BYTE theStr[64];
-    sprintf(theStr, "%f", cvs->param->Ki);
     TCPPutString(sktHTTP, theStr);
 }
 
@@ -1520,7 +1532,7 @@ void HTTPPrint_buttonR(void)
 void HTTPPrint_omegaref_R(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%.3f", cvs->inputs->l_wheel_speed*.0325*100*3); //cvs->state->omegaref[R_ID]*.0325*100);
+    sprintf(theStr, "%.3f", cvs->inputs->l_wheel_speed*.0325*100*3 - 75); //cvs->state->omegaref[R_ID]*.0325*100);
     TCPPutString(sktHTTP, theStr);
 }
 
@@ -1701,5 +1713,67 @@ void HTTPPrint_time(void)
     TCPPutString(sktHTTP, theStr);
 }
 
+void HTTPPrint_kpleft(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.4f", cvs->param->Kp[L_ID]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_kpright(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.4f", cvs->param->Kp[R_ID]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_kileft(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.4f", cvs->param->Ki[L_ID]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_kiright(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.4f", cvs->param->Ki[R_ID]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_refspeed(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.2f", cvs->param->refspeed);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_irL(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->inputs->irL);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_irR(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->inputs->irR);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_opponent0(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->state->opponent_position[0]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_opponent1(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->state->opponent_position[1]);
+    TCPPutString(sktHTTP, theStr);
+}
 
 #endif

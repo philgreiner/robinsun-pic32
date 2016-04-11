@@ -95,10 +95,10 @@ MyVarFloat(24)
 MyVarFloat(27)
 MyVarFloat(25)
 MyVarFloat(26)
-refspeed
++refspeed
 maxspeed
-+kp
-+ki
+kp
+ki
 +buttonL
 +buttonR
 +omegaref_R
@@ -127,3 +127,11 @@ maxspeed
 +clamp
 +time
 +current_progress
++kpleft
++kpright
++kileft
++kiright
++irL
++irR
++opponent0
++opponent1

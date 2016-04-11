@@ -10,6 +10,8 @@
 	<h2> Sonars </h2>
 	<h3> 1) <span id="sonar1" style="font-weight:normal">-</span> [cm]; 2) <span id="sonar2" style="font-weight:normal">-</span> [cm]; 3) <span id="sonar3" style="font-weight:normal">-</span> [cm] </h3><br>
 	<h3> 4) <span id="sonar4" style="font-weight:normal">-</span> [cm]; 5) <span id="sonar5" style="font-weight:normal">-</span> [cm]; 6) <span id="sonar6" style="font-weight:normal">-</span> [cm] </h3><br>
+	<h2> IR Sensors </h2>
+	<h3> Left: <span id="irL" style="font-weight:normal">-</span> [cm]; Right: <span id="irR" style="font-weight:normal">-</span> [cm] </h3><br>
 	<h3> Blocks: <span id="speed_blocks" style="font-weight:normal">-</span> [cm/s] - Command: <span id="command_blocks" style="font-weight:normal">-</span> [/100] </h3><br>
 	<h3> Fish horizontal: <span id="speed_fish_horizontal" style="font-weight:normal">-</span> [cm/s] - Command: <span id="command_fish_horizontal" style="font-weight:normal">-</span> [/100] </h3><br>
 	<h3> Fish vertical: <span id="speed_fish_vertical" style="font-weight:normal">-</span> [cm/s] - Command: <span id="command_fish_vertical" style="font-weight:normal">-</span> [/100] </h3><br>
@@ -48,11 +50,12 @@
 </div>
 <br>
 <div id="mapdiv">
-	<img src="images/positionmark.png" id="positionmark" style="display: none; position: absolute;"  height="96" />
-	<img src="images/goalgear.png" id="goalgear" style="display: none; position: absolute;"  height="80" />
+	<img src="images/positionmark.png" id="positionmark" onmousemove="move(event);" style="display: none; position: absolute;"  height="96" />
+	<img src="images/goalgear.png" id="goalgear" onmousemove="move(event);" style="display: none; position: absolute;"  height="80" />
 	<img src="../images/map.png" alt="map" id="map" onmousemove="move(event);" onclick="click(event);" height="720" width="960"/>
 	<h2> Position X: <span id="position0" style="font-weight:normal">-</span> [m] - Y: <span id="position1" style="font-weight:normal">-</span> [m] - Theta: <span id="position2" style="font-weight:normal">-</span> [deg]</h2>
 	<h3> Goal X: <span id="goal0" style="font-weight:normal">-</span> [m] - Y: <span id="goal1" style="font-weight:normal">-</span> [m] - Theta: <span id="goal2" style="font-weight:normal">-</span> [deg]</h3>
+	<h3> Mouse  <span id="mousepos" style="font-weight:normal">-</span> </h3>
 </div> <!-- map !-->
 
 </div> <!-- content !-->
@@ -138,6 +141,10 @@ function updateStatus(xmlData) {
 	document.getElementById('sonar5').innerHTML = getXMLValue(xmlData, 'sonar5');
 	document.getElementById('sonar6').innerHTML = getXMLValue(xmlData, 'sonar6');
 	
+	// Update IR Sensor values
+	document.getElementById('irL').innerHTML = getXMLValue(xmlData, 'irL');
+	document.getElementById('irR').innerHTML = getXMLValue(xmlData, 'irR');	
+	
 	// Block speeds
 	document.getElementById('speed_blocks').innerHTML = getXMLValue(xmlData, 'speed_blocks');
 	document.getElementById('command_blocks').innerHTML = getXMLValue(xmlData, 'command_blocks');
@@ -214,9 +221,9 @@ function move(event){
     var point_x = mouse_x - image_x + scroll_x;
     var point_y = mouse_y - image_y + scroll_y;
     
-    position_x = point_x*3/480;
-    position_y = point_y*2/360;
-    //document.getElementById("info_position").innerHTML = "x = " + position_x.toFixed(3)  + " m : y = " + position_y.toFixed(3) + " m";
+    position_x = point_x*3/880 - 1.63;
+    position_y = point_y*2/605 - 1.12;
+    document.getElementById("mousepos").innerHTML = "Y = " + position_x.toFixed(3)  + " [m] - X = " + position_y.toFixed(3) + " [m]";
     
     pixX = mouse_x + scroll_x;
     pixY = mouse_y + scroll_y;
@@ -247,14 +254,14 @@ function updatePos(xmlData){
 	with(document.getElementById('positionmark'))
 	{
 		style.left = pos1*888/3+image_x+444+34-64+'px';
-		style.top = pos0*614/2+image_y+307+72-48+'px';
+		style.top = pos0*614/2+image_y+307+72-48-0.16*614/2+'px';
 		style.transform  = "rotate("+(180-pos2)+"deg)";
 		style.display = 'block';
 	}
 	with(document.getElementById('goalgear'))
 	{
 		style.left = goal1*888/3+image_x+444+34-40+'px';
-		style.top = goal0*614/2+image_y+307+72-39+'px';
+		style.top = goal0*614/2+image_y+307+72-39-0.16*614/2+'px';
 		style.transform  = "rotate("+(180-goal2)+"deg)";
 		style.display = 'block';
 	}

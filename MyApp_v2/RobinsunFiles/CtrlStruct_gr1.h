@@ -83,6 +83,7 @@ typedef struct CtrlParam{
 	double initial_pos[3];
 	double beacons[6];
 
+    double refspeed;
 	// Non-deterministic parameters of the motor drive and the wheel-floor interaction
 	double kr;
 	double kl;

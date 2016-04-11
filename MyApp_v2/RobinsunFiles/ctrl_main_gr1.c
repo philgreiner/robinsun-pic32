@@ -55,12 +55,11 @@ void controller_init(CtrlStruct *cvs) {
 #else
     // Controller parameters
 #ifdef ROBINSUN
-    //cvs->param->Kp = -0.1029; //0.09;
-    //cvs->param->Ki = 2.0414; //1.18; 
-    cvs->param->Kp[L_ID] = -0.1423;
-    cvs->param->Ki[L_ID] = 0.8599;
-    cvs->param->Kp[R_ID] = -0.1301;
-    cvs->param->Ki[R_ID] = 1.2266;
+    // Right: 5.975 kg     Left: 4.6 kg
+    cvs->param->Kp[L_ID] = -0.1292;
+    cvs->param->Ki[L_ID] = 1.2537;
+    cvs->param->Kp[R_ID] = -0.1167;
+    cvs->param->Ki[R_ID] = 1.6272;
 #else
     cvs->param->Kp = -0.031;
     cvs->param->Ki = 2.1729;
@@ -124,9 +123,9 @@ void controller_init(CtrlStruct *cvs) {
         cvs->state->position[2] = -M_PI_2;
     }
 #else
-    cvs->state->position[0] = -0.225;
-    cvs->state->position[1] = -1.15;
-    cvs->state->position[2] = M_PI_2;
+    cvs->state->position[0] = -0.16;
+    cvs->state->position[1] = -1.34;
+    cvs->state->position[2] = 0;
 #endif
 
     cvs->state->position_odo[0] = cvs->state->position[0];
@@ -164,6 +163,7 @@ void controller_init(CtrlStruct *cvs) {
     cvs->state->current_action_progress = 0;
     cvs->state->clamp = CLOSED;
     cvs->state->clamp_opening = 9.2;
+    cvs->param->refspeed = 0.0;
 }
 
 /*! \brief controller loop (called eveiry timestep)
@@ -189,7 +189,7 @@ void controller_loop(CtrlStruct *cvs) {
     char msg[1024];
     sprintf(msg, "Clamp opening: %f; Clamp state: %d\n\n", cvs->state->clamp_opening, (int) cvs->state->clamp);
     //    MyConsole_SendMsg(msg);
-
+    
     if (fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 3 * M_PI)
         ivs->r_wheel_speed = cvs->state->lastMesR[0];
     if (fabs(ivs->l_wheel_speed - cvs->state->lastMesL[0]) > 3 * M_PI)
@@ -284,11 +284,11 @@ void controller_loop(CtrlStruct *cvs) {
 
     /* Path planning through potential field computation */
     // Choice of the path planning algorithm
-    if (cvs->inputs->t >= 5 & cvs->inputs->t < 5.5) {
+    if (cvs->inputs->t >= 5) {
         //strategy_objective(cvs);
-        //robinsun_main(cvs);
-        cvs->state->omegaref[R_ID] = 2*(cvs->inputs->t-5)*.2/.0325;
-        cvs->state->omegaref[L_ID] = 2*(cvs->inputs->t-5)*.2/.0325;
+        robinsun_main(cvs);
+//        cvs->state->omegaref[R_ID] = cvs->param->refspeed/.0325;
+//        cvs->state->omegaref[L_ID] = cvs->param->refspeed/.0325;
 #ifdef POTENTIAL
         potential_Field(cvs);
 #endif
@@ -302,10 +302,6 @@ void controller_loop(CtrlStruct *cvs) {
             Astar_read_path(cvs);
         }
 #endif
-
-    } else if (cvs->inputs->t > 5.5) {
-        cvs->state->omegaref[R_ID] = .2/.0325;
-        cvs->state->omegaref[L_ID] = .2/.0325;
 #ifdef SIMU_PROJECT
         calibrate_start(cvs);
 #endif
