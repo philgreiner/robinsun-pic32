@@ -120,6 +120,31 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
 //        MyConsole_SendMsg(msg);
         
         unsigned int lt24 = MyCyclone_Read(A_lt24);
+        // Team color defined
+        if(lt24%2)
+            cvs->inputs->team_color = 1;
+        else
+            cvs->inputs->team_color = 2;
+        
+        // Strategy defined
+        if(lt24 >> 2)
+            cvs->inputs->strategy = 1;
+        else if(lt24 >> 3)
+            cvs->inputs->strategy = 2;
+        else if(lt24 >> 4)
+            cvs->inputs->strategy = 3;
+        else
+            cvs->inputs->strategy = 4;
+        
+        // Number of opponents detected
+        if(lt24 >> 6)
+            cvs->inputs->nb_opponents = 1;
+        else
+            cvs->inputs->nb_opponents = 2;
+        
+        // Are the data sent to ROBINSUN ?
+        cvs->inputs->ready_signal = lt24 >> 8;
+        
         cvs->inputs->start_signal = lt24 >> 15;
         
         unsigned int sonar12 = MyCyclone_Read(A_sonar12);
@@ -141,7 +166,7 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         cvs->inputs->speed_blocks = (double) -speedClamp*2*M_PI/(4096.0*0.025);
         sprintf(msg, "Measured speed: %f (cm/s)\n", cvs->inputs->speed_blocks);
 //        MyConsole_SendMsg(msg);
-        
+                
     #endif
     cvs->inputs->t = (ReadCoreTimer()/(SYS_FREQ/2.0)) - MyMiniProject_tStart; // time in seconds
     while (cvs->inputs->t < cvs->state->lastT) cvs->inputs->t += 107.3741823075;
