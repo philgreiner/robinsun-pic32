@@ -75,7 +75,7 @@ int main(void)
     
     // Do MyInitializations
     MyConsole_Init();
-    MyCamera_Init();
+    //MyCamera_Init();
     MyRTCC_Init();
     MyLED_Init();
     MySPI_Init();
@@ -83,7 +83,7 @@ int main(void)
     MyCAN_Init();
     MyIO_Init();
     MyFlash_Init();
-    MyTemperature_Init();
+    //MyTemperature_Init();
     //MyMIWI_Init();
     MyWIFI_Init();
 

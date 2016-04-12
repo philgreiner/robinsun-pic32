@@ -26,7 +26,7 @@ void locate_opponent(CtrlStruct *cvs)
 	CtrlIn *ivs;
     ivs = cvs->inputs;
 
- 	int nb_opponents = ivs->nb_opponents;
+ 	//int nb_opponents = ivs->nb_opponents;
 	int opponents_detected = 0;
 	double opponent_radius = 0.15;		// max distance from a point of the opponent and its center
 	double opponents_xpos[2];			// vector of size 2 since {opponents_detected <= 2}
@@ -56,13 +56,12 @@ void locate_opponent(CtrlStruct *cvs)
 	
 	double dist[6];
 	for (i=0; i<6; i=i+1)
-		dist[i] = cvs->state->obstacle_dist[i];
+		dist[i] = cvs->state->avSonar[i];
 
 	double sign[2] = {1.0,-1.0};  // used to adapt the contributions of front and rear sonars
 
-	// Conditions on the measurements
+	// Condition on the measurements
 	double max_dist = 0.8;	// maximum measurable/significant distance					// TO ADAPT
-	double min_dist = 0.05; // maximum measurable/significant distance 					// TO ADAPT
 
 	// Intermediate variables
 	double xpos = 0.0;
@@ -214,13 +213,15 @@ void locate_opponent(CtrlStruct *cvs)
 
 	if (opponents_detected == 1)
 	{
+        cvs->state->nb_opponents_detected = opponents_detected;
 		if (fabs(opponents_xpos[0]) <= 1.0)
 			cvs->state->opponent_position[0] = opponents_xpos[0];
 		if (fabs(opponents_ypos[0]) <= 1.5)
 			cvs->state->opponent_position[1] = opponents_ypos[0];
 	}
-	else if ((opponents_detected == 2) && (nb_opponents == 2))				// ATTENTION NEED TO BE INITIALIZED !!
+	else if (opponents_detected == 2)// && (nb_opponents == 2))				// ATTENTION NEED TO BE INITIALIZED !!
 	{
+        cvs->state->nb_opponents_detected = opponents_detected;
 		// Position of the first opponent
 		if (fabs(opponents_xpos[0]) <= 1.0)
 			cvs->state->opponent_position[0] = opponents_xpos[0];
@@ -232,7 +233,11 @@ void locate_opponent(CtrlStruct *cvs)
 			cvs->state->opponent_position[2] = opponents_xpos[1];
 		if (fabs(opponents_ypos[1]) <= 1.5)
 			cvs->state->opponent_position[3] = opponents_ypos[1];
-	}	
+	}
+    else if (opponents_detected == 0)
+    {
+        cvs->state->nb_opponents_detected = opponents_detected;
+    }
 
 }
 
@@ -248,12 +253,12 @@ int isMeasureRelevant(double xFound, double yFound)
 	double external_walls_max_x = 1.0;
 	double external_walls_max_y = 1.5;
 
-	double central_wall_min_x = -0.2;
-	double central_wall_max_x = 0.5;
-	double central_wall_max_y = 0.1;
+	double central_wall_min_x = -0.25;
+	double central_wall_max_x = 0.35;
+	double central_wall_max_y = 0.025;
 
 	 if ((fabs(xFound) > external_walls_max_x) || (fabs(yFound) > external_walls_max_y))
-	 { // if the obstacle detected is located behind the external walls
+	 { // if the obstacle detected is located beyond the external walls
 	 	return 0;
 	 } 
 	 else if (((xFound < central_wall_max_x) && (xFound > central_wall_min_x)) && (fabs(yFound) < central_wall_max_y))
