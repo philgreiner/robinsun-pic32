@@ -80,6 +80,10 @@ typedef struct CtrlIn
 	/*! \brief number of opponents taking part in this game
 	 */
 	int nb_opponents; ///< number of opponents
+    
+    int team_color;     // 1: green team. 2: purple team.
+    int strategy;       // [1;4]
+    int ready_signal;   // If 1, the configuration with the LT24 is done.
 
 	#ifdef SIMU_PROJECT
 	/*! \brief tower for the fixed beacon
