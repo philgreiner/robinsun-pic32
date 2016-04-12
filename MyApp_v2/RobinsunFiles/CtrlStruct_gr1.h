@@ -39,6 +39,7 @@ typedef struct CtrlState
     double avSpeedR, avSpeedL;
 	double lastT;
     double avSonar[6];
+    double prevAvSonar[6];
     double lastMesSonar[6][10];
     
 	double position[3];

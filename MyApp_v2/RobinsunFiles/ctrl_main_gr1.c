@@ -28,6 +28,10 @@ void controller_init(CtrlStruct *cvs) {
     for (zeta = 0; zeta < 10; zeta++) {
         cvs->state->lastMesL[zeta] = 0;
         cvs->state->lastMesR[zeta] = 0;
+    
+    }
+    
+    for (zeta = 0; zeta < 10; zeta++) {
         for(i = 0; i < 6; i++) {
             cvs->state->lastMesSonar[i][zeta] = 0.0;
         }
@@ -199,8 +203,10 @@ void controller_loop(CtrlStruct *cvs) {
     int i, j;
     cvs->state->avSpeedR = cvs->state->lastMesR[0];
     cvs->state->avSpeedL = cvs->state->lastMesL[0];
-    for (j = 0; j < 6; j++)
+    for (j = 0; j < 6; j++) {
+        cvs->state->prevAvSonar[j] = cvs->state->avSonar[j];
         cvs->state->avSonar[j] = cvs->state->lastMesSonar[j][0];
+    }
 
     for (i = 0; i < 9; i++) {
         for (j = 0; j < 6; j++) {
@@ -219,8 +225,12 @@ void controller_loop(CtrlStruct *cvs) {
 
     cvs->state->avSpeedR = cvs->state->avSpeedR / 10.0;
     cvs->state->avSpeedL = cvs->state->avSpeedL / 10.0;
-    for (j = 0; j < 6; j++)
-        cvs->state->avSonar[j] = cvs->state->avSonar[j] / 10.0;
+ 
+    
+    for (j = 0; j < 6; j++) {
+        //cvs->state->avSonar[j] = ((cvs->state->avSonar[j]/10.0) > 200.0) ? (cvs->state->prevAvSonar[j]) : (cvs->state->avSonar[j]/10.0);
+        cvs->state->avSonar[j] = ((cvs->state->avSonar[j]/10.0) < 5.0) ? (cvs->state->prevAvSonar[j]) : (cvs->state->avSonar[j]/10.0);
+    }
 
 #ifdef SIMU_PROJECT
     set_plot(ivs->r_wheel_speed, "r_wheel_speed");
