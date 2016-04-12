@@ -17,6 +17,7 @@
 #include "MyIO.h"
 #include "MyFlash.h"
 #include "MyMIWI.h"
+#include "locate_opponent_gr1.h"
 #include "MyWIFI.h"
 #include "MyTemperature.h"
 #include "MyMDDFS.h"
