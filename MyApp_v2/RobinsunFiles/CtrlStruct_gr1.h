@@ -45,6 +45,7 @@ typedef struct CtrlState
 	double position_odo[3];
 	double position_triang[3];
 	double opponent_position[4];
+    double obstacle_dist[6];
 	double goal_position[3];
 
 	//Potential field & Astar orientation error

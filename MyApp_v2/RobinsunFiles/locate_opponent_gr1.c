@@ -1,4 +1,3 @@
-
 /*!
 * \file robot_detect_gr1.cc
 * \brief File description
@@ -59,7 +58,7 @@ void locate_opponent(CtrlStruct *cvs)
 	for (i=0; i<6; i=i+1)
 		dist[i] = cvs->state->obstacle_dist[i];
 
-	double sign[2] = [1.0,-1.0];  // used to adapt the contributions of front and rear sonars
+	double sign[2] = {1.0,-1.0};  // used to adapt the contributions of front and rear sonars
 
 	// Conditions on the measurements
 	double max_dist = 0.8;	// maximum measurable/significant distance					// TO ADAPT
@@ -81,7 +80,7 @@ void locate_opponent(CtrlStruct *cvs)
 	for(i=0; (i<6 && opponents_detected<2); i=i+3)
 	{ // for : i=0 --> front side / i=3 --> rear side
 
-		if (dist[i+] < max_dist)
+		if (dist[i] < max_dist)
 		{ // left
 
 			if (dist[i+1] < max_dist)
@@ -111,7 +110,7 @@ void locate_opponent(CtrlStruct *cvs)
 
 			} // left and center
 			
-			else if (dist[i+2] < dist_max)
+			else if (dist[i+2] < max_dist)
 			{ // left and right --> 2 opponents : one on the left of the left sonar, 
 			  //								  the other on the right of the right sonar
 
@@ -195,7 +194,7 @@ void locate_opponent(CtrlStruct *cvs)
 		{ // center only --> opponent in front of the center sonar
 
 			xpos = x_sonars[i+1] + sign[i]*(dist[i+1] + opponent_radius)*cos(theta_robinsun);
-			ypos = y_sonars[i+1] + sign[i]*(dist[i+1] + opponent_radius)*sin(theta_robins
+			ypos = y_sonars[i+1] + sign[i]*(dist[i+1] + opponent_radius)*sin(theta_robinsun);
 			 
 			if (isMeasureRelevant(xpos,ypos))
 			{
@@ -246,18 +245,18 @@ int isMeasureRelevant(double xFound, double yFound)
 	 */
 	
 	// Characteristic lengths of the playing area
-	external_walls_max_x = 1.0;
-	external_walls_max_y = 1.5;
+	double external_walls_max_x = 1.0;
+	double external_walls_max_y = 1.5;
 
-	central_wall_min_x = ;
-	central_wall_max_x = ;
-	central_wall_max_y = ;
+	double central_wall_min_x = -0.2;
+	double central_wall_max_x = 0.5;
+	double central_wall_max_y = 0.1;
 
 	 if ((fabs(xFound) > external_walls_max_x) || (fabs(yFound) > external_walls_max_y))
 	 { // if the obstacle detected is located behind the external walls
 	 	return 0;
 	 } 
-	 else if (((xFound < central_wall_max_x) && (xFound > central_wall_min_x)) && (fabs(yFound) < central_wall_max_y));
+	 else if (((xFound < central_wall_max_x) && (xFound > central_wall_min_x)) && (fabs(yFound) < central_wall_max_y))
 	 { // if the obstacle detected is the central separation wall
 	 	return 0;
 	 } 

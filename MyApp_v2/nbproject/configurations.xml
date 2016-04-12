@@ -55,6 +55,7 @@
         <itemPath>RobinsunFiles/potentialfield_gr1.h</itemPath>
         <itemPath>RobinsunFiles/robinsun_strategy.h</itemPath>
         <itemPath>RobinsunFiles/competition_functions.h</itemPath>
+        <itemPath>RobinsunFiles/locate_opponent_gr1.h</itemPath>
       </logicalFolder>
       <itemPath>MyIncludes/MyApp.h</itemPath>
     </logicalFolder>
@@ -183,6 +184,7 @@
         <itemPath>RobinsunFiles/calibrate_gr1.c</itemPath>
         <itemPath>RobinsunFiles/robinsun_strategy.c</itemPath>
         <itemPath>RobinsunFiles/competition_functions.c</itemPath>
+        <itemPath>RobinsunFiles/locate_opponent_gr1.c</itemPath>
       </logicalFolder>
       <itemPath>MyFiles/MyApp.c</itemPath>
     </logicalFolder>
