@@ -52,9 +52,11 @@
 <div id="mapdiv">
 	<img src="images/positionmark.png" id="positionmark" onmousemove="move(event);" style="display: none; position: absolute;"  height="96" />
 	<img src="images/goalgear.png" id="goalgear" onmousemove="move(event);" style="display: none; position: absolute;"  height="80" />
+	<img src="images/opponent.png" id="opponent" onmousemove="move(event);" style="display: none; position: absolute;"  height="50" />
 	<img src="../images/map.png" alt="map" id="map" onmousemove="move(event);" onclick="click(event);" height="720" width="960"/>
 	<h2> Position X: <span id="position0" style="font-weight:normal">-</span> [m] - Y: <span id="position1" style="font-weight:normal">-</span> [m] - Theta: <span id="position2" style="font-weight:normal">-</span> [deg]</h2>
 	<h3> Goal X: <span id="goal0" style="font-weight:normal">-</span> [m] - Y: <span id="goal1" style="font-weight:normal">-</span> [m] - Theta: <span id="goal2" style="font-weight:normal">-</span> [deg]</h3>
+	<h3> Opponent X: <span id="opponent0" style="font-weight:normal">-</span> [m] - Y: <span id="opponent1" style="font-weight:normal">-</span> [m]</h3>
 	<h3> Mouse  <span id="mousepos" style="font-weight:normal">-</span> </h3>
 </div> <!-- map !-->
 
@@ -249,6 +251,12 @@ function updatePos(xmlData){
 	document.getElementById('goal1').innerHTML = goal1;
 	document.getElementById('goal2').innerHTML = goal2;
 	
+	var opponent0 = getXMLValue(xmlData, 'opponent0');
+	var opponent1 = getXMLValue(xmlData, 'opponent1');
+
+	document.getElementById('opponent0').innerHTML = opponent0;
+	document.getElementById('opponent1').innerHTML = opponent1;	
+	
 	var image_x = document.getElementById("map").offsetLeft;
 	var image_y = document.getElementById("map").offsetTop;
 	with(document.getElementById('positionmark'))
@@ -263,6 +271,12 @@ function updatePos(xmlData){
 		style.left = goal1*888/3+image_x+444+34-40+'px';
 		style.top = goal0*614/2+image_y+307+72-39-0.16*614/2+'px';
 		style.transform  = "rotate("+(180-goal2)+"deg)";
+		style.display = 'block';
+	}
+	with(document.getElementById('opponent'))
+	{
+		style.left = opponent0*888/3+image_x+444+34-25+'px';
+		style.top = opponent1*614/2+image_y+307+72-25-0.16*614/2+'px';
 		style.display = 'block';
 	}
 }
