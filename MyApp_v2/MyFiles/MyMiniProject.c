@@ -135,11 +135,11 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         locate_opponent(cvs);
         
         sprintf(msg, "Opponents detected : %d \n", cvs->state->nb_opponents_detected);
-        MyConsole_SendMsg(msg);
+        //MyConsole_SendMsg(msg);
         sprintf(msg, "Opponent1 position : x1 = %d \t y1 = %d \n", cvs->state->opponent_position[0],cvs->state->opponent_position[1]);
-        MyConsole_SendMsg(msg);
+        //MyConsole_SendMsg(msg);
         sprintf(msg, "Opponent2 position : x2 = %d \t y2 = %d \n", cvs->state->opponent_position[2],cvs->state->opponent_position[3]);
-        MyConsole_SendMsg(msg);
+        //MyConsole_SendMsg(msg);
         
         int speedClamp = MyCyclone_Read(A_speedB);
         sprintf(msg, "Measured ticks: %d (# of ticks)\n", speedClamp);
