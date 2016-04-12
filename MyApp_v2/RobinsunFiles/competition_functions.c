@@ -166,10 +166,12 @@ void blocks_front(CtrlStruct *cvs) {
             // TURN OFF A*
             cvs->param->ready_start_astar = 0;
             
-            // MOVE BACKWARD
-            cvs->state->omegaref[R_ID] = -2.75 * M_PI;
-            cvs->state->omegaref[L_ID] = -2.75 * M_PI;
-
+            dest[0] = 0.1; dest[1] = -0.70; dest[2] = 0;
+            gotoPoint(cvs,dest,wheels);
+            // MOVE FORWARD
+            cvs->state->omegaref[R_ID] = wheels[R_ID];
+            cvs->state->omegaref[L_ID] = wheels[L_ID];
+            
             // ACTION IS DONE
             if (fabs(0.60 - fabs(y)) < 0.03)
                 cvs->state->objectives[cvs->state->current_objective] = DONE1;
@@ -206,7 +208,7 @@ void cabins_close(CtrlStruct *cvs) {
             d = sqrt((x - x_goal)*(x - x_goal) + (y - y_goal)*(y - y_goal));
 
             // GO TO TURN IF CLOSE ENOUGH
-            if (d < 0.03)
+            if (cvs->param->ready_start_astar)
                 cvs->state->current_action_progress = TURN_C;
             break;
 
@@ -296,10 +298,10 @@ void blocks_dune_1(CtrlStruct *cvs) {
                 cvs->outputs->command_blocks = 0;
 
             // GO TO TURN IF CLOSE ENOUGH
-            if (d < 0.03)
+            if (cvs->param->ready_start_astar)
                 cvs->state->current_action_progress = TURN_BD1;
             break;
-            
+
         case TURN_BD1:
             // TURN OFF A*
             cvs->param->ready_start_astar = 0;
@@ -459,7 +461,7 @@ void blocks_cabins(CtrlStruct *cvs) {
                 cvs->outputs->command_blocks = 0;
 
             // GO TO TURN IF CLOSE ENOUGH
-            if (d < 0.03)
+            if (cvs->param->ready_start_astar)
                 cvs->state->current_action_progress = TURN_BC;
             break;
             
@@ -528,7 +530,7 @@ void blocks_cabins(CtrlStruct *cvs) {
             if (-0.2 - y < 0.03)
                 cvs->state->current_action_progress = BRING_BC;
             break;
-            
+
         case BRING_BC:
             // SET GOAL POSITION
             cvs->state->goal_position[0] = 0.0;
