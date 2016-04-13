@@ -628,7 +628,7 @@ void parasol_open(CtrlStruct *cvs) {
     cvs->state->omegaref[L_ID] = 0;
     
     // ACTIVATE PARASOL
-    if(cvs->inputs->t > 40)
+    if(cvs->inputs->t > 90)
     {
         MyCyclone_Write(A_PICtoFPGA, 0x0001 & 1);
         // MARK AS DONE
