@@ -92,7 +92,7 @@
 /*--------------------------------------------*/
 /* Default settings for Connection Management */
 /*--------------------------------------------*/
-#define MY_DEFAULT_SSID_NAME                "wifi-bt96" //"wifi-pgreiner" 
+#define MY_DEFAULT_SSID_NAME                "wifi-pgreiner" //"wifi-pgreiner" 
 
 #define MY_DEFAULT_NETWORK_TYPE             WF_INFRASTRUCTURE   /* WF_INFRASTRUCTURE or WF_ADHOC     */
 

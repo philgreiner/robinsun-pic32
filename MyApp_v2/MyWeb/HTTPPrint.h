@@ -57,6 +57,9 @@ void HTTPPrint_irL(void);
 void HTTPPrint_irR(void);
 void HTTPPrint_opponent0(void);
 void HTTPPrint_opponent1(void);
+void HTTPPrint_opponent2(void);
+void HTTPPrint_opponent3(void);
+void HTTPPrint_opponentsdetected(void);
 
 void HTTPPrint(DWORD callbackID)
 {
@@ -184,6 +187,15 @@ void HTTPPrint(DWORD callbackID)
 			break;
         case 0x00000088:
 			HTTPPrint_opponent1();
+			break;
+        case 0x00000089:
+			HTTPPrint_opponent2();
+			break;
+        case 0x0000008a:
+			HTTPPrint_opponent3();
+			break;
+        case 0x0000008b:
+			HTTPPrint_opponentsdetected();
 			break;
 		default:
 			// Output notification for undefined values

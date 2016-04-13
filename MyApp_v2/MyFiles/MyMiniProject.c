@@ -127,23 +127,23 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
             cvs->inputs->team_color = 2;
         
         // Strategy defined
-        if(lt24 >> 2)
+        if((lt24 >> 2)%2)
             cvs->inputs->strategy = 1;
-        else if(lt24 >> 3)
+        else if((lt24 >> 3)%2)
             cvs->inputs->strategy = 2;
-        else if(lt24 >> 4)
+        else if((lt24 >> 4)%2)
             cvs->inputs->strategy = 3;
         else
             cvs->inputs->strategy = 4;
         
         // Number of opponents detected
-        if(lt24 >> 6)
+        if((lt24 >> 6)%2)
             cvs->inputs->nb_opponents = 1;
         else
             cvs->inputs->nb_opponents = 2;
         
         // Are the data sent to ROBINSUN ?
-        cvs->inputs->ready_signal = lt24 >> 8;
+        cvs->inputs->ready_signal = (lt24 >> 8)%2;
         
         cvs->inputs->start_signal = lt24 >> 15;
         
@@ -157,14 +157,7 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         cvs->inputs->sonars[4] = (sonar56 & 0xff00) >> 8;
         cvs->inputs->sonars[5] = (sonar56 & 0x00ff);
         
-        locate_opponent(cvs);
-        
-        sprintf(msg, "Opponents detected : %d \n", cvs->state->nb_opponents_detected);
-        MyConsole_SendMsg(msg);
-        sprintf(msg, "Opponent1 position : x1 = %d \t y1 = %d \n", cvs->state->opponent_position[0],cvs->state->opponent_position[1]);
-        MyConsole_SendMsg(msg);
-        sprintf(msg, "Opponent2 position : x2 = %d \t y2 = %d \n", cvs->state->opponent_position[2],cvs->state->opponent_position[3]);
-        MyConsole_SendMsg(msg);
+        //locate_opponent(cvs);
         
         int speedClamp = MyCyclone_Read(A_speedB);
         sprintf(msg, "Measured ticks: %d (# of ticks)\n", speedClamp);

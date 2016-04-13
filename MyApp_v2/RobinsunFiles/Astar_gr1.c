@@ -207,7 +207,7 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 	/* B. Check if on position and act accordingly  */
 
 	// 1. ***** ON POSITION *****
-	if (fabs(dist) <= PRECISION) {
+	if (fabs(dist) <= PRECISION){
 		if (cvs->param->index_path == 0)				// at final destination
 		{       
                 cvs->state->omegaref[R_ID] = 0.0;
@@ -237,44 +237,58 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 //		}
         
         theta_required = atan2(delta_y,delta_x);
-		double delta_theta = theta_required - theta;
+        
+        double delta_theta;
+        delta_theta =  theta_required - theta;
         
         if (delta_theta > M_PI) delta_theta -= 2 * M_PI;
 		if (delta_theta < -M_PI) delta_theta += 2 * M_PI;
-        
-        int reversed = 1;
+//        
+//        int reversed = 1;
 //        if (delta_theta > M_PI_2)
 //            delta_theta = delta_theta - M_PI;
 //        else if (delta_theta < -M_PI_2)
 //            delta_theta = delta_theta + M_PI;
 //        else
-            reversed = 0;
-        
-		omega = 1.95*delta_theta;
-        omega = (omega > 2.75*M_PI) ? (2.75*M_PI) : omega;
-        omega = (omega < -2.75*M_PI) ? (-2.75*M_PI) : omega;
-        
-        #ifdef DEBUG
-            printf("delta_x= %lf, delta_y=%lf, theta_req =%lf, delta_theta = %lf\n", delta_x, delta_y, theta_required, delta_theta);
-        #endif
+//            reversed = 0;
+//        
+//		omega = 1.95*delta_theta;
+//        omega = (omega > 2.75*M_PI) ? (2.75*M_PI) : omega;
+//        omega = (omega < -2.75*M_PI) ? (-2.75*M_PI) : omega;
+//        
+//        #ifdef DEBUG
+//            printf("delta_x= %lf, delta_y=%lf, theta_req =%lf, delta_theta = %lf\n", delta_x, delta_y, theta_required, delta_theta);
+//        #endif
+//
+//		vlin = 2.75*M_PI*((1.25+cos(delta_theta))/2.25);
+//		if (cvs->param->index_path == 0) vlin = dist*0.75*M_PI;
+//		if (fabs(delta_theta) < 1.3*M_PI_4) {
+//			vlin = (vlin > 2.75*M_PI) ? (2.75*M_PI) : (vlin);
+//			vlin = (vlin < -2.75*M_PI) ? (-2.75*M_PI) : (vlin);
+//			if (fabs(vlin) <= 0.85*M_PI_2)
+//				vlin = (vlin /(fabs(vlin)))*0.85*M_PI_2;
+//		}
+//		else {
+//			vlin = 0;
+//		}
+//
+//        vlin = (reversed) ? -vlin : vlin;
+    double omega = 2.5*delta_theta;
+    omega = (omega > 3*M_PI) ? (3*M_PI) : omega;
+    omega = (omega < -3*M_PI) ? (-3*M_PI) : omega;
 
-		vlin = 2.75*M_PI*((1.25+cos(delta_theta))/2.25);
-		if (cvs->param->index_path == 0) vlin = dist*0.75*M_PI;
-		if (fabs(delta_theta) < 1.3*M_PI_4) {
-			vlin = (vlin > 2.75*M_PI) ? (2.75*M_PI) : (vlin);
-			vlin = (vlin < -2.75*M_PI) ? (-2.75*M_PI) : (vlin);
-			if (fabs(vlin) <= 0.85*M_PI_2)
-				vlin = (vlin /(fabs(vlin)))*0.85*M_PI_2;
-		}
-		else {
-			vlin = 0;
-		}
-
-        vlin = (reversed) ? -vlin : vlin;
-
+    double vlin = 1.5*M_PI*cos(delta_theta);
+    if (fabs(delta_theta) < 0.7*M_PI_4) {
+        vlin = (vlin > 2.75*M_PI) ? (2.75*M_PI) : (vlin);
+        vlin = (vlin < -2.75*M_PI) ? (-2.75*M_PI) : (vlin);
+        if (fabs(vlin) <= M_PI_4)
+            vlin = (vlin /(fabs(vlin)))*M_PI_4;
+    }
+    else {
+        vlin = 0;
+    }
 		cvs->state->omegaref[R_ID] = vlin + omega;
 		cvs->state->omegaref[L_ID] = vlin - omega;
-
 
 	} // end else (not on position)
 #endif 

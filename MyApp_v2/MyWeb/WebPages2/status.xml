@@ -34,6 +34,9 @@
 	<goal2>~goal2~</goal2>
 	<opponent0>~opponent0~</opponent0>
 	<opponent1>~opponent1~</opponent1>
+	<opponent2>~opponent2~</opponent2>
+	<opponent3>~opponent3~</opponent3>
+	<opponentsdetected>~opponentsdetected~</opponentsdetected>
 	<competition_state>~competition_state~</competition_state>
 	<current_progress>~current_progress~</current_progress>
 	<clamp>~clamp~</clamp>

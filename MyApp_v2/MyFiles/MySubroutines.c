@@ -40,35 +40,25 @@ void    gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
     delta_x = destination[0] - x;
     delta_y = destination[1] - y;
     delta_theta = atan2(delta_y,delta_x) - theta;
-    if(dist < 0.05) delta_theta = destination[2] - theta;
+    if(dist < 0.001) delta_theta = destination[2] - theta;
     if (delta_theta > M_PI) delta_theta -= 2 * M_PI;
     if (delta_theta < -M_PI) delta_theta += 2 * M_PI;
+        
+    double omega = 3*delta_theta;
+    omega = (omega > 3*M_PI) ? (3*M_PI) : omega;
+    omega = (omega < -3*M_PI) ? (-3*M_PI) : omega;
 
-    int reversed = 1;
-    if (delta_theta > M_PI_2)
-        delta_theta = delta_theta - M_PI;
-    else if (delta_theta < -M_PI_2)
-        delta_theta = delta_theta + M_PI;
-    else
-        reversed = 0;
-    
-    double omega = 1.95*delta_theta;
-    omega = (omega > 2.75*M_PI) ? (2.75*M_PI) : omega;
-    omega = (omega < -2.75*M_PI) ? (-2.75*M_PI) : omega;
-
-    double vlin = 2.75*M_PI*((1.25+cos(delta_theta))/2.25);
-    if (cvs->param->index_path == 0) vlin = dist*15*M_PI;
-    if (fabs(delta_theta) < 1.3*M_PI_4) {
+    double vlin = 1.0*M_PI*cos(delta_theta);
+    if (fabs(delta_theta) < 0.7*M_PI_4) {
         vlin = (vlin > 2.75*M_PI) ? (2.75*M_PI) : (vlin);
         vlin = (vlin < -2.75*M_PI) ? (-2.75*M_PI) : (vlin);
-        /* REMOVED LOWER LIMIT ON VLIN (to allow for orientation) */
+        if (fabs(vlin) <= M_PI_4)
+            vlin = (vlin /(fabs(vlin)))*M_PI_4;
     }
     else {
         vlin = 0;
     }
-    
-    vlin = (reversed) ? -vlin : vlin;
-    
+
     wheels[R_ID] = vlin + omega;
     wheels[L_ID] = vlin - omega;
 }

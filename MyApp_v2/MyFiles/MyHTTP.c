@@ -236,6 +236,7 @@ HTTP_IO_RESULT HTTPExecuteGet(void)
                     cvs->outputs->command_fish_vertical = 0.0;
                     cvs->outputs->command_fish_horizontal = 0.0;
                     cvs->outputs->command_blocks = 0.0;
+                    MyCyclone_Write(A_PICtoFPGA, 0x0001 & 1);
                 #endif          
             }
             else if(strcmppgm2ram((char*)ptr,(ROM char*)"open") == 0){
@@ -1518,14 +1519,14 @@ void HTTPPrint_l_wheel_speed(void)
 void HTTPPrint_buttonL(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%d", cvs->inputs->u_switch[1]);
+    sprintf(theStr, "%d", cvs->inputs->u_switch[L_ID]);
     TCPPutString(sktHTTP, theStr);
 }
 
 void HTTPPrint_buttonR(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%d", cvs->inputs->u_switch[0]);
+    sprintf(theStr, "%d", cvs->inputs->u_switch[R_ID]);
     TCPPutString(sktHTTP, theStr);
 }
 
@@ -1773,6 +1774,27 @@ void HTTPPrint_opponent1(void)
 {
     BYTE theStr[64];
     sprintf(theStr, "%.3f", cvs->state->opponent_position[1]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_opponent2(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->state->opponent_position[2]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_opponent3(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->state->opponent_position[3]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_opponentsdetected(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%d", cvs->state->nb_opponents_detected);
     TCPPutString(sktHTTP, theStr);
 }
 

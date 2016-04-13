@@ -17,7 +17,7 @@ void calibrate(CtrlStruct *cvs);
 void wait(CtrlStruct *cvs);
 
 typedef enum {
-    GOTO_BF, WAIT_FOR_POSITION_BF, TURN_BF, FORWARD_BF, CLAMP_BF, PUSH_BF, UNCLAMP_BF, MOVE_BACK_BF
+    GOTO_BF, WAIT_FOR_POSITION_BF, TURN_BF, FORWARD_BF, CLAMP_BF, PUSH_BF, ORIENT_BF, UNCLAMP_BF, MOVE_BACK_BF
 } blocks_front_t;
 void blocks_front(CtrlStruct *cvs);
 

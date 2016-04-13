@@ -366,8 +366,14 @@ void controller_loop(CtrlStruct *cvs) {
 #endif
 
     /* Locate the opponent */
-    //robot_Detect(cvs);
+    robot_Detect(cvs);
 
+    if(cvs->state->nb_opponents_detected != 0)
+    {
+        ovs->wheel_commands[R_ID] = 0.0;
+        ovs->wheel_commands[L_ID] = 0.0;
+    }
+        
     ovs->tower_command = 15;
     cvs->state->lastT = ivs->t;
 

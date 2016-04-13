@@ -7,6 +7,8 @@
 NAMESPACE_INIT(ctrlGr1);
 
 void robinsun_main(CtrlStruct *cvs) {
+    if(cvs->inputs->t >= 90)
+        cvs->state->current_objective = PARASOL;
     switch (cvs->state->current_objective) {
         case CALIBRATE:
             calibrate(cvs);
