@@ -27,11 +27,6 @@ void    DutyToInf(double duty, unsigned *MSB, unsigned *LSB)
             *LSB = 1;
         else
             *LSB = 3;
-    #ifdef ROBOTCONSOLE
-        char msg[1024];
-        sprintf(msg, "Real duty: %d; MSB: %d; LSB: %d\n",realduty,*MSB,*LSB);
-        MyConsole_SendMsg(msg);
-    #endif
 }
 
 void    gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
@@ -49,6 +44,14 @@ void    gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
     if (delta_theta > M_PI) delta_theta -= 2 * M_PI;
     if (delta_theta < -M_PI) delta_theta += 2 * M_PI;
 
+    int reversed = 1;
+    if (delta_theta > M_PI_2)
+        delta_theta = delta_theta - M_PI;
+    else if (delta_theta < -M_PI_2)
+        delta_theta = delta_theta + M_PI;
+    else
+        reversed = 0;
+    
     double omega = 1.95*delta_theta;
     omega = (omega > 2.75*M_PI) ? (2.75*M_PI) : omega;
     omega = (omega < -2.75*M_PI) ? (-2.75*M_PI) : omega;
@@ -63,6 +66,8 @@ void    gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
     else {
         vlin = 0;
     }
+    
+    vlin = (reversed) ? -vlin : vlin;
     
     wheels[R_ID] = vlin + omega;
     wheels[L_ID] = vlin - omega;
