@@ -38,8 +38,8 @@ void blocks_front(CtrlStruct *cvs) {
     switch (cvs->state->current_action_progress) {
         case GOTO_BF:
             // SET GOAL POSITION
-            cvs->state->goal_position[0] = 1 ;
-            cvs->state->goal_position[1] = 1.25;
+            cvs->state->goal_position[0] = -0.1 ;
+            cvs->state->goal_position[1] = -1.25;
             cvs->state->goal_position[2] = M_PI_2;
 
             // ACTIVATE A*
@@ -56,7 +56,7 @@ void blocks_front(CtrlStruct *cvs) {
         case WAIT_FOR_POSITION_BF:
             // COMPUTE REMAINING DISTANCE
             d = sqrt((x - x_goal)*(x - x_goal) + (y - y_goal)*(y - y_goal));
-            dest[0] = 1; dest[1] = 1.25; dest[2] = M_PI_2;
+            dest[0] = -0.1; dest[1] = -1.1; dest[2] = M_PI_2;
             gotoPoint(cvs,dest,wheels);
             cvs->state->omegaref[R_ID] = wheels[R_ID];//M_PI_4 * omega / (fabs(omega)) + omega;
             cvs->state->omegaref[L_ID] = wheels[L_ID];//-M_PI_4 * omega / (fabs(omega)) - omega;
@@ -94,7 +94,7 @@ void blocks_front(CtrlStruct *cvs) {
             // TURN OFF A*
             cvs->param->ready_start_astar = 0;
 
-            dest[0] = 0.1; dest[1] = -1.10; dest[2] = M_PI_2;
+            dest[0] = -0.1; dest[1] = -1.10; dest[2] = M_PI_2;
             gotoPoint(cvs,dest,wheels);
 
             // MOVE FORWARD
@@ -183,11 +183,11 @@ void blocks_front(CtrlStruct *cvs) {
             // TURN OFF A*
             cvs->param->ready_start_astar = 0;
             
-            dest[0] = -0.1; dest[1] = -0.70; dest[2] = 0;
+            dest[0] = 0.1; dest[1] = -0.70; dest[2] = 0;
             gotoPoint(cvs,dest,wheels);
             // MOVE FORWARD
-            cvs->state->omegaref[R_ID] = -M_PI; //wheels[R_ID];
-            cvs->state->omegaref[L_ID] = -M_PI; //wheels[L_ID];
+            cvs->state->omegaref[R_ID] = wheels[R_ID];
+            cvs->state->omegaref[L_ID] = wheels[L_ID];
             
             // ACTION IS DONE
             if (fabs(0.70 - fabs(y)) < 0.03)

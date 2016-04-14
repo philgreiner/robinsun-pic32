@@ -168,6 +168,7 @@ void controller_init(CtrlStruct *cvs) {
     cvs->state->clamp = CLOSED;
     cvs->state->clamp_opening = 9.2;
     cvs->param->refspeed = 0.0;
+    cvs->state->errorAngle = 0.0;
 }
 
 /*! \brief controller loop (called eveiry timestep)
@@ -488,7 +489,7 @@ void motors_control(CtrlStruct *cvs, double * wheels) {
     wheels[R_ID] = -100.0 * UconsigneR / 26.0;
     wheels[L_ID] = 100.0 * UconsigneL / 26.0;
 
-    double f = (ivs->t - cvs->state->lastT) / 0.05;
+    double f = (ivs->t - cvs->state->lastT) / 0.005;
     double frac = 1.0 / (1.0 + f);
 
     // filtered_value = { old_value * (dt/tau)/(1+dt/tau) } + { dt/tau * current }
