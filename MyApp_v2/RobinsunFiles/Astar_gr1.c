@@ -287,8 +287,10 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
     else {
         vlin = 0;
     }
-		cvs->state->omegaref[R_ID] = vlin + omega;
-		cvs->state->omegaref[L_ID] = vlin - omega;
+    double wheels[2], dest[3] = {(actual_step_x - 21)/20.0, (actual_step_y - 31)/20.0, 0};
+    gotoPoint(cvs,dest, wheels);
+		cvs->state->omegaref[R_ID] = wheels[R_ID]; //vlin + omega;
+		cvs->state->omegaref[L_ID] = wheels[L_ID]; //vlin - omega;
 
 	} // end else (not on position)
 #endif 

@@ -46,8 +46,7 @@ void    gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
     char msg[1024];
 //    sprintf(msg,"delta_theta: %f, dist = %f\n",delta_theta,dist);
 //    MyConsole_SendMsg(msg);
-    double lin_sat = 0.5;
-    double theta_sat = 0.15;
+    double lin_sat = 0.5, theta_sat = 0.15;
     if(dist > 0.025) // Go to point
     {
         if(-M_PI_2 <= delta_theta && M_PI_2 >= delta_theta) // Go forward
@@ -72,7 +71,7 @@ void    gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
         delta_theta = (delta_theta > 2*M_PI) ? delta_theta - 2*M_PI : (delta_theta < 2*M_PI) ? delta_theta + 2*M_PI : delta_theta;
         v = 0;
         double turn_sat = 0.2;
-        omega = max(-turn_sat, min(turn_sat, 0.5 * delta_theta - 0.5*(delta_theta-cvs->state->errorAngle)/(cvs->state->lastT - cvs->inputs->t)));
+        omega = max(-turn_sat, min(turn_sat, 0.25 * delta_theta - 0.5*(delta_theta-cvs->state->errorAngle)/(cvs->state->lastT - cvs->inputs->t)));
 //        sprintf(msg,"Orientation ! omega: %f\n\n",omega);
 //        MyConsole_SendMsg(msg);
     }
