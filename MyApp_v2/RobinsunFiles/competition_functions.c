@@ -152,7 +152,7 @@ void blocks_front(CtrlStruct *cvs) {
             gotoPoint(cvs,dest,wheels);
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
-            if(fabs(theta-M_PI_2) < 0.01)
+            if(fabs(theta-M_PI_2)*180.0/M_PI < 3.0)
             {
                 cvs->state->current_action_progress = UNCLAMP_BF;
                 cvs->state->timer = cvs->inputs->t;
