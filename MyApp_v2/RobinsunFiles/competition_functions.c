@@ -11,8 +11,9 @@ NAMESPACE_INIT(ctrlGr1);
 //} calibrate_t;
 
 void calibrate(CtrlStruct *cvs) {
-    cvs->state->objectives[cvs->state->current_objective] = DONE1;
-    MyConsole_SendMsg("Calibrate set to DONE1.\n");
+    cvs->state->position[1] = (cvs->inputs->team_color)? 1.34 : -1.34;
+    if(cvs->inputs->ready_signal || cvs->inputs->start_signal)
+        cvs->state->objectives[cvs->state->current_objective] = DONE1;
 }
 
 //typedef enum {
@@ -20,10 +21,7 @@ void calibrate(CtrlStruct *cvs) {
 
 void wait(CtrlStruct *cvs) {
     if(cvs->inputs->start_signal)
-    {
-        MyConsole_SendMsg("Start message received.\n");
         cvs->state->objectives[cvs->state->current_objective] = DONE1;
-    }
 }
 
 void blocks_front(CtrlStruct *cvs) {
@@ -38,9 +36,9 @@ void blocks_front(CtrlStruct *cvs) {
     switch (cvs->state->current_action_progress) {
         case GOTO_BF:
             // SET GOAL POSITION
-            cvs->state->goal_position[0] = 0.5;//-0.1;
-            cvs->state->goal_position[1] = 0.5;//-1.25;
-            cvs->state->goal_position[2] = M_PI_2;
+            cvs->state->goal_position[0] = -0.1;
+            cvs->state->goal_position[1] = cvs->inputs->team_color? 1.25 : -1.25;
+            cvs->state->goal_position[2] = cvs->inputs->team_color? -M_PI_2 : M_PI_2;
 
             // ACTIVATE A*
             cvs->param->ready_start_astar = 0;
@@ -55,9 +53,10 @@ void blocks_front(CtrlStruct *cvs) {
 
         case WAIT_FOR_POSITION_BF:
             // COMPUTE REMAINING DISTANCE
-            dest[0] = 0.5; 
-            dest[1] = 0.5; 
-            dest[2] = M_PI_2;
+            dest[0] = -0.1; 
+            dest[1] = cvs->inputs->team_color? 1.25 : -1.25;
+            dest[2] = cvs->inputs->team_color? -M_PI_2 : M_PI_2;
+
             d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
             delta_theta = fabs(cvs->state->position[2] - dest[2]);
             delta_theta = (delta_theta > 2*M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
@@ -113,8 +112,8 @@ void blocks_front(CtrlStruct *cvs) {
                 cvs->state->errorIntR = 0.0;
                 cvs->param->ready_start_astar = 1;
                 cvs->state->goal_position[0] = 0.1 ;
-                cvs->state->goal_position[1] = -0.5;
-                cvs->state->goal_position[2] = M_PI_2;
+                cvs->state->goal_position[1] = cvs->inputs->team_color? 0.5 : -0.5;
+                cvs->state->goal_position[2] = cvs->inputs->team_color? -M_PI_2 : M_PI_2;
             }
             break;
 
@@ -153,7 +152,7 @@ void blocks_front(CtrlStruct *cvs) {
             cvs->param->ready_start_astar = 0;
             
             dest[0] = 0.1; 
-            dest[1] = -0.75; 
+            dest[1] = cvs->inputs->team_color? 0.75 : -0.75; 
             dest[2] = 0;
             d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
             
@@ -181,7 +180,7 @@ void cabins_close(CtrlStruct *cvs) {
         case GOTO_C:
             // SET GOAL POSITION
             cvs->state->goal_position[0] = -0.5;
-            cvs->state->goal_position[1] = -1.1;
+            cvs->state->goal_position[1] = cvs->inputs->team_color? 1.1 : -1.1;
             cvs->state->goal_position[2] = M_PI;
 
             // ACTIVATE A*

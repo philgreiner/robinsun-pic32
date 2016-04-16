@@ -28,112 +28,47 @@ void controller_init(CtrlStruct *cvs) {
     for (zeta = 0; zeta < 10; zeta++) {
         cvs->state->lastMesL[zeta] = 0;
         cvs->state->lastMesR[zeta] = 0;
-    
     }
     
-    for (zeta = 0; zeta < 10; zeta++) {
-        for(i = 0; i < 6; i++) {
+    for (zeta = 0; zeta < 10; zeta++)
+        for(i = 0; i < 6; i++)
             cvs->state->lastMesSonar[i][zeta] = 0.0;
-        }
-    }
 
-#ifdef SIMU_GAME
     // Controller parameters
-    cvs->param->Kp = 0.0038;
-    cvs->param->Ki = 5.5626;
+    #ifdef ROBINSUN
+        // Right: 5.975 kg     Left: 4.6 kg
+        cvs->param->Kp[L_ID] = -0.0631;//-0.1292;
+        cvs->param->Ki[L_ID] = 2.1572;//1.2537;
+        cvs->param->Kd[L_ID] = 0.001;
+        cvs->param->Kp[R_ID] = -0.0548;//-0.1167;
+        cvs->param->Ki[R_ID] = 2.3232;//1.6272;
+        cvs->param->Kd[R_ID] = 0.001;
+    #else
+        cvs->param->Kp = -0.031;
+        cvs->param->Ki = 2.1729;
+    #endif
 
     // Kalman filter uncertainties
-#ifdef KALMAN
-    cvs->param->kr = 1; // FIND APPROPRIATE VALUES !
-    cvs->param->kl = 1; // FIND APPROPRIATE VALUES !
-    for (i = 0; i < 3; i = i + 1)
-        for (j = 0; j < 3; j = j + 1)
-            if (i == j) {
-                cvs->state->covariance[i][j] = 1.0;
-                cvs->state->covariance_odo[i][j] = 1.0;
-            } else {
-                cvs->state->covariance[i][j] = 0.0;
-                cvs->state->covariance_odo[i][j] = 0.0;
-            }
-#endif
-#else
-    // Controller parameters
-#ifdef ROBINSUN
-    // Right: 5.975 kg     Left: 4.6 kg
-    cvs->param->Kp[L_ID] = -0.0631;//-0.1292;
-    cvs->param->Ki[L_ID] = 2.1572;//1.2537;
-    cvs->param->Kd[L_ID] = 0.001;
-    cvs->param->Kp[R_ID] = -0.0548;//-0.1167;
-    cvs->param->Ki[R_ID] = 2.3232;//1.6272;
-    cvs->param->Kd[R_ID] = 0.001;
-#else
-    cvs->param->Kp = -0.031;
-    cvs->param->Ki = 2.1729;
-#endif
-
-    // Kalman filter uncertainties
-#ifdef KALMAN // Using Pozyx
-    cvs->param->kr = 1; // FIND APPROPRIATE VALUES !
-    cvs->param->kl = 1; // FIND APPROPRIATE VALUES !
-    for (i = 0; i < 3; i = i + 1)
-        for (j = 0; j < 3; j = j + 1)
-            if (i == j) {
-                cvs->state->covariance[i][j] = 1.0;
-                cvs->state->covariance_odo[i][j] = 1.0;
-            } else {
-                cvs->state->covariance[i][j] = 0.0;
-                cvs->state->covariance_odo[i][j] = 0.0;
-            }
-#endif
-#endif
+    #ifdef KALMAN // Using Pozyx
+        cvs->param->kr = 1; // FIND APPROPRIATE VALUES !
+        cvs->param->kl = 1; // FIND APPROPRIATE VALUES !
+        for (i = 0; i < 3; i = i + 1)
+            for (j = 0; j < 3; j = j + 1)
+                if (i == j) {
+                    cvs->state->covariance[i][j] = 1.0;
+                    cvs->state->covariance_odo[i][j] = 1.0;
+                } else {
+                    cvs->state->covariance[i][j] = 0.0;
+                    cvs->state->covariance_odo[i][j] = 0.0;
+                }
+    #endif
 
     cvs->state->lastT = cvs->inputs->t;
 
-    /* Sets the beacon position, beginning by the one which is alone on its side, for both robot starting configurations */
-
-#ifdef SIMU_GAME
-
-    // On which side does the robot begin ? --> Position of the beacons
-    if ((cvs->inputs->robot_id == ROBOT_B) || (cvs->inputs->robot_id == ROBOT_R)) {
-        cvs->param->beacons[0] = 0;
-        cvs->param->beacons[1] = -1.562;
-        cvs->param->beacons[2] = 1.062;
-        cvs->param->beacons[3] = 1.562;
-        cvs->param->beacons[4] = -1.062;
-        cvs->param->beacons[5] = 1.562;
-    } else {
-        cvs->param->beacons[0] = 0;
-        cvs->param->beacons[1] = 1.562;
-        cvs->param->beacons[2] = -1.062;
-        cvs->param->beacons[3] = -1.562;
-        cvs->param->beacons[4] = 1.062;
-        cvs->param->beacons[5] = -1.562;
-    }
-
-    // If the robot is the blue one
-    if (cvs->inputs->robot_id == ROBOT_B) {
-        cvs->state->position[0] = -0.225;
-        cvs->state->position[1] = -1.15;
-        cvs->state->position[2] = M_PI_2;
-    } else if (cvs->inputs->robot_id == ROBOT_R) {
-        cvs->state->position[0] = -0.075;
-        cvs->state->position[1] = -1.4;
-        cvs->state->position[2] = M_PI_2;
-    } else if (cvs->inputs->robot_id == ROBOT_Y) {
-        cvs->state->position[0] = -0.225;
-        cvs->state->position[1] = 1.15;
-        cvs->state->position[2] = -M_PI_2;
-    } else {
-        cvs->state->position[0] = -0.075;
-        cvs->state->position[1] = 1.4;
-        cvs->state->position[2] = -M_PI_2;
-    }
-#else
     cvs->state->position[0] = -0.16;
-    cvs->state->position[1] = -1.34;
+    cvs->state->position[1] = (cvs->inputs->team_color)? 1.34 : -1.34;
     cvs->state->position[2] = 0;
     cvs->state->prev_theta = 0;
-#endif
 
     cvs->state->position_odo[0] = cvs->state->position[0];
     cvs->state->position_odo[1] = cvs->state->position[1];
@@ -142,15 +77,16 @@ void controller_init(CtrlStruct *cvs) {
     cvs->state->position_triang[1] = cvs->state->position[1];
     cvs->state->position_triang[2] = cvs->state->position[2];
     cvs->state->direction = 0;
+
     // Path planning strategy selection
-#ifdef POTENTIAL
-    potential_Field_Init(cvs);
-#endif
-#ifdef ASTAR
-    game_map_drawing(cvs);
-    cvs->param->Astar_path_active = 0; // No path calculated yet
-    cvs->param->ready_start_astar = 0; // No objective inserted yet
-#endif
+    #ifdef POTENTIAL
+        potential_Field_Init(cvs);
+    #endif
+    #ifdef ASTAR
+        game_map_drawing(cvs);
+        cvs->param->Astar_path_active = 0; // No path calculated yet
+        cvs->param->ready_start_astar = 0; // No objective inserted yet
+    #endif
 
     // Strategy parameters initialization
     cvs->state->objectives_on_robot = 0;
@@ -160,9 +96,6 @@ void controller_init(CtrlStruct *cvs) {
     for (i = 0; i < 10; i++)
         cvs->state->objectives[i] = NOTDONE1;
 
-#ifdef SIMU_PROJECT
-    cvs->outputs->flag_release = 0;
-#endif
     cvs->state->strategy_state = WAIT_FOR_START;
     cvs->state->calibration = CALIBRATEY;
 
@@ -236,138 +169,84 @@ void controller_loop(CtrlStruct *cvs) {
         cvs->state->avSonar[j] = ((cvs->state->avSonar[j]/10.0) < 5.0) ? (cvs->state->prevAvSonar[j]) : (cvs->state->avSonar[j]/10.0);
     }
 
-#ifdef SIMU_PROJECT
-    set_plot(ivs->r_wheel_speed, "r_wheel_speed");
-    set_plot(ivs->l_wheel_speed, "l_wheel_speed");
-#endif
-
     // Choice of the localization method
-#ifdef KALMAN
-    kalman(cvs);
-#endif
-#ifdef ODO_ONLY
-    odometry_estimate(cvs);
-
-    // Debugging
-    //set_plot(cvs->state->position_odo[0], "X_odo");
-    //set_plot(cvs->state->position_odo[1], "Y_odo");
-    //set_plot(cvs->state->position_odo[2], "theta_odo");
-#endif
-#ifdef TRIANG_ONLY
-    odometry_estimate(cvs);
-    triangulation(cvs);
-
-    // Debugging
-    //set_plot(cvs->state->position_odo[0], "X_odo");
-    //set_plot(cvs->state->position_odo[1], "Y_odo");
-    //set_plot(cvs->state->position_triang[0], "X_triang");
-    //set_plot(cvs->state->position_triang[1], "Y_triang");
-#endif
-
-    // Write position errors in separate files (folder ResultsR/ )
-#ifdef SAVE_OUTPUT
-#ifdef KALMAN
-    set_output(cvs->state->position_odo[0], "X_odo_kalman");
-    set_output(cvs->state->position_odo[1], "Y_odo_kalman");
-    set_output(cvs->state->position_odo[2]*180.0 / M_PI, "theta_odo_kalman");
-
-    set_output(cvs->state->position_triang[0], "X_triang_kalman");
-    set_output(cvs->state->position_triang[1], "Y_triang_kalman");
-    set_output(cvs->state->position_triang[2]*180.0 / M_PI, "theta_triang_kalman");
-
-    set_output(cvs->state->position[0], "X_kalman");
-    set_output(cvs->state->position[1], "Y_kalman");
-    set_output(cvs->state->position[2]*180.0 / M_PI, "theta_kalman");
-#endif
-
-#ifdef ODO_ONLY
-    set_output(cvs->state->position_odo[0], "X_odo_odo");
-    set_output(cvs->state->position_odo[1], "Y_odo_odo");
-    set_output(cvs->state->position_odo[2]*180.0 / M_PI, "theta_odo_odo");
-#endif
-
-#ifdef TRIANG_ONLY
-    set_output(cvs->state->position_odo[0], "X_odo_triang");
-    set_output(cvs->state->position_odo[1], "Y_odo_triang");
-    set_output(cvs->state->position_odo[2]*180.0 / M_PI, "theta_odo_triang");
-    set_output(cvs->state->position_triang[0], "X_triang_triang");
-    set_output(cvs->state->position_triang[1], "Y_triang_triang");
-    set_output(cvs->state->position_triang[2]*180.0 / M_PI, "theta_triang_triang");
-#endif
-#endif
+    #ifdef KALMAN
+        kalman(cvs);
+    #endif
+    #ifdef ODO_ONLY
+        odometry_estimate(cvs);
+    #endif
+    #ifdef TRIANG_ONLY
+        odometry_estimate(cvs);
+        triangulation(cvs);
+    #endif
 
     /* Path planning through potential field computation */
     // Choice of the path planning algorithm
-    if (cvs->inputs->t >= 5) {
+    if (ivs->t >= 5) {
         //strategy_objective(cvs);
         robinsun_main(cvs);
 //        cvs->state->omegaref[R_ID] = cvs->param->refspeed/.0325;
 //        cvs->state->omegaref[L_ID] = cvs->param->refspeed/.0325;
-#ifdef POTENTIAL
-        potential_Field(cvs);
-#endif
-#ifdef ASTAR
-        if (cvs->param->ready_start_astar == 1) // If objective
-        {
-            if (cvs->param->Astar_path_active == 0) {
-                Astar_get_path(cvs);
-                cvs->param->Astar_path_active = 1; // A path was found and saved
+        #ifdef POTENTIAL
+            potential_Field(cvs);
+        #endif
+        #ifdef ASTAR
+            if (cvs->param->ready_start_astar == 1) // If objective
+            {
+                if (cvs->param->Astar_path_active == 0) {
+                    Astar_get_path(cvs);
+                    cvs->param->Astar_path_active = 1; // A path was found and saved
+                }
+                Astar_read_path(cvs);
             }
-            Astar_read_path(cvs);
-        }
-#endif
-#ifdef SIMU_PROJECT
-        calibrate_start(cvs);
-#endif
-    } else {
+        #endif
+    } 
+    else {
         cvs->state->omegaref[R_ID] = 0.0;
         cvs->state->omegaref[L_ID] = 0.0;
     }
 
     // Constant speed references for wheel calibrations
-#ifdef TEST_ROBINSUN
-    cvs->state->omegaref[R_ID] = (ivs->t > 5) ? .30 / .0325 : 0;
-    cvs->state->omegaref[L_ID] = (ivs->t > 5) ? .30 / .0325 : 0;
-#endif
-#ifdef TEST_MINIBOT
-    cvs->state->omegaref[R_ID] = 4 * M_PI * sin(M_PI * ivs->t);
-    cvs->state->omegaref[L_ID] = 4 * M_PI * cos(M_PI * ivs->t);
-#endif
+    #ifdef TEST_ROBINSUN
+        cvs->state->omegaref[R_ID] = (ivs->t > 5) ? .30 / .0325 : 0;
+        cvs->state->omegaref[L_ID] = (ivs->t > 5) ? .30 / .0325 : 0;
+    #endif
+    #ifdef TEST_MINIBOT
+        cvs->state->omegaref[R_ID] = 4 * M_PI * sin(M_PI * ivs->t);
+        cvs->state->omegaref[L_ID] = 4 * M_PI * cos(M_PI * ivs->t);
+    #endif
 
     // Tests to calibrate the odometry
     //#define TEST_ODO
-#ifdef TEST_ODO
-    //        if((cvs->state->position_odo[1]<1.85) && (ivs->t > 5.0)){
-    //            cvs->state->omegaref[R_ID] = 3*M_PI;
-    //            cvs->state->omegaref[L_ID] = 3*M_PI;
-    //        }
-    //        else {
-    //            cvs->state->omegaref[R_ID] = 0;
-    //            cvs->state->omegaref[L_ID] = 0;
-    //        }
-    if ((cvs->state->position_odo[2]> -M_PI_2) && (ivs->t > 5.0)) {
-        cvs->state->omegaref[R_ID] = -2 * M_PI;
-        cvs->state->omegaref[L_ID] = 2 * M_PI;
-    } else {
-        cvs->state->omegaref[R_ID] = 0;
-        cvs->state->omegaref[L_ID] = 0;
-    }
-#endif
+    #ifdef TEST_ODO
+        //        if((cvs->state->position_odo[1]<1.85) && (ivs->t > 5.0)){
+        //            cvs->state->omegaref[R_ID] = 3*M_PI;
+        //            cvs->state->omegaref[L_ID] = 3*M_PI;
+        //        }
+        //        else {
+        //            cvs->state->omegaref[R_ID] = 0;
+        //            cvs->state->omegaref[L_ID] = 0;
+        //        }
+        if ((cvs->state->position_odo[2]> -M_PI_2) && (ivs->t > 5.0)) {
+            cvs->state->omegaref[R_ID] = -2 * M_PI;
+            cvs->state->omegaref[L_ID] = 2 * M_PI;
+        } else {
+            cvs->state->omegaref[R_ID] = 0;
+            cvs->state->omegaref[L_ID] = 0;
+        }
+    #endif
 
     /* Computation of the motor voltages */
     double wheels[2];
     motors_control(cvs, wheels);
-#ifdef MINIBOT
-    ovs->wheel_commands[R_ID] = wheels[L_ID];
-    ovs->wheel_commands[L_ID] = wheels[R_ID];
-#else
-    ovs->wheel_commands[R_ID] = wheels[R_ID];
-    ovs->wheel_commands[L_ID] = wheels[L_ID];
-#endif
-
-#ifdef ROBINSUN
-    //ovs->command_blocks = 100;
-#endif
+    #ifdef MINIBOT
+        ovs->wheel_commands[R_ID] = wheels[L_ID];
+        ovs->wheel_commands[L_ID] = wheels[R_ID];
+    #else
+        ovs->wheel_commands[R_ID] = wheels[R_ID];
+        ovs->wheel_commands[L_ID] = wheels[L_ID];
+    #endif
 
     /* Locate the opponent */
     //robot_Detect(cvs);
@@ -380,12 +259,6 @@ void controller_loop(CtrlStruct *cvs) {
         
     ovs->tower_command = 15;
     cvs->state->lastT = ivs->t;
-
-#ifdef ROBOTCONSOLE
-    char msg[1024];
-    sprintf(msg, "x: %.3f; y: %.3f; theta: %.3f\n", cvs->state->position_odo[0], cvs->state->position_odo[1], cvs->state->position_odo[2]*(180.0 / M_PI));
-    MyConsole_SendMsg(msg);
-#endif
 }
 
 /*! \brief last controller operations (called once)
@@ -408,46 +281,23 @@ void motors_control(CtrlStruct *cvs, double * wheels) {
     double *omegaref = cvs->state->omegaref;
 
     // Get values for current speed and reference speed
-#ifdef ROBINSUN
-    double rspeed = ivs->r_wheel_speed;
-    double lspeed = ivs->l_wheel_speed;
-#else
-#ifdef MINIBOT
-    double rspeed = -ivs->r_wheel_speed;
-    double lspeed = -ivs->l_wheel_speed;
-#else
-    double rspeed = ivs->r_wheel_speed;
-    double lspeed = ivs->l_wheel_speed;
-#endif
-#endif
+    #ifdef ROBINSUN
+        double rspeed = ivs->r_wheel_speed;
+        double lspeed = ivs->l_wheel_speed;
+    #else
+        #ifdef MINIBOT
+            double rspeed = -ivs->r_wheel_speed;
+            double lspeed = -ivs->l_wheel_speed;
+        #else
+            double rspeed = ivs->r_wheel_speed;
+            double lspeed = ivs->l_wheel_speed;
+        #endif
+    #endif
 
     // Integrate the error
     cvs->state->errorIntR += (omegaref[R_ID] - rspeed)*(ivs->t - cvs->state->lastT);
     cvs->state->errorIntL += (omegaref[L_ID] - lspeed)*(ivs->t - cvs->state->lastT);
 
-#ifdef ROBOTCONSOLE
-    char msg[1024];
-    sprintf(msg, "t: %.3f; lastT: %.3f \n", ivs->t, cvs->state->lastT);
-    MyConsole_SendMsg(msg);
-#endif
-
-#ifdef SIMU_PROJECT
-    // Limit the integral error (anti-windup)
-    cvs->state->errorIntR = (14 * cvs->state->errorIntR * cvs->param->Ki > 24.0) ? (24.0 / (14 * cvs->param->Ki)) : (cvs->state->errorIntR);
-    cvs->state->errorIntL = (14 * cvs->state->errorIntL * cvs->param->Ki > 24.0) ? (24.0 / (14 * cvs->param->Ki)) : (cvs->state->errorIntL);
-    cvs->state->errorIntR = (14 * cvs->state->errorIntR * cvs->param->Ki<-24.0) ? (-24.0 / (14 * cvs->param->Ki)) : (cvs->state->errorIntR);
-    cvs->state->errorIntL = (14 * cvs->state->errorIntL * cvs->param->Ki<-24.0) ? (-24.0 / (14 * cvs->param->Ki)) : (cvs->state->errorIntL);
-
-    // PI controller
-    UconsigneR = (omegaref[R_ID] - rspeed) * 14 * cvs->param->Kp + cvs->state->errorIntR * 14 * cvs->param->Ki;
-    UconsigneL = (omegaref[L_ID] - lspeed) * 14 * cvs->param->Kp + cvs->state->errorIntL * 14 * cvs->param->Ki;
-
-    UconsigneR = (UconsigneR > 0.9 * 24) ? (0.9 * 24) : (UconsigneR);
-    UconsigneL = (UconsigneL > 0.9 * 24) ? (0.9 * 24) : (UconsigneL);
-
-    wheels[R_ID] = UconsigneR * (100 / (0.9 * 24));
-    wheels[L_ID] = UconsigneL * (100 / (0.9 * 24));
-#else
     // Limit the integral error (anti-windup)
     cvs->state->errorIntR = (cvs->state->errorIntR * cvs->param->Ki[R_ID] > Valim) ? (Valim / (cvs->param->Ki[R_ID])) : (cvs->state->errorIntR);
     cvs->state->errorIntL = (cvs->state->errorIntL * cvs->param->Ki[L_ID] > Valim) ? (Valim / (cvs->param->Ki[L_ID])) : (cvs->state->errorIntL);
@@ -479,30 +329,21 @@ void motors_control(CtrlStruct *cvs, double * wheels) {
         UconsigneR += delta;
     }
 
-#ifdef ROBOTCONSOLE
-    char msg[1024];
-    sprintf(msg, "Right speed: %.3f; omegaref: %.3f; UconsigneR: %.3f, errorIntR = %.3f\n", rspeed, omegaref[R_ID], UconsigneR, cvs->state->errorIntR);
-    MyConsole_SendMsg(msg);
-    sprintf(msg, "Left speed: %.3f; omegaref: %.3f; UconsigneL: %.3f, errorIntL = %.3f\n", lspeed, omegaref[L_ID], UconsigneL, cvs->state->errorIntL);
-    MyConsole_SendMsg(msg);
-#endif
-
     // Update command values
-#ifdef ROBINSUN
-    wheels[R_ID] = -100.0 * UconsigneR / 26.0;
-    wheels[L_ID] = 100.0 * UconsigneL / 26.0;
+    #ifdef ROBINSUN
+        wheels[R_ID] = -100.0 * UconsigneR / 26.0;
+        wheels[L_ID] = 100.0 * UconsigneL / 26.0;
 
-    double f = (ivs->t - cvs->state->lastT) / 0.005;
-    double frac = 1.0 / (1.0 + f);
+        double f = (ivs->t - cvs->state->lastT) / 0.005;
+        double frac = 1.0 / (1.0 + f);
 
-    // filtered_value = { old_value * (dt/tau)/(1+dt/tau) } + { dt/tau * current }
-    wheels[R_ID] = (f * frac * wheels[R_ID]) + (frac * cvs->outputs->wheel_commands[R_ID]);
-    wheels[L_ID] = (f * frac * wheels[L_ID]) + (frac * cvs->outputs->wheel_commands[L_ID]);
-#else
-    wheels[R_ID] = 100.0 * UconsigneR / Valim;
-    wheels[L_ID] = 100.0 * UconsigneL / Valim;
-#endif
-#endif
+        // filtered_value = { old_value * (dt/tau)/(1+dt/tau) } + { dt/tau * current }
+        wheels[R_ID] = (f * frac * wheels[R_ID]) + (frac * cvs->outputs->wheel_commands[R_ID]);
+        wheels[L_ID] = (f * frac * wheels[L_ID]) + (frac * cvs->outputs->wheel_commands[L_ID]);
+    #else
+        wheels[R_ID] = 100.0 * UconsigneR / Valim;
+        wheels[L_ID] = 100.0 * UconsigneL / Valim;
+    #endif
 }
 
 NAMESPACE_CLOSE();
