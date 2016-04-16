@@ -11,8 +11,9 @@ NAMESPACE_INIT(ctrlGr1);
 //} calibrate_t;
 
 void calibrate(CtrlStruct *cvs) {
-    cvs->state->objectives[cvs->state->current_objective] = DONE1;
-    MyConsole_SendMsg("Calibrate set to DONE1.\n");
+    cvs->state->position[1] = (cvs->inputs->team_color)? 1.34 : -1.34;
+    if(cvs->inputs->ready_signal || cvs->inputs->start_signal)
+        cvs->state->objectives[cvs->state->current_objective] = DONE1;
 }
 
 //typedef enum {
@@ -20,10 +21,7 @@ void calibrate(CtrlStruct *cvs) {
 
 void wait(CtrlStruct *cvs) {
     if(cvs->inputs->start_signal)
-    {
-        MyConsole_SendMsg("Start message received.\n");
         cvs->state->objectives[cvs->state->current_objective] = DONE1;
-    }
 }
 
 void blocks_front(CtrlStruct *cvs) {

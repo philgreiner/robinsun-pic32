@@ -65,9 +65,8 @@ void controller_init(CtrlStruct *cvs) {
 
     cvs->state->lastT = cvs->inputs->t;
 
-    /* Sets the beacon position, beginning by the one which is alone on its side, for both robot starting configurations */
     cvs->state->position[0] = -0.16;
-    cvs->state->position[1] = -1.34;
+    cvs->state->position[1] = (cvs->inputs->team_color)? 1.34 : -1.34;
     cvs->state->position[2] = 0;
     cvs->state->prev_theta = 0;
 
@@ -78,7 +77,7 @@ void controller_init(CtrlStruct *cvs) {
     cvs->state->position_triang[1] = cvs->state->position[1];
     cvs->state->position_triang[2] = cvs->state->position[2];
     cvs->state->direction = 0;
-    
+
     // Path planning strategy selection
     #ifdef POTENTIAL
         potential_Field_Init(cvs);
