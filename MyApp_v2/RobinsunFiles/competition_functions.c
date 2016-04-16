@@ -7,11 +7,11 @@
 
 NAMESPACE_INIT(ctrlGr1);
 
-//typedef enum {
-//} calibrate_t;
-
 void calibrate(CtrlStruct *cvs) {
-    cvs->state->position[1] = (cvs->inputs->team_color)? (1.34) : (-1.34);
+    if(!cvs->inputs->u_switch[R_ID] && !cvs->inputs->u_switch[L_ID]) {
+        cvs->state->position[1] = (cvs->inputs->team_color)? (1.36) : (-1.36);
+        cvs->state->position[2] = (cvs->inputs->team_color) ? (-M_PI_2) : (M_PI_2);
+    }
     if(cvs->inputs->ready_signal || cvs->inputs->start_signal)
         cvs->state->objectives[cvs->state->current_objective] = DONE1;
 }
@@ -20,6 +20,10 @@ void calibrate(CtrlStruct *cvs) {
 //} wait_t;
 
 void wait(CtrlStruct *cvs) {
+    if(!cvs->inputs->u_switch[R_ID] && !cvs->inputs->u_switch[L_ID]) {
+        cvs->state->position[1] = (cvs->inputs->team_color)? (1.36) : (-1.36);
+        cvs->state->position[2] = (cvs->inputs->team_color) ? (-M_PI_2) : (M_PI_2);
+    }
     if(cvs->inputs->start_signal)
         cvs->state->objectives[cvs->state->current_objective] = DONE1;
 }

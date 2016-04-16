@@ -124,7 +124,7 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         if(lt24%2)
             cvs->inputs->team_color = 1;
         else
-            cvs->inputs->team_color = 2;
+            cvs->inputs->team_color = 0;
         
         // Strategy defined
         if((lt24 >> 2)%2)
