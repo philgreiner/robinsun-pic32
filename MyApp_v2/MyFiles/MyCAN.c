@@ -226,10 +226,10 @@ void MyCAN_Task(void) {
        //MyConsole_SendMsg(theStr);
         if(theSID==0x402){
             char msg[1024];
-            sprintf(msg,"0 %i, 1: %i, 2: %i, 3: %i, 4: %i, 5: %i, 6: %i, 7: %i;\n > ",in0, in1, in2, in3, in4, in5, in6, in7);
+//            sprintf(msg,"0 %i, 1: %i, 2: %i, 3: %i, 4: %i, 5: %i, 6: %i, 7: %i;\n > ",in0, in1, in2, in3, in4, in5, in6, in7);
+//            MyConsole_SendMsg(msg);  
             cvs->inputs->u_switch[L_ID] = in1 + 1; // left
             cvs->inputs->u_switch[R_ID] = in3 + 1; // right
-            MyConsole_SendMsg(msg);  
         }
         if (theSID == 0x200)
             MyCAN_TxMsg(0x201, theData);

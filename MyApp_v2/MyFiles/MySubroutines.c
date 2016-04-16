@@ -46,7 +46,7 @@ void gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
     char msg[1024];
     
     double lin_sat = 0.4, theta_sat = 0.2;
-    if(dist > 0.04) // Go to point
+    if(dist > 0.035) // Go to point
     {
         if(-M_PI_2 <= delta_theta && M_PI_2 >= delta_theta) // Go forward
         {

@@ -199,7 +199,7 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
     #endif // DEBUG
 
 	int PRECISION;
-	if (cvs->param->index_path == 0) PRECISION = 1;
+	if (cvs->param->index_path == 0) PRECISION = 0;
 	else PRECISION = 1;
 	double dist = sqrt((delta_x*delta_x) + (delta_y*delta_y));
     double delta_theta = fabs(cvs->state->position[2] - cvs->state->goal_position[2]);

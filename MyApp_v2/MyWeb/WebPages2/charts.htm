@@ -178,19 +178,20 @@ var buttonL = 0;
 var buttonR = 0;
 function updateSwitches(xmlData){
 		buttonL = getXMLValue(xmlData, 'buttonL');
-		if(parseInt(buttonL) == 0)
+		if(parseInt(buttonL) == 1)
 			document.getElementById('buttonL').src = "../images/button0.png";
 		else document.getElementById('buttonL').src = "../images/button1.png";
 		
 		document.getElementById('buttonleft').innerHTML = buttonL;//getXMLValue(xmlData, 'buttonL');
 	
 		buttonR = getXMLValue(xmlData, 'buttonR');
-		if(parseInt(buttonR) == 0)
+		if(parseInt(buttonR) == 1)
 			document.getElementById('buttonR').src = "../images/button0.png";
 		else document.getElementById('buttonR').src = "../images/button1.png";
 		
 		document.getElementById('buttonright').innerHTML = buttonR;//getXMLValue(xmlData, 'buttonR');
 }
+setTimeout("newAJAXCommand('status.xml', updateSwitches, true)",250);
 </script>
 
 <script type="text/javascript">

@@ -105,6 +105,8 @@ void controller_init(CtrlStruct *cvs) {
     cvs->state->clamp_opening = 9.2;
     cvs->param->refspeed = 0.0;
     cvs->state->errorAngle = 0.0;
+    cvs->inputs->u_switch[R_ID] = 1;
+    cvs->inputs->u_switch[L_ID] = 1;
 }
 
 /*! \brief controller loop (called eveiry timestep)
@@ -130,7 +132,7 @@ void controller_loop(CtrlStruct *cvs) {
     char msg[1024];
     sprintf(msg, "Clamp opening: %f; Clamp state: %d\n\n", cvs->state->clamp_opening, (int) cvs->state->clamp);
     //    MyConsole_SendMsg(msg);
-    
+
     if (fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 3 * M_PI)
         ivs->r_wheel_speed = cvs->state->lastMesR[0];
     if (fabs(ivs->l_wheel_speed - cvs->state->lastMesL[0]) > 3 * M_PI)
