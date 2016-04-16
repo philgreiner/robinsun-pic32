@@ -27,7 +27,7 @@ void wait(CtrlStruct *cvs) {
 }
 
 void blocks_front(CtrlStruct *cvs) {
-    double x, y, theta, x_goal, y_goal, theta_goal, d, wheels[2], dest[3];
+    double x, y, theta, x_goal, y_goal, theta_goal, d, wheels[2], dest[3], delta_theta;
     x = cvs->state->position[0];
     y = cvs->state->position[1];
     theta = cvs->state->position[2];
@@ -39,8 +39,8 @@ void blocks_front(CtrlStruct *cvs) {
         case GOTO_BF:
             // SET GOAL POSITION
             cvs->state->goal_position[0] = 0.5;//-0.1;
-            cvs->state->goal_position[1] = 0.75;//-1.25;
-            cvs->state->goal_position[2] = 3*M_PI_4;//M_PI_2
+            cvs->state->goal_position[1] = 0.5;//-1.25;
+            cvs->state->goal_position[2] = M_PI_2;
 
             // ACTIVATE A*
             cvs->param->ready_start_astar = 0;
@@ -55,17 +55,19 @@ void blocks_front(CtrlStruct *cvs) {
 
         case WAIT_FOR_POSITION_BF:
             // COMPUTE REMAINING DISTANCE
-            dest[0] = 0.5;//-0.1; 
-            dest[1] = 0.75;//-1.25; 
-            dest[2] = 3*M_PI_4;//M_PI_2;
+            dest[0] = 0.5; 
+            dest[1] = 0.5; 
+            dest[2] = M_PI_2;
             d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
+            delta_theta = fabs(cvs->state->position[2] - dest[2]);
+            delta_theta = (delta_theta > 2*M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
             
             gotoPoint(cvs,dest,wheels);
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
 
             // PUSH BLOC
-            if ((d < 0.05) && (fabs(cvs->state->position[2] - dest[2])*180.0/M_PI < 2.5))
+            if ((d < 0.05) && (delta_theta*180.0/M_PI < 4.0))
                 cvs->state->current_action_progress = FORWARD_BF;
             break;
         
@@ -78,13 +80,15 @@ void blocks_front(CtrlStruct *cvs) {
             dest[1] = -1.1; 
             dest[2] = M_PI_2;
             d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
+            delta_theta = fabs(cvs->state->position[2] - dest[2]);
+            delta_theta = (delta_theta > 2*M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
             
             gotoPoint(cvs,dest,wheels);
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
 
             // GO TO CLAMP 
-            if ((d < 0.05) && (fabs(cvs->state->position[2] - dest[2])*180.0/M_PI < 2.5))
+            if ((d < 0.05) && (delta_theta*180.0/M_PI < 4.0))
             {
                 cvs->state->current_action_progress = CLAMP_BF;
                 cvs->state->timer = cvs->inputs->t;
@@ -120,6 +124,7 @@ void blocks_front(CtrlStruct *cvs) {
             {
                 cvs->state->current_action_progress = UNCLAMP_BF;
                 cvs->state->errorAngle = 0.0;
+                cvs->state->timer = cvs->inputs->t;
             }
             break;
             
@@ -157,7 +162,7 @@ void blocks_front(CtrlStruct *cvs) {
             cvs->state->omegaref[L_ID] = wheels[L_ID];
             
             // ACTION IS DONE
-            if ((d < 0.05) && (fabs(cvs->state->position[2] - dest[2])*180.0/M_PI < 2.5))
+            if ((d < 0.05) && (fabs(cvs->state->position[2] - dest[2])*180.0/M_PI < 3.0))
                 cvs->state->objectives[cvs->state->current_objective] = DONE1;
             break;
     }

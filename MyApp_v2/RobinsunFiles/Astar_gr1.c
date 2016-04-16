@@ -173,7 +173,6 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 {
 #ifdef ASTAR
 	CtrlIn *ivs = cvs->inputs;
-	double omega, vlin;
 
 	/* A. Goal data */
 	int actual_step = cvs->param->path[cvs->param->index_path];
@@ -203,6 +202,8 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 	if (cvs->param->index_path == 0) PRECISION = 1;
 	else PRECISION = 1;
 	double dist = sqrt((delta_x*delta_x) + (delta_y*delta_y));
+    double delta_theta = fabs(cvs->state->position[2] - cvs->state->goal_position[2]);
+    delta_theta = (delta_theta > 2*M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
 
 	/* B. Check if on position and act accordingly  */
 
@@ -210,7 +211,7 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 	if (dist <= PRECISION) {
 		if (cvs->param->index_path == 0) // at final destination
 		{       
-            if (fabs(cvs->state->position[2] - cvs->state->goal_position[2])*180.0/M_PI < 3.0) {
+            if (delta_theta*180.0/M_PI < 4.0) {
                 cvs->state->omegaref[R_ID] = 0.0;
                 cvs->state->omegaref[L_ID] = 0.0;
 

@@ -63,10 +63,9 @@ void gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
     else    // Orientation to objective
     {
         delta_theta = destination[2] - theta;
-        delta_theta = (delta_theta > 2*M_PI) ? delta_theta - 2*M_PI : (delta_theta < 2*M_PI) ? delta_theta + 2*M_PI : delta_theta;
+        delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : (delta_theta < -M_PI) ? (delta_theta + 2*M_PI) : delta_theta;
         v = 0;
-        double turn_sat = 0.2;
-        omega = max(-theta_sat, min(theta_sat, (1.0 * delta_theta) - 0.1*(theta - cvs->state->prev_theta)/(cvs->inputs->t - cvs->state->lastT)));
+        omega = 0.125 * delta_theta;
     }
     
     wheels[R_ID] = (v + omega)/0.0325;
