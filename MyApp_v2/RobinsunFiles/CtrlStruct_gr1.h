@@ -51,6 +51,7 @@ typedef struct CtrlState
 
 	//Potential field & Astar orientation error
 	double errorAngle;
+    double prev_theta;
 	double lastT_pot;
 	double lastT_astar;
 
@@ -91,7 +92,7 @@ typedef struct CtrlParam{
 	double kl;
 
 	// Wheel controller parameters
-	double Ki[2], Kp[2];
+	double Ki[2], Kp[2], Kd[2];
 	#ifdef POTENTIAL
 	    double Ki_pot, Kp_pot;
 		double obstacle_center[100];    // Coordinates of the central obstacle

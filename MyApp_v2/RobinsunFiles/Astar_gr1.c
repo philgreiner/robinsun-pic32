@@ -200,21 +200,29 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
     #endif // DEBUG
 
 	int PRECISION;
-	if (cvs->param->index_path == 0) PRECISION = 0;
+	if (cvs->param->index_path == 0) PRECISION = 1;
 	else PRECISION = 1;
 	double dist = sqrt((delta_x*delta_x) + (delta_y*delta_y));
 
 	/* B. Check if on position and act accordingly  */
 
 	// 1. ***** ON POSITION *****
-	if (fabs(dist) <= PRECISION){
-		if (cvs->param->index_path == 0)				// at final destination
+	if (dist <= PRECISION) {
+		if (cvs->param->index_path == 0) // at final destination
 		{       
+            if (fabs(cvs->state->position[2] - cvs->state->goal_position[2])*180.0/M_PI < 3.0) {
                 cvs->state->omegaref[R_ID] = 0.0;
                 cvs->state->omegaref[L_ID] = 0.0;
 
                 cvs->param->Astar_path_active = 0;
                 cvs->param->ready_start_astar = 0;
+            }
+            else {
+                double wheels[2], dest[3] = {(actual_step_x - 21)/20.0, (actual_step_y - 31)/20.0, cvs->state->goal_position[2]};
+                gotoPoint(cvs, dest, wheels);
+                cvs->state->omegaref[R_ID] = wheels[R_ID];
+                cvs->state->omegaref[L_ID] = wheels[L_ID];
+            }
 		}
 		else {
 			cvs->param->index_path = cvs->param->index_path - 1;
@@ -224,74 +232,15 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 
 	// 2. NOT YET ON POSITION
 	else {
-		// Calculate angle divergence
+		double delta_theta = atan2(delta_y,delta_x) - theta;
 
-//		double arcos = acos(delta_x / dist);	// Calculate the angle between the 0rad reference angle and the angle to go to the next point
-		double theta_required;
-
-//		if (delta_y >= 0) {					// positive angle between 0 and PI
-//			theta_required = arcos;
-//		}
-//		else {								// negative angle between -0 and -PI
-//			theta_required = -arcos;
-//		}
-        
-        theta_required = atan2(delta_y,delta_x);
-        
-        double delta_theta;
-        delta_theta =  theta_required - theta;
-        
         if (delta_theta > M_PI) delta_theta -= 2 * M_PI;
 		if (delta_theta < -M_PI) delta_theta += 2 * M_PI;
-//        
-//        int reversed = 1;
-//        if (delta_theta > M_PI_2)
-//            delta_theta = delta_theta - M_PI;
-//        else if (delta_theta < -M_PI_2)
-//            delta_theta = delta_theta + M_PI;
-//        else
-//            reversed = 0;
-//        
-//		omega = 1.95*delta_theta;
-//        omega = (omega > 2.75*M_PI) ? (2.75*M_PI) : omega;
-//        omega = (omega < -2.75*M_PI) ? (-2.75*M_PI) : omega;
-//        
-//        #ifdef DEBUG
-//            printf("delta_x= %lf, delta_y=%lf, theta_req =%lf, delta_theta = %lf\n", delta_x, delta_y, theta_required, delta_theta);
-//        #endif
-//
-//		vlin = 2.75*M_PI*((1.25+cos(delta_theta))/2.25);
-//		if (cvs->param->index_path == 0) vlin = dist*0.75*M_PI;
-//		if (fabs(delta_theta) < 1.3*M_PI_4) {
-//			vlin = (vlin > 2.75*M_PI) ? (2.75*M_PI) : (vlin);
-//			vlin = (vlin < -2.75*M_PI) ? (-2.75*M_PI) : (vlin);
-//			if (fabs(vlin) <= 0.85*M_PI_2)
-//				vlin = (vlin /(fabs(vlin)))*0.85*M_PI_2;
-//		}
-//		else {
-//			vlin = 0;
-//		}
-//
-//        vlin = (reversed) ? -vlin : vlin;
-    double omega = 2.5*delta_theta;
-    omega = (omega > 3*M_PI) ? (3*M_PI) : omega;
-    omega = (omega < -3*M_PI) ? (-3*M_PI) : omega;
 
-    double vlin = 1.5*M_PI*cos(delta_theta);
-    if (fabs(delta_theta) < 0.7*M_PI_4) {
-        vlin = (vlin > 2.75*M_PI) ? (2.75*M_PI) : (vlin);
-        vlin = (vlin < -2.75*M_PI) ? (-2.75*M_PI) : (vlin);
-        if (fabs(vlin) <= M_PI_4)
-            vlin = (vlin /(fabs(vlin)))*M_PI_4;
-    }
-    else {
-        vlin = 0;
-    }
-    double wheels[2], dest[3] = {(actual_step_x - 21)/20.0, (actual_step_y - 31)/20.0, 0};
-    gotoPoint(cvs,dest, wheels);
-		cvs->state->omegaref[R_ID] = wheels[R_ID]; //vlin + omega;
-		cvs->state->omegaref[L_ID] = wheels[L_ID]; //vlin - omega;
-
+        double wheels[2], dest[3] = {(actual_step_x - 21)/20.0, (actual_step_y - 31)/20.0, cvs->state->goal_position[2]};
+        gotoPoint(cvs, dest, wheels);
+		cvs->state->omegaref[R_ID] = wheels[R_ID];
+		cvs->state->omegaref[L_ID] = wheels[L_ID];
 	} // end else (not on position)
 #endif 
 

@@ -38,9 +38,9 @@ void blocks_front(CtrlStruct *cvs) {
     switch (cvs->state->current_action_progress) {
         case GOTO_BF:
             // SET GOAL POSITION
-            cvs->state->goal_position[0] = -0.1 ;
-            cvs->state->goal_position[1] = -1.25;
-            cvs->state->goal_position[2] = M_PI_2;
+            cvs->state->goal_position[0] = 0.5;//-0.1;
+            cvs->state->goal_position[1] = 0.75;//-1.25;
+            cvs->state->goal_position[2] = 3*M_PI_4;//M_PI_2
 
             // ACTIVATE A*
             cvs->param->ready_start_astar = 0;
@@ -55,54 +55,36 @@ void blocks_front(CtrlStruct *cvs) {
 
         case WAIT_FOR_POSITION_BF:
             // COMPUTE REMAINING DISTANCE
-            d = sqrt((x - x_goal)*(x - x_goal) + (y - y_goal)*(y - y_goal));
-            dest[0] = -0.1; dest[1] = -1.25; dest[2] = M_PI_2;
-            gotoPoint(cvs,dest,wheels);
-            cvs->state->omegaref[R_ID] = wheels[R_ID];//M_PI_4 * omega / (fabs(omega)) + omega;
-            cvs->state->omegaref[L_ID] = wheels[L_ID];//-M_PI_4 * omega / (fabs(omega)) - omega;
-
-            // GO TO TURN IF CLOSE ENOUGH
-            if (d < 0.05)
-                cvs->state->current_action_progress = TURN_BF;
-            break;
-
-        case TURN_BF:
-            // TURN OFF A*
-            cvs->param->ready_start_astar = 0;
-
-            dest[0] = x; dest[1] = y; dest[2] = M_PI_2;
-            // Set correct orientation
-            double omega = (M_PI_2 - theta);
-            if (omega > M_PI) omega -= 2 * M_PI;
-            if (omega < -M_PI) omega += 2 * M_PI;
-            double wheels[2];
+            dest[0] = 0.5;//-0.1; 
+            dest[1] = 0.75;//-1.25; 
+            dest[2] = 3*M_PI_4;//M_PI_2;
+            d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
             
             gotoPoint(cvs,dest,wheels);
-            cvs->state->omegaref[R_ID] = wheels[R_ID];//M_PI_4 * omega / (fabs(omega)) + omega;
-            cvs->state->omegaref[L_ID] = wheels[L_ID];//-M_PI_4 * omega / (fabs(omega)) - omega;
+            cvs->state->omegaref[R_ID] = wheels[R_ID];
+            cvs->state->omegaref[L_ID] = wheels[L_ID];
 
-            // GO TO FORWARD 
-            if (fabs(omega) < 0.01)
-            {
+            // PUSH BLOC
+            if ((d < 0.05) && (fabs(cvs->state->position[2] - dest[2])*180.0/M_PI < 2.5))
                 cvs->state->current_action_progress = FORWARD_BF;
-                cvs->state->errorIntL = 0.0;
-                cvs->state->errorIntR = 0.0;
-            }
             break;
         
         case FORWARD_BF:
             // TURN OFF A*
             cvs->param->ready_start_astar = 0;
-
-            dest[0] = -0.1; dest[1] = -1.1; dest[2] = M_PI_2;
+            
+            // DEFINE GOAL POSITION
+            dest[0] = -0.1; 
+            dest[1] = -1.1; 
+            dest[2] = M_PI_2;
+            d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
+            
             gotoPoint(cvs,dest,wheels);
-
-            // MOVE FORWARD
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
 
             // GO TO CLAMP 
-            if (fabs(1.1 - fabs(y)) < 0.05)
+            if ((d < 0.05) && (fabs(cvs->state->position[2] - dest[2])*180.0/M_PI < 2.5))
             {
                 cvs->state->current_action_progress = CLAMP_BF;
                 cvs->state->timer = cvs->inputs->t;
@@ -133,29 +115,11 @@ void blocks_front(CtrlStruct *cvs) {
             break;
 
         case PUSH_BF:
-            // TURN OFF A*
-//            dest[0] = 0.1; dest[1] = -0.43; dest[2] = M_PI_2;
-//            gotoPoint(cvs,dest,wheels);
-//            // MOVE FORWARD
-//            cvs->state->omegaref[R_ID] = wheels[R_ID];
-//            cvs->state->omegaref[L_ID] = wheels[L_ID];
-
             // GO TO UNCLAMP
             if (!cvs->param->ready_start_astar)
             {
-                cvs->state->current_action_progress = ORIENT_BF;
-            }
-            break;
-            
-        case ORIENT_BF:
-            dest[0] = x; dest[1] = y; dest[2] = M_PI_2;
-            gotoPoint(cvs,dest,wheels);
-            cvs->state->omegaref[R_ID] = wheels[R_ID];
-            cvs->state->omegaref[L_ID] = wheels[L_ID];
-            if(fabs(theta-M_PI_2)*180.0/M_PI < 3.0)
-            {
                 cvs->state->current_action_progress = UNCLAMP_BF;
-                cvs->state->timer = cvs->inputs->t;
+                cvs->state->errorAngle = 0.0;
             }
             break;
             
@@ -183,14 +147,17 @@ void blocks_front(CtrlStruct *cvs) {
             // TURN OFF A*
             cvs->param->ready_start_astar = 0;
             
-            dest[0] = 0.1; dest[1] = -0.75; dest[2] = 0;
+            dest[0] = 0.1; 
+            dest[1] = -0.75; 
+            dest[2] = 0;
+            d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
+            
             gotoPoint(cvs,dest,wheels);
-            // MOVE FORWARD
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
             
             // ACTION IS DONE
-            if (fabs(0.75 - fabs(y)) < 0.03)
+            if ((d < 0.05) && (fabs(cvs->state->position[2] - dest[2])*180.0/M_PI < 2.5))
                 cvs->state->objectives[cvs->state->current_objective] = DONE1;
             break;
     }
@@ -222,35 +189,9 @@ void cabins_close(CtrlStruct *cvs) {
             break;
 
         case WAIT_FOR_POSITION_C:
-            // COMPUTE REMAINING DISTANCE
-            d = sqrt((x - x_goal)*(x - x_goal) + (y - y_goal)*(y - y_goal));
-
-            // GO TO TURN IF CLOSE ENOUGH
+            // MOVE BACKWARDS IF CLOSE ENOUGH
             if (!cvs->param->ready_start_astar)
-                cvs->state->current_action_progress = TURN_C;
-            break;
-            
-        case TURN_C:
-            // TURN OFF A*
-            cvs->param->ready_start_astar = 0;
-
-            dest[0] = x; dest[1] = y; dest[2] = 0;
-//            // Set correct orientation
-//            double omega = (M_PI - theta);
-//            if (omega > M_PI) omega -= 2 * M_PI;
-//            if (omega < -M_PI) omega += 2 * M_PI;
-            gotoPoint(cvs,dest,wheels);
-//            cvs->state->omegaref[R_ID] = M_PI_4 * omega / (fabs(omega));
-//            cvs->state->omegaref[L_ID] = -M_PI_4 * omega / (fabs(omega));
-            cvs->state->omegaref[R_ID] = wheels[R_ID];
-            cvs->state->omegaref[L_ID] = wheels[L_ID];
-            // GO TO FORWARD 
-            if (fabs(theta) < 0.01)
-            {
                 cvs->state->current_action_progress = BACKWARDS_C;
-                cvs->state->errorIntL = 0.0;
-                cvs->state->errorIntR = 0.0;
-            }
             break;
             
         case BACKWARDS_C:
@@ -262,7 +203,7 @@ void cabins_close(CtrlStruct *cvs) {
             cvs->state->omegaref[L_ID] = -2 * M_PI;
 
             // GO TO CLAMP 
-            if (x + 0.8 < 0.02)//cvs->inputs->u_switch[R_ID] & cvs->inputs->u_switch[L_ID])
+            if (x + 0.875 < 0.02)//cvs->inputs->u_switch[R_ID] & cvs->inputs->u_switch[L_ID])
             {
                 cvs->state->current_action_progress = SWITCHES_C;
                 cvs->state->timer = cvs->inputs->t;
@@ -298,7 +239,7 @@ void blocks_dune_1(CtrlStruct *cvs) {
         case GOTO_BD1:
             // SET GOAL POSITION
             cvs->state->goal_position[0] = -0.5;
-            cvs->state->goal_position[1] = 0;
+            cvs->state->goal_position[1] = -0.5;
             cvs->state->goal_position[2] = M_PI;
 
             // ACTIVATE A*
@@ -348,7 +289,7 @@ void blocks_dune_1(CtrlStruct *cvs) {
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
             // GO TO FORWARD 
-            if (fabs(M_PI - theta) < 0.1)
+            if (fabs(M_PI - theta)*180/M_PI < 3.0)
             {
                 cvs->state->timer = cvs->inputs->t;
                 cvs->state->current_action_progress = FORWARD_BD1;

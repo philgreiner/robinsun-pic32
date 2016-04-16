@@ -60,10 +60,12 @@ void controller_init(CtrlStruct *cvs) {
     // Controller parameters
 #ifdef ROBINSUN
     // Right: 5.975 kg     Left: 4.6 kg
-    cvs->param->Kp[L_ID] = -0.1292;
-    cvs->param->Ki[L_ID] = 1.2537;
-    cvs->param->Kp[R_ID] = -0.1167;
-    cvs->param->Ki[R_ID] = 1.6272;
+    cvs->param->Kp[L_ID] = -0.0631;//-0.1292;
+    cvs->param->Ki[L_ID] = 2.1572;//1.2537;
+    cvs->param->Kd[L_ID] = 0.001;
+    cvs->param->Kp[R_ID] = -0.0548;//-0.1167;
+    cvs->param->Ki[R_ID] = 2.3232;//1.6272;
+    cvs->param->Kd[R_ID] = 0.001;
 #else
     cvs->param->Kp = -0.031;
     cvs->param->Ki = 2.1729;
@@ -130,6 +132,7 @@ void controller_init(CtrlStruct *cvs) {
     cvs->state->position[0] = -0.16;
     cvs->state->position[1] = -1.34;
     cvs->state->position[2] = 0;
+    cvs->state->prev_theta = 0;
 #endif
 
     cvs->state->position_odo[0] = cvs->state->position[0];
@@ -452,8 +455,8 @@ void motors_control(CtrlStruct *cvs, double * wheels) {
     cvs->state->errorIntL = (cvs->state->errorIntL * cvs->param->Ki[L_ID]<-Valim) ? (-Valim / (cvs->param->Ki[L_ID])) : (cvs->state->errorIntL);
 
     // PI controller
-    UconsigneR = (omegaref[R_ID] - rspeed) * cvs->param->Kp[R_ID] + cvs->state->errorIntR * cvs->param->Ki[R_ID];
-    UconsigneL = (omegaref[L_ID] - lspeed) * cvs->param->Kp[L_ID] + cvs->state->errorIntL * cvs->param->Ki[L_ID];
+    UconsigneR = (omegaref[R_ID] - rspeed) * cvs->param->Kp[R_ID] + cvs->state->errorIntR * cvs->param->Ki[R_ID] - cvs->param->Kd[R_ID]*(rspeed - cvs->state->lastMesR[0])/(ivs->t - cvs->state->lastT);
+    UconsigneL = (omegaref[L_ID] - lspeed) * cvs->param->Kp[L_ID] + cvs->state->errorIntL * cvs->param->Ki[L_ID] - cvs->param->Kd[L_ID]*(lspeed - cvs->state->lastMesL[0])/(ivs->t - cvs->state->lastT);
 
     if (UconsigneR > 0.9 * 24) {
         float delta = 0.9 * 24 - UconsigneR;
