@@ -37,8 +37,8 @@ void blocks_front(CtrlStruct *cvs) {
         case GOTO_BF:
             // SET GOAL POSITION
             cvs->state->goal_position[0] = 0.5;//-0.1;
-            cvs->state->goal_position[1] = 0.75;//-1.25;
-            cvs->state->goal_position[2] = 3*M_PI_4;//M_PI_2
+            cvs->state->goal_position[1] = 0.75;//cvs->inputs->team_color? 1.25 : -1.25;
+            cvs->state->goal_position[2] = 3*M_PI_4;//cvs->inputs->team_color? -M_PI_2 : M_PI_2;
 
             // ACTIVATE A*
             cvs->param->ready_start_astar = 0;
@@ -54,8 +54,8 @@ void blocks_front(CtrlStruct *cvs) {
         case WAIT_FOR_POSITION_BF:
             // COMPUTE REMAINING DISTANCE
             dest[0] = 0.5;//-0.1; 
-            dest[1] = 0.75;//-1.25; 
-            dest[2] = 3*M_PI_4;//M_PI_2;
+            dest[1] = 0.75;//cvs->inputs->team_color? 1.25 : -1.25;
+            dest[2] = 3*M_PI_4;//cvs->inputs->team_color? -M_PI_2 : M_PI_2;
             d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
             
             gotoPoint(cvs,dest,wheels);
@@ -107,8 +107,8 @@ void blocks_front(CtrlStruct *cvs) {
                 cvs->state->errorIntR = 0.0;
                 cvs->param->ready_start_astar = 1;
                 cvs->state->goal_position[0] = 0.1 ;
-                cvs->state->goal_position[1] = -0.5;
-                cvs->state->goal_position[2] = M_PI_2;
+                cvs->state->goal_position[1] = cvs->inputs->team_color? 0.5 : -0.5;
+                cvs->state->goal_position[2] = cvs->inputs->team_color? -M_PI_2 : M_PI_2;
             }
             break;
 
@@ -146,7 +146,7 @@ void blocks_front(CtrlStruct *cvs) {
             cvs->param->ready_start_astar = 0;
             
             dest[0] = 0.1; 
-            dest[1] = -0.75; 
+            dest[1] = cvs->inputs->team_color? 0.75 : -0.75; 
             dest[2] = 0;
             d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
             
@@ -174,7 +174,7 @@ void cabins_close(CtrlStruct *cvs) {
         case GOTO_C:
             // SET GOAL POSITION
             cvs->state->goal_position[0] = -0.5;
-            cvs->state->goal_position[1] = -1.1;
+            cvs->state->goal_position[1] = cvs->inputs->team_color? 1.1 : -1.1;
             cvs->state->goal_position[2] = M_PI;
 
             // ACTIVATE A*
