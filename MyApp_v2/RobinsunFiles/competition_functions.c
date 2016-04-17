@@ -16,9 +16,6 @@ void calibrate(CtrlStruct *cvs) {
         cvs->state->objectives[cvs->state->current_objective] = DONE1;
 }
 
-//typedef enum {
-//} wait_t;
-
 void wait(CtrlStruct *cvs) {
     if(!cvs->inputs->u_switch[R_ID] && !cvs->inputs->u_switch[L_ID]) {
         cvs->state->position[1] = (cvs->inputs->team_color)? (1.36) : (-1.36);
@@ -29,7 +26,10 @@ void wait(CtrlStruct *cvs) {
 }
 
 void blocks_front(CtrlStruct *cvs) {
-    double x, y, theta, x_goal, y_goal, theta_goal, d, wheels[2], dest[3], delta_theta;
+    double x, y, theta, x_goal, y_goal, theta_goal;
+    double d, delta_theta;
+    double wheels[2], dest[3];
+    
     x = cvs->state->position[0];
     y = cvs->state->position[1];
     theta = cvs->state->position[2];
@@ -63,14 +63,14 @@ void blocks_front(CtrlStruct *cvs) {
 
             d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
             delta_theta = fabs(cvs->state->position[2] - dest[2]);
-            delta_theta = (delta_theta > 2*M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
+            delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
             
             gotoPoint(cvs,dest,wheels);
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
 
             // PUSH BLOC
-            if ((d < 0.05) && (delta_theta*180.0/M_PI < 4.0))
+            if ((d < 0.05) && (delta_theta*180.0/M_PI < 3.5))
                 cvs->state->current_action_progress = FORWARD_BF;
             break;
         
@@ -80,18 +80,18 @@ void blocks_front(CtrlStruct *cvs) {
             
             // DEFINE GOAL POSITION
             dest[0] = -0.1; 
-            dest[1] = (cvs->inputs->team_color) ? (1.1) : (-1.1); 
+            dest[1] = (cvs->inputs->team_color) ? (1.08) : (-1.08); 
             dest[2] = (cvs->inputs->team_color) ? (-M_PI_2) : (M_PI_2);
             d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
             delta_theta = fabs(cvs->state->position[2] - dest[2]);
-            delta_theta = (delta_theta > 2*M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
+            delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
             
             gotoPoint(cvs,dest,wheels);
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
 
             // GO TO CLAMP 
-            if ((d < 0.05) && (delta_theta*180.0/M_PI < 4.0))
+            if ((d < 0.05) && (delta_theta*180.0/M_PI < 3.5))
             {
                 cvs->state->current_action_progress = CLAMP_BF;
                 cvs->state->timer = cvs->inputs->t;
@@ -116,8 +116,8 @@ void blocks_front(CtrlStruct *cvs) {
                 cvs->state->errorIntR = 0.0;
                 cvs->param->ready_start_astar = 1;
                 cvs->state->goal_position[0] = 0.1 ;
-                cvs->state->goal_position[1] = cvs->inputs->team_color? 0.5 : -0.5;
-                cvs->state->goal_position[2] = cvs->inputs->team_color? -M_PI_2 : M_PI_2;
+                cvs->state->goal_position[1] = (cvs->inputs->team_color) ? (0.5) : (-0.5);
+                cvs->state->goal_position[2] = (cvs->inputs->team_color) ? (-M_PI_2) : (M_PI_2);
             }
             break;
 
@@ -156,23 +156,28 @@ void blocks_front(CtrlStruct *cvs) {
             cvs->param->ready_start_astar = 0;
             
             dest[0] = 0.1; 
-            dest[1] = cvs->inputs->team_color? 0.75 : -0.75; 
-            dest[2] = 0;
+            dest[1] = (cvs->inputs->team_color) ? (0.8) : (-0.8); 
+            dest[2] = (cvs->inputs->team_color) ? (-M_PI_4) : (M_PI_4);
             d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
+            delta_theta = fabs(cvs->state->position[2] - dest[2]);
+            delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
             
             gotoPoint(cvs,dest,wheels);
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
             
             // ACTION IS DONE
-            if ((d < 0.05) && (fabs(cvs->state->position[2] - dest[2])*180.0/M_PI < 3.0))
+            if ((d < 0.05) && (delta_theta*180.0/M_PI < 3.5))
                 cvs->state->objectives[cvs->state->current_objective] = DONE1;
             break;
     }
 }
 
 void cabins_close(CtrlStruct *cvs) {
-    double x, y, theta, x_goal, y_goal, theta_goal, d, wheels[2], dest[3];
+    double x, y, theta, x_goal, y_goal, theta_goal;
+    double d, delta_theta;
+    double wheels[2], dest[3];
+    
     x = cvs->state->position[0];
     y = cvs->state->position[1];
     theta = cvs->state->position[2];
@@ -184,13 +189,13 @@ void cabins_close(CtrlStruct *cvs) {
         case GOTO_C:
             // SET GOAL POSITION
             cvs->state->goal_position[0] = -0.5;
-            cvs->state->goal_position[1] = cvs->inputs->team_color? 1.1 : -1.1;
-            cvs->state->goal_position[2] = M_PI;
+            cvs->state->goal_position[1] = (cvs->inputs->team_color) ? (1.1) : (-1.1);
+            cvs->state->goal_position[2] = 0;
 
             // ACTIVATE A*
             cvs->param->ready_start_astar = 1;
             cvs->param->Astar_path_active = 0;
-            cvs->outputs->command_blocks = 15;
+            cvs->outputs->command_blocks = 20;
             
             // GO TO WAIT FOR DESTINATION
             cvs->state->current_action_progress = WAIT_FOR_POSITION_C;
@@ -200,6 +205,10 @@ void cabins_close(CtrlStruct *cvs) {
             // MOVE BACKWARDS IF CLOSE ENOUGH
             if (!cvs->param->ready_start_astar)
                 cvs->state->current_action_progress = BACKWARDS_C;
+                cvs->inputs->u_switch[R_ID] = 1;
+                cvs->inputs->u_switch[L_ID] = 1;
+                cvs->state->timer = cvs->inputs->t;
+                cvs->state->wall_touched = 0;
             break;
             
         case BACKWARDS_C:
@@ -207,14 +216,22 @@ void cabins_close(CtrlStruct *cvs) {
             cvs->param->ready_start_astar = 0;
 
             // MOVE BACKWARDS
-            cvs->state->omegaref[R_ID] = -2 * M_PI;
-            cvs->state->omegaref[L_ID] = -2 * M_PI;
+            cvs->state->omegaref[R_ID] = -2.0*M_PI;
+            cvs->state->omegaref[L_ID] = -2.0*M_PI;
 
             // GO TO CLAMP 
-            if (x + 0.875 < 0.02)//cvs->inputs->u_switch[R_ID] & cvs->inputs->u_switch[L_ID])
+//            if ((cvs->inputs->u_switch[R_ID] == 0) && (cvs->inputs->u_switch[L_ID] == 0) && (cvs->state->wall_touched == 0))
+//            {
+//                cvs->state->wall_touched = 1;
+//                cvs->state->omegaref[R_ID] = 0;
+//                cvs->state->omegaref[L_ID] = 0;
+//            }
+//            else 
+            if (cvs->inputs->t - cvs->state->timer > 3.5)
             {
                 cvs->state->current_action_progress = SWITCHES_C;
-                cvs->state->timer = cvs->inputs->t;
+                cvs->state->omegaref[R_ID] = 0;
+                cvs->state->omegaref[L_ID] = 0;
             }
             break;
             
@@ -222,20 +239,33 @@ void cabins_close(CtrlStruct *cvs) {
             // TURN OFF A*
             cvs->param->ready_start_astar = 0;
 
-            // MOVE BACKWARDS
-            cvs->state->omegaref[R_ID] = M_PI;
-            cvs->state->omegaref[L_ID] = M_PI;
-
+            // MOVE 
+            dest[0] = -0.5;
+            dest[1] = (cvs->inputs->team_color) ? (1.1) : (-1.1);
+            dest[2] = 0;
+            d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
+            delta_theta = fabs(cvs->state->position[2] - dest[2]);
+            delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
+            
+            gotoPoint(cvs,dest,wheels);
+            cvs->state->omegaref[R_ID] = wheels[R_ID];
+            cvs->state->omegaref[L_ID] = wheels[L_ID];
+          
             // END AFTER ONE SECOND
-            if(cvs->inputs->t - cvs->state->timer > 1)
+            if ((d < 0.05) && (delta_theta*180.0/M_PI < 4.0))
+            {
                 cvs->state->objectives[cvs->state->current_objective] = DONE1;
+            }
             break;
     }
 }
 
 
 void blocks_dune_1(CtrlStruct *cvs) {
-    double x, y, theta, x_goal, y_goal, theta_goal, d, dest[3], wheels[2];
+    double x, y, theta, x_goal, y_goal, theta_goal;
+    double d, delta_theta;
+    double dest[3], wheels[2];
+    
     x = cvs->state->position[0];
     y = cvs->state->position[1];
     theta = cvs->state->position[2];
@@ -247,7 +277,7 @@ void blocks_dune_1(CtrlStruct *cvs) {
         case GOTO_BD1:
             // SET GOAL POSITION
             cvs->state->goal_position[0] = -0.5;
-            cvs->state->goal_position[1] = -0.5;
+            cvs->state->goal_position[1] = (cvs->inputs->team_color) ? (0.57) : (-0.57);
             cvs->state->goal_position[2] = M_PI;
 
             // ACTIVATE A*
@@ -262,44 +292,25 @@ void blocks_dune_1(CtrlStruct *cvs) {
             break;
             
         case WAIT_FOR_POSITION_BD1:
-            // COMPUTE REMAINING DISTANCE
-            d = sqrt((x - x_goal)*(x - x_goal) + (y - y_goal)*(y - y_goal));
-            
-            // STOP MOTOR IF OPEN
-            if(cvs->state->clamp == OPEN)
-                cvs->outputs->command_blocks = 0;
-
             // GO TO TURN IF CLOSE ENOUGH
-            if (!cvs->param->ready_start_astar)
+            if (!cvs->param->ready_start_astar) {
                 cvs->state->current_action_progress = TURN_BD1;
+            }
             break;
-
+         
         case TURN_BD1:
             // TURN OFF A*
             cvs->param->ready_start_astar = 0;
 
-            cvs->outputs->command_blocks = -20;
-            // Set correct orientation
-//            double omega = (M_PI - theta);
-//            if (omega > M_PI) omega -= 2 * M_PI;
-//            if (omega < -M_PI) omega += 2 * M_PI;
-//            
-//            cvs->state->omegaref[R_ID] = 2 * M_PI * omega / (fabs(omega));
-//            cvs->state->omegaref[L_ID] = -2 * M_PI * omega / (fabs(omega));
-            dest[0] = x; dest[1] = y; dest[2] = M_PI;
-//            // Set correct orientation
-//            double omega = (M_PI - theta);
-//            if (omega > M_PI) omega -= 2 * M_PI;
-//            if (omega < -M_PI) omega += 2 * M_PI;
-            gotoPoint(cvs,dest,wheels);
-//            cvs->state->omegaref[R_ID] = M_PI_4 * omega / (fabs(omega));
-//            cvs->state->omegaref[L_ID] = -M_PI_4 * omega / (fabs(omega));
-            cvs->state->omegaref[R_ID] = wheels[R_ID];
-            cvs->state->omegaref[L_ID] = wheels[L_ID];
-            // GO TO FORWARD 
-            if (fabs(M_PI - theta)*180/M_PI < 3.0)
-            {
-                cvs->state->timer = cvs->inputs->t;
+            delta_theta = M_PI - theta;
+            delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : (delta_theta);
+            delta_theta = (delta_theta < -M_PI) ? (delta_theta + 2*M_PI) : (delta_theta);
+           
+            double omega = 2.0*delta_theta;
+            cvs->state->omegaref[R_ID] = omega;
+            cvs->state->omegaref[L_ID] = -omega;
+            
+            if(fabs(delta_theta)*180/M_PI < 0.5){
                 cvs->state->current_action_progress = FORWARD_BD1;
             }
             break;
@@ -307,16 +318,19 @@ void blocks_dune_1(CtrlStruct *cvs) {
         case FORWARD_BD1:
             // TURN OFF A*
             cvs->param->ready_start_astar = 0;
+            
+            cvs->outputs->command_blocks = 0;
 
             // MOVE FORWARD
-            cvs->state->omegaref[R_ID] = 2 * M_PI;
-            cvs->state->omegaref[L_ID] = 2 * M_PI;
+            cvs->state->omegaref[R_ID] = 0.75*M_PI;
+            cvs->state->omegaref[L_ID] = 0.75*M_PI;
 
             // GO TO CLAMP 
-            if (-0.328 - y < 0.01 | (cvs->inputs->odo_l_speed < M_PI && (cvs->inputs->t - cvs->state->timer) > 1))
-            {
+            if (fabs(-0.72-x) < 0.02) {
                 cvs->state->current_action_progress = CLAMP_BD1;
                 cvs->state->timer = cvs->inputs->t;
+                cvs->state->omegaref[R_ID] = 0;
+                cvs->state->omegaref[L_ID] = 0;
             }
             break;
             
@@ -328,11 +342,10 @@ void blocks_dune_1(CtrlStruct *cvs) {
             cvs->state->omegaref[R_ID] = 0.0;
             cvs->state->omegaref[L_ID] = 0.0;
             
-            cvs->outputs->command_blocks = 25.0;
+            cvs->outputs->command_blocks = 55.0;
 
             // GO TO MOVE_BACK 
-            if (cvs->state->clamp == CLAMPED | (cvs->inputs->t - cvs->state->timer > 2))
-            {
+            if (cvs->inputs->t - cvs->state->timer > 3.5) {
                 cvs->state->current_action_progress = MOVE_BACK_BD1;
             }
             break;
@@ -342,29 +355,40 @@ void blocks_dune_1(CtrlStruct *cvs) {
             cvs->param->ready_start_astar = 0;
 
             // MOVE BACKWARD
-            cvs->state->omegaref[R_ID] = -2.75 * M_PI;
-            cvs->state->omegaref[L_ID] = -2.75 * M_PI;
+            cvs->state->omegaref[R_ID] = -0.75*M_PI;
+            cvs->state->omegaref[L_ID] = -0.75*M_PI;
 
             // GO TO BRING
-            if (-0.2 - y < 0.03)
-                cvs->state->current_action_progress = BRING_BD1;
+            if(fabs(-0.55-x) < 0.02) {
+                cvs->state->current_action_progress = POS_BD1;
+                cvs->state->omegaref[R_ID] = 0.0;
+                cvs->state->omegaref[L_ID] = 0.0;
+            }
+            break;
+            
+        case POS_BD1:
+            // TURN OFF A*
+            cvs->param->ready_start_astar = 0;
+            
+            dest[0] = -0.35; 
+            dest[1] = (cvs->inputs->team_color) ? (0.8) : (-0.8); 
+            dest[2] = (cvs->inputs->team_color) ? (-M_PI_4) : (M_PI_4);
+            d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
+            delta_theta = fabs(cvs->state->position[2] - dest[2]);
+            delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
+            
+            gotoPoint(cvs,dest,wheels);
+            cvs->state->omegaref[R_ID] = wheels[R_ID];
+            cvs->state->omegaref[L_ID] = wheels[L_ID];
+            
+            // ACTION IS DONE
+            if ((d < 0.05) && (delta_theta*180.0/M_PI < 3.5))
+                cvs->state->objectives[cvs->state->current_objective] = DONE1;
             break;
             
         case BRING_BD1:
-            // SET GOAL POSITION
-            cvs->state->goal_position[0] = 0.0;
-            cvs->state->goal_position[1] = -0.2;
-            cvs->state->goal_position[2] = M_PI;
-
-            // ACTIVATE A*
-            cvs->param->ready_start_astar = 1;
-            cvs->param->Astar_path_active = 0;
-            
-            // COMPUTE REMAINING DISTANCE
-            d = sqrt((x - x_goal)*(x - x_goal) + (y - y_goal)*(y - y_goal));
-            
             // GO TO UNCLAMP
-            if(d < 0.05)
+            if (!cvs->param->ready_start_astar)
                 cvs->state->current_action_progress = UNCLAMP_BD1;
             break;
             
@@ -376,25 +400,33 @@ void blocks_dune_1(CtrlStruct *cvs) {
             cvs->state->omegaref[R_ID] = 0.0;
             cvs->state->omegaref[L_ID] = 0.0;
             
-            cvs->outputs->command_blocks = -25.0;
+            cvs->outputs->command_blocks = -30.0;
 
             // GO TO MOVE_BACK_END
-            if (cvs->state->clamp == UNCLAMPED | (cvs->inputs->t - cvs->state->timer > 2))
+            if (cvs->inputs->t - cvs->state->timer > 3.0)
             {
                 cvs->state->current_action_progress = MOVE_BACK_BD1_END;
+                cvs->outputs->command_blocks = 0.0;
             }
             break;
             
         case MOVE_BACK_BD1_END:
             // TURN OFF A*
             cvs->param->ready_start_astar = 0;
-
-            // MOVE BACKWARD
-            cvs->state->omegaref[R_ID] = -2.75 * M_PI;
-            cvs->state->omegaref[L_ID] = -2.75 * M_PI;
-
+            
+            dest[0] = 0.15; 
+            dest[1] = (cvs->inputs->team_color) ? (0.8) : (-0.8); 
+            dest[2] = (cvs->inputs->team_color) ? (-M_PI_2) : (M_PI_2);
+            d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
+            delta_theta = fabs(cvs->state->position[2] - dest[2]);
+            delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
+            
+            gotoPoint(cvs,dest,wheels);
+            cvs->state->omegaref[R_ID] = wheels[R_ID];
+            cvs->state->omegaref[L_ID] = wheels[L_ID];
+            
             // ACTION IS DONE
-            if (0.60 - fabs(y) < 0.03)
+            if ((d < 0.05) && (delta_theta*180.0/M_PI < 3.5))
                 cvs->state->objectives[cvs->state->current_objective] = DONE1;
             break;
     }
@@ -567,7 +599,44 @@ void blocks_cabins(CtrlStruct *cvs) {
 //} fish_catch_t;
 
 void fish_catch(CtrlStruct *cvs) {
-    cvs->state->objectives[cvs->state->current_objective] = DONE1;
+    double x, y, theta, x_goal, y_goal, theta_goal;
+    double d, delta_theta;
+    double wheels[2], dest[3];
+    
+    x = cvs->state->position[0];
+    y = cvs->state->position[1];
+    theta = cvs->state->position[2];
+    x_goal = cvs->state->goal_position[0];
+    y_goal = cvs->state->goal_position[1];
+    theta_goal = cvs->state->goal_position[2];
+    
+    switch (cvs->state->current_action_progress) {
+        case GOTO_FC:
+            // SET GOAL POSITION
+            cvs->state->goal_position[0] = 0.65;
+            cvs->state->goal_position[1] = (cvs->inputs->team_color) ? (0.85) : (-0.85);
+            cvs->state->goal_position[2] = 0;
+
+            // ACTIVATE A*
+            cvs->param->ready_start_astar = 1;
+            cvs->param->Astar_path_active = 0;
+            
+            // START OPENING CLAMP
+            cvs->outputs->command_blocks = 0;
+
+            // GO TO WAIT FOR DESTINATION
+            cvs->state->current_action_progress = WAIT_FOR_POSITION_FC;
+            break;
+            
+        case WAIT_FOR_POSITION_FC:
+            if (!cvs->param->ready_start_astar) {
+                //cvs->state->current_action_progress = TURN_BD1;
+                cvs->state->omegaref[R_ID] = 0.0;
+                cvs->state->omegaref[L_ID] = 0.0;
+            }
+            break;
+    }
+    
 }
 
 void parasol_open(CtrlStruct *cvs) {

@@ -45,19 +45,19 @@ void gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
     
     char msg[1024];
     
-    double lin_sat = 0.4, theta_sat = 0.2;
+    double lin_sat = 0.4, theta_sat = 0.19;
     if(dist > 0.035) // Go to point
     {
         if(-M_PI_2 <= delta_theta && M_PI_2 >= delta_theta) // Go forward
         {
             v = (fabs(delta_theta) > 45.0*M_PI/180.0) ? 0.0 : max(-lin_sat, min(lin_sat, (1.5 * dist)));
-            omega = max(-theta_sat, min(theta_sat, (0.225 * delta_theta) + 0.5*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
+            omega = max(-theta_sat, min(theta_sat, (0.25 * delta_theta) + 0.45*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
         }
         else
         {
             delta_theta = (delta_theta < 0) ? delta_theta + M_PI : delta_theta - M_PI;
             v = (fabs(delta_theta) > 45.0*M_PI/180.0) ? 0.0 : -max(-lin_sat, min(lin_sat, (1.5 * dist)));
-            omega = max(-theta_sat, min(theta_sat, (0.225 * delta_theta) + 0.5*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
+            omega = max(-theta_sat, min(theta_sat, (0.25 * delta_theta) + 0.45*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
         }
     }
     else    // Orientation to objective
@@ -65,7 +65,9 @@ void gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
         delta_theta = destination[2] - theta;
         delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : (delta_theta < -M_PI) ? (delta_theta + 2*M_PI) : delta_theta;
         v = 0;
-        omega = 0.125 * delta_theta;
+        omega = 0.15 * delta_theta;
+        omega = (omega > 0.15*M_PI_2) ? (0.15*M_PI_2) : (omega);
+        omega = (omega < -0.15*M_PI_2) ? (-0.15*M_PI_2) : (omega);
     }
     
     wheels[R_ID] = (v + omega)/0.0325;

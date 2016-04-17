@@ -44,7 +44,6 @@ const char* getProgress(robinsun_competition state, int current_progress)
            {
                case GOTO_BF:                return "Going to starting point...";
                case WAIT_FOR_POSITION_BF:   return "Waiting for starting point";
-               case TURN_BF:                return "Turn towards blocks";
                case FORWARD_BF:             return "Go to the blocks";
                case CLAMP_BF:               return "Clamp the blocks";
                case PUSH_BF:                return "Push forward";
@@ -57,7 +56,6 @@ const char* getProgress(robinsun_competition state, int current_progress)
            {
                case GOTO_C:                 return "Going to starting point...";
                case WAIT_FOR_POSITION_C:    return "Waiting for starting point";
-               case TURN_C:                 return "Turn back to cabins";
                case BACKWARDS_C:            return "Go backwards";
                case SWITCHES_C:             return "Switches pushed (last)";
                default:                     return "Unknown progression.";
@@ -67,7 +65,6 @@ const char* getProgress(robinsun_competition state, int current_progress)
            {
                case GOTO_BD1:               return "Going to starting point...";
                case WAIT_FOR_POSITION_BD1:  return "Waiting for starting point";
-               case TURN_BD1:               return "Turn to the dune";
                case FORWARD_BD1:            return "Go to the dune";
                case CLAMP_BD1:              return "Clamp the blocks (fingers crossed)";
                case MOVE_BACK_BD1:          return "Move backwards";

@@ -189,6 +189,11 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 	int y = cvs->state->position[1] * 20;
 	y = (int)y + 31;				// shift of reference to lower left corner
 	double theta = cvs->state->position[2];
+    
+    double real_step_x = (actual_step_x - 21)/20.0;
+    double real_step_y = (actual_step_y - 31)/20.0;
+    double real_delta_x = real_step_x - cvs->state->position[0];
+    double real_delta_y = real_step_y - cvs->state->position[1];
 
 	double delta_x = actual_step_x - x;
 	double delta_y = actual_step_y - y;
@@ -199,16 +204,18 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
     #endif // DEBUG
 
 	int PRECISION;
-	if (cvs->param->index_path == 0) PRECISION = 0;
+	if (cvs->param->index_path == 0) PRECISION = 1;
 	else PRECISION = 1;
 	double dist = sqrt((delta_x*delta_x) + (delta_y*delta_y));
+    double real_dist = sqrt((real_delta_x*real_delta_x) + (real_delta_y*real_delta_y));
+    
     double delta_theta = fabs(cvs->state->position[2] - cvs->state->goal_position[2]);
     delta_theta = (delta_theta > 2*M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
 
 	/* B. Check if on position and act accordingly  */
 
 	// 1. ***** ON POSITION *****
-	if (dist <= PRECISION) {
+	if (real_dist < 0.055) {
 		if (cvs->param->index_path == 0) // at final destination
 		{       
             if (delta_theta*180.0/M_PI < 4.0) {
@@ -238,7 +245,7 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
         if (delta_theta > M_PI) delta_theta -= 2 * M_PI;
 		if (delta_theta < -M_PI) delta_theta += 2 * M_PI;
 
-        double wheels[2], dest[3] = {(actual_step_x - 21)/20.0, (actual_step_y - 31)/20.0, cvs->state->goal_position[2]};
+        double wheels[2], dest[3] = {real_step_x, real_step_y, cvs->state->goal_position[2]};
         gotoPoint(cvs, dest, wheels);
 		cvs->state->omegaref[R_ID] = wheels[R_ID];
 		cvs->state->omegaref[L_ID] = wheels[L_ID];

@@ -36,12 +36,13 @@ void controller_init(CtrlStruct *cvs) {
 
     // Controller parameters
     #ifdef ROBINSUN
-        // Right: 5.975 kg     Left: 4.6 kg
-        cvs->param->Kp[L_ID] = -0.0631;//-0.1292;
-        cvs->param->Ki[L_ID] = 2.1572;//1.2537;
+        //                  Right: 5.975 kg     Left: 4.6 kg
+        // In charge        Right: 9.0 kg       Left: 3.0 kg
+        cvs->param->Kp[L_ID] = -0.0365;//-0.0631;
+        cvs->param->Ki[L_ID] = 2.6883;//2.1572;
         cvs->param->Kd[L_ID] = 0.001;
-        cvs->param->Kp[R_ID] = -0.0548;//-0.1167;
-        cvs->param->Ki[R_ID] = 2.3232;//1.6272;
+        cvs->param->Kp[R_ID] = -0.0727;//-0.0548;
+        cvs->param->Ki[R_ID] = 1.9641;//2.3232;
         cvs->param->Kd[R_ID] = 0.001;
     #else
         cvs->param->Kp = -0.031;
@@ -49,7 +50,7 @@ void controller_init(CtrlStruct *cvs) {
     #endif
 
     // Kalman filter uncertainties
-    #ifdef KALMAN // Using Pozyx
+    #ifdef KALMAN // Using Decawave
         cvs->param->kr = 1; // FIND APPROPRIATE VALUES !
         cvs->param->kl = 1; // FIND APPROPRIATE VALUES !
         for (i = 0; i < 3; i = i + 1)
@@ -66,7 +67,7 @@ void controller_init(CtrlStruct *cvs) {
     cvs->state->lastT = cvs->inputs->t;
 
     cvs->state->position[0] = -0.16;
-    cvs->state->position[1] = (cvs->inputs->team_color)? 1.34 : -1.34;
+    cvs->state->position[1] = (cvs->inputs->team_color) ? (1.34) : (-1.34);
     cvs->state->position[2] = 0;
     cvs->state->prev_theta = 0;
 
@@ -240,6 +241,8 @@ void controller_loop(CtrlStruct *cvs) {
     #endif
 
     /* Computation of the motor voltages */
+    //cvs->state->omegaref[R_ID] = M_PI;
+    //cvs->state->omegaref[L_ID] = M_PI;
     double wheels[2];
     motors_control(cvs, wheels);
     #ifdef MINIBOT
@@ -259,7 +262,6 @@ void controller_loop(CtrlStruct *cvs) {
         ovs->wheel_commands[L_ID] = 0.0;
     }
         
-    ovs->tower_command = 15;
     cvs->state->lastT = ivs->t;
 }
 
