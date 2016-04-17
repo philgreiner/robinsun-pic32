@@ -16,8 +16,8 @@ NAMESPACE_INIT(ctrlGr1);
 void Astar_get_path(CtrlStruct *cvs)
 {
 	// Set the reference frame to the lower left corner; and multiply to get it in 5cm
-	int x = (int)(cvs->state->position[0] * 20 + 21);                       // to adapt the cvs->state->position with reference to the center of the table to the one with reference to the left lower corner (corresponding to the game_map)
-	int y = (int)(cvs->state->position[1] * 20 + 31);	                    // shift of reference to lower left corner
+	int x = (int) (cvs->state->position[0] * 20 + 21);                       // to adapt the cvs->state->position with reference to the center of the table to the one with reference to the left lower corner (corresponding to the game_map)
+	int y = (int) (cvs->state->position[1] * 20 + 31);	                    // shift of reference to lower left corner
 
 	int starting_node;                                                      // The number of the starting node. Will be used for step 3
 
@@ -133,7 +133,7 @@ void Astar_get_path(CtrlStruct *cvs)
 	*/
     int prev_direction = -10, direction = 0;
 	int check_node = goal_node;     // = top of the stack
-	int parent_node, x_check_node, y_check_node;
+	int x_check_node, y_check_node;
     int prev_check_x = check_node % 42, prev_check_y = (check_node - prev_check_x) / 42;
 	cvs->param->index_path = -1;
 
@@ -184,10 +184,8 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
         printf("actual_step_x = %d, actual_step_y = %d\n", actual_step_x, actual_step_y);
     #endif // DEBUG
 
-	int x = cvs->state->position[0] * 20;
-	x = (int)x + 21;				// to adapt the cvs->state->position with reference to the center of the table to the one with reference to the left lower corner (corresponding to the game_map)
-	int y = cvs->state->position[1] * 20;
-	y = (int)y + 31;				// shift of reference to lower left corner
+	int x = (int) (cvs->state->position[0] * 20 + 21);				// to adapt the cvs->state->position with reference to the center of the table to the one with reference to the left lower corner (corresponding to the game_map)
+	int y = (int) (cvs->state->position[1] * 20 + 31);
 	double theta = cvs->state->position[2];
     
     double real_step_x = (actual_step_x - 21)/20.0;

@@ -122,9 +122,9 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         unsigned int lt24 = MyCyclone_Read(A_lt24);
         // Team color defined
         if(lt24%2)
-            cvs->inputs->team_color = 1;
-        else
             cvs->inputs->team_color = 0;
+        else
+            cvs->inputs->team_color = 1;
         
         // Strategy defined
         if((lt24 >> 2)%2)

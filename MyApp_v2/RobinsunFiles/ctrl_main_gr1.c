@@ -66,9 +66,9 @@ void controller_init(CtrlStruct *cvs) {
 
     cvs->state->lastT = cvs->inputs->t;
 
-    cvs->state->position[0] = -0.16;
+    cvs->state->position[0] = (cvs->inputs->team_color) ? (-0.09) : (-0.16);
     cvs->state->position[1] = (cvs->inputs->team_color) ? (1.34) : (-1.34);
-    cvs->state->position[2] = 0;
+    cvs->state->position[2] = (cvs->inputs->team_color) ? (-M_PI) : (0);
     cvs->state->prev_theta = 0;
 
     cvs->state->position_odo[0] = cvs->state->position[0];

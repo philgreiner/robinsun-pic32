@@ -26,14 +26,14 @@ void game_map_drawing(CtrlStruct *cvs)
 	// All values are in [cm]
 	int x;
 	int y;
-	int radius_robot = 4;
+	int radius_robot = 3;
 
 	for (x = 0; x <= 42; x++)
 	{
 		for (y = 0; y <= 62; y++)
 		{
 		// *** 0/ borders
-			if (x <= 3 || x >= 38 || y < 1 || y >= 61) {
+			if (x < 1 || x > 41 || y < 1 || y > 61) {
 				cvs->param->game_map[x][y] = 0;
 			}
             
@@ -60,7 +60,7 @@ void game_map_drawing(CtrlStruct *cvs)
 
 	   // *** 3/ central bar horizontal ***
 			else if (x >= (16 - radius_robot) && x <= (29 + radius_robot)) {
-				if (y >= (31 - radius_robot) && y <= (32 + radius_robot)) {
+				if (y >= (31 - radius_robot) && y <= (31 + radius_robot)) {
 					cvs->param->game_map[x][y] = 0;
 				}
 				else cvs->param->game_map[x][y] = 1;

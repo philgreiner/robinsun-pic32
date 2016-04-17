@@ -29,6 +29,11 @@ void    DutyToInf(double duty, unsigned *MSB, unsigned *LSB)
             *LSB = 3;
 }
 
+int round(double num)
+{
+    return num < 0 ? num - 0.5 : num + 0.5;
+}
+ 
 void gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
 {
     double x, y, theta, delta_theta, delta_x, delta_y, dist;
@@ -66,10 +71,10 @@ void gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
 //        omega = 0.3 * delta_theta;
 //        omega = (omega > 0.15*M_PI_2) ? (0.15*M_PI_2) : (omega);
 //        omega = (omega < -0.15*M_PI_2) ? (-0.15*M_PI_2) : (omega);
-        if(fabs(delta_theta)*180.0/M_PI > 20.0)
-            omega = max(-theta_sat, min(theta_sat, (0.25 * delta_theta)));
+        if(fabs(delta_theta)*180.0/M_PI > 22.5)
+            omega = max(-theta_sat, min(theta_sat, (0.375 * delta_theta)));
         else
-            omega = max(-theta_sat, min(theta_sat, (0.25 * delta_theta) + 0.45*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
+            omega = max(-theta_sat, min(theta_sat, (0.275 * delta_theta) + 0.45*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
     }
     
     wheels[R_ID] = (v + omega)/0.0325;
