@@ -11,7 +11,6 @@
 #include "competition_functions.h"
 
 const char* getStateName(robinsun_competition state);
-const char* getClampState(clampstate_t state);
 const char* getProgress(robinsun_competition state, int current_progress);
 
 #endif	/* MYPRINTS_H */

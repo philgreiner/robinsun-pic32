@@ -139,8 +139,8 @@ MyAPP_EXT  int      MyVideo_Counter MyAPP_INIT;
 *******************************************************************************/
 
 #define MotorSID  0x708
-#define FishSID   0x508
 #define BlockSID  0x608
+#define FishSID   0x508
 
 MyAPP_EXT   CtrlParam param;
 MyAPP_EXT   CtrlStruct *cvs;

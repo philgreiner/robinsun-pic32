@@ -22,14 +22,8 @@
 
 NAMESPACE_INIT(ctrlGr1);
 
-typedef enum {CALIBRATEY, GOTOY, TURN, CALIBRATEX, GOHOMEX, GOHOMETURN, GOHOMEY} calibratestate;
-typedef enum {WAIT_FOR_START, GOTO_OBJ, WAIT_TO_TAKE, WAIT_FOR_DESTINATION} strategystate_t;
-typedef enum {CALIBRATE, WAIT_FOR_START1, BLOCKS_FRONT, BLOCKS_DUNE_1, FISH, CABINS, BLOCKS_DUNE_2, BLOCKS_CABINS, PARASOL, STOP} robinsun_competition;
+typedef enum {CALIBRATE, WAIT_FOR_START1, BLOCKS_FRONT, CABINS, BLOCKS_DUNE_1, FISH, BLOCKS_DUNE_2, BLOCKS_CABINS, PARASOL, STOP} robinsun_competition;
 typedef enum {NOTDONE1, DELAYED, DONE1} state;
-typedef enum {UNCLAMPED, CLAMPED, OPEN, CLOSED} clampstate_t;
-
-typedef enum {OBJ0, OBJ4, OBJ2, OBJ1, OBJ3, OBJ5, OBJ6, BASE} objectives;
-typedef enum {NOTDONE, DONE} STATUS;
 
 typedef struct CtrlState
 {
@@ -61,26 +55,14 @@ typedef struct CtrlState
 	double covariance_triang[6][6];
 	double alpha[3];
     double r[3];
-    
-    int wall_touched;
 
 	// Strategy parameters
-	strategystate_t   strategy_state;
-	objectives		  next_objective;
+    double            competition_start;
     state             objectives[10];
     robinsun_competition current_objective;
     int               current_action_progress;
-	int				  done_objectives[7];
-	int				  objectives_on_robot;
-	double			  timer;
+	double			  timer, objective_timer;
     int               direction;
-
-	// Calibrate initially
-	calibratestate    calibration;
-    
-    // State of functional modules
-    double            clamp_opening;
-    clampstate_t      clamp;
 } CtrlState;
 
 typedef struct CtrlParam{

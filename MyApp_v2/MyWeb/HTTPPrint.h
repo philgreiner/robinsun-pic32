@@ -46,7 +46,6 @@ void HTTPPrint_goal0(void);
 void HTTPPrint_goal1(void);
 void HTTPPrint_goal2(void);
 void HTTPPrint_competition_state(void);
-void HTTPPrint_clamp(void);
 void HTTPPrint_time(void);
 void HTTPPrint_current_progress(void);
 void HTTPPrint_kpleft(void);
@@ -154,9 +153,6 @@ void HTTPPrint(DWORD callbackID)
 			break;
         case 0x0000007d:
 			HTTPPrint_competition_state();
-			break;
-        case 0x0000007e:
-			HTTPPrint_clamp();
 			break;
         case 0x0000007f:
 			HTTPPrint_time();

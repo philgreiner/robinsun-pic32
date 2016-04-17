@@ -170,7 +170,7 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
 //        MyConsole_SendMsg(msg);
                 
     #endif
-    cvs->inputs->t = (ReadCoreTimer()/(SYS_FREQ/2.0)) - MyMiniProject_tStart; // time in seconds
+    cvs->inputs->t = (ReadCoreTimer()/(SYS_FREQ/2.0)) - MyMiniProject_tStart; // - cvs->state->competition_start; // time in seconds
     while (cvs->inputs->t < cvs->state->lastT) cvs->inputs->t += 107.3741823075;
 }
 

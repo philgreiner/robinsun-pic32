@@ -98,7 +98,7 @@ void robinsun_next(CtrlStruct *cvs) {
             }
         
         // IF EVERYTHING IS DONE, TAKE MORE BLOCKS
-        cvs->state->objectives[BLOCKS_DUNE_2] = NOTDONE;
+        cvs->state->objectives[BLOCKS_DUNE_2] = NOTDONE1;
         cvs->state->current_objective = BLOCKS_DUNE_2;
     }
 }

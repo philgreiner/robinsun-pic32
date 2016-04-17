@@ -1700,13 +1700,6 @@ void HTTPPrint_current_progress(void)
     TCPPutString(sktHTTP, theStr);
 }
 
-void HTTPPrint_clamp(void)
-{
-    BYTE theStr[64];
-    sprintf(theStr, "%s", getClampState(cvs->state->clamp));
-    TCPPutString(sktHTTP, theStr);
-}
-
 void HTTPPrint_time(void)
 {
     BYTE theStr[64];

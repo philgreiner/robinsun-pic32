@@ -19,24 +19,12 @@ const char* getStateName(robinsun_competition state)
    }
 }
 
-const char* getClampState(clampstate_t state)
-{
-   switch (state) 
-   {
-       case UNCLAMPED:  return "UNCLAMPED";
-       case CLAMPED:    return "CLAMPED";
-       case OPEN:       return "OPEN";
-       case CLOSED:     return "CLOSED";
-       default:         return "UNKNOWN STATE...";
-   }
-}
-
 const char* getProgress(robinsun_competition state, int current_progress)
 {
     switch(state)
     {
        case CALIBRATE:      
-           return   "NOT IMPLEMENTED LOL";
+           return   "CONFIGURE AND CALIBRATE";
        case WAIT_FOR_START1:
            return   "REMOVE THE JUMPER MAYBE ?";
        case BLOCKS_FRONT:   
@@ -56,8 +44,10 @@ const char* getProgress(robinsun_competition state, int current_progress)
            {
                case GOTO_C:                 return "Going to starting point...";
                case WAIT_FOR_POSITION_C:    return "Waiting for starting point";
-               case BACKWARDS_C:            return "Go backwards";
-               case SWITCHES_C:             return "Switches pushed (last)";
+               case BACKWARDS_C:            return "Closing first cabin.";
+               case SECOND_C:               return "Taking position for second cabin.";
+               case BACKWARDS_C1:           return "Closing second cabin.";
+               case SWITCHES_C:             return "Closed both cabins.";
                default:                     return "Unknown progression.";
            }
        case BLOCKS_DUNE_1:

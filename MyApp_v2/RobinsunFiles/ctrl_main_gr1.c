@@ -89,21 +89,11 @@ void controller_init(CtrlStruct *cvs) {
         cvs->param->ready_start_astar = 0; // No objective inserted yet
     #endif
 
-    // Strategy parameters initialization
-    cvs->state->objectives_on_robot = 0;
-    for (i = 0; i < 7; i = i + 1)
-        cvs->state->done_objectives[i] = NOTDONE;
-
     for (i = 0; i < 10; i++)
         cvs->state->objectives[i] = NOTDONE1;
 
-    cvs->state->strategy_state = WAIT_FOR_START;
-    cvs->state->calibration = CALIBRATEY;
-
     cvs->state->current_objective = CALIBRATE;
     cvs->state->current_action_progress = 0;
-    cvs->state->clamp = CLOSED;
-    cvs->state->clamp_opening = 9.2;
     cvs->param->refspeed = 0.0;
     cvs->state->errorAngle = 0.0;
     cvs->inputs->u_switch[R_ID] = 1;
@@ -120,19 +110,6 @@ void controller_loop(CtrlStruct *cvs) {
 
     ivs = cvs->inputs;
     ovs = cvs->outputs;
-
-    cvs->state->clamp_opening += ivs->speed_blocks;
-    if (cvs->state->clamp_opening < 10)
-        cvs->state->clamp = CLOSED;
-    else if (ovs->command_blocks > 5 && ivs->speed_blocks < 1)
-        cvs->state->clamp = CLAMPED;
-    else if (cvs->state->clamp_opening > 28.5)
-        cvs->state->clamp = OPEN;
-    else
-        cvs->state->clamp = UNCLAMPED;
-    char msg[1024];
-    sprintf(msg, "Clamp opening: %f; Clamp state: %d\n\n", cvs->state->clamp_opening, (int) cvs->state->clamp);
-    //    MyConsole_SendMsg(msg);
 
     if (fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 3 * M_PI)
         ivs->r_wheel_speed = cvs->state->lastMesR[0];
@@ -184,13 +161,14 @@ void controller_loop(CtrlStruct *cvs) {
         triangulation(cvs);
     #endif
 
-    /* Path planning through potential field computation */
-    // Choice of the path planning algorithm
-    if (ivs->t >= 5) {
-        //strategy_objective(cvs);
+    if(ivs->t >= 5.0)
+    {
+        /* Path planning through potential field computation */
+        // Choice of the path planning algorithm
+            //strategy_objective(cvs);
         robinsun_main(cvs);
-//        cvs->state->omegaref[R_ID] = cvs->param->refspeed/.0325;
-//        cvs->state->omegaref[L_ID] = cvs->param->refspeed/.0325;
+    //        cvs->state->omegaref[R_ID] = cvs->param->refspeed/.0325;
+    //        cvs->state->omegaref[L_ID] = cvs->param->refspeed/.0325;
         #ifdef POTENTIAL
             potential_Field(cvs);
         #endif
@@ -204,8 +182,9 @@ void controller_loop(CtrlStruct *cvs) {
                 Astar_read_path(cvs);
             }
         #endif
-    } 
-    else {
+    }
+    else
+    {
         cvs->state->omegaref[R_ID] = 0.0;
         cvs->state->omegaref[L_ID] = 0.0;
     }
@@ -255,6 +234,7 @@ void controller_loop(CtrlStruct *cvs) {
 
     /* Locate the opponent */
     //robot_Detect(cvs);
+//    locate_opponent(cvs);
 
     if(cvs->state->nb_opponents_detected != 0)
     {

@@ -42,9 +42,7 @@ void gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
     delta_theta = atan2(delta_y,delta_x) - theta;
     delta_theta = (delta_theta > M_PI) ? delta_theta - 2*M_PI : (delta_theta < -M_PI) ? delta_theta + 2*M_PI : delta_theta;
     dist = sqrt((delta_x*delta_x) + (delta_y*delta_y));
-    
-    char msg[1024];
-    
+        
     double lin_sat = 0.4, theta_sat = 0.19;
     if(dist > 0.035) // Go to point
     {
@@ -65,9 +63,13 @@ void gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
         delta_theta = destination[2] - theta;
         delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : (delta_theta < -M_PI) ? (delta_theta + 2*M_PI) : delta_theta;
         v = 0;
-        omega = 0.15 * delta_theta;
-        omega = (omega > 0.15*M_PI_2) ? (0.15*M_PI_2) : (omega);
-        omega = (omega < -0.15*M_PI_2) ? (-0.15*M_PI_2) : (omega);
+//        omega = 0.3 * delta_theta;
+//        omega = (omega > 0.15*M_PI_2) ? (0.15*M_PI_2) : (omega);
+//        omega = (omega < -0.15*M_PI_2) ? (-0.15*M_PI_2) : (omega);
+        if(fabs(delta_theta)*180.0/M_PI > 20.0)
+            omega = max(-theta_sat, min(theta_sat, (0.25 * delta_theta)));
+        else
+            omega = max(-theta_sat, min(theta_sat, (0.25 * delta_theta) + 0.45*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
     }
     
     wheels[R_ID] = (v + omega)/0.0325;

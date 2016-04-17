@@ -85,7 +85,7 @@ int main(void)
     MyFlash_Init();
     //MyTemperature_Init();
     //MyMIWI_Init();
-    //MyWIFI_Init();
+    MyWIFI_Init();
 
     // Configure for multi-vectored mode
     INTConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
@@ -98,7 +98,7 @@ int main(void)
 
     // Start Wireless and Camera connections
     //MyMIWI_Start();
-    //MyWIFI_Start();
+    MyWIFI_Start();
     //MyCamera_Start();
 
     MyMiniProject_Init();
@@ -109,6 +109,8 @@ int main(void)
     cvs = init_CtrlStruct(inputs, outputs);
     
     MyMiniProject_tStart = (ReadCoreTimer()/(SYS_FREQ/2.0));
+//    cvs->state->competition_start = 210.0;
+//    cvs->state->lastT = -MyMiniProject_tStart - cvs->state->competition_start;
     MyMiniProject_Update(cvs);
     controller_init(cvs);
     
@@ -118,7 +120,7 @@ int main(void)
         THREAD_START(1);
             MyConsole_Task();
         THREAD_BREAK
-            //MyWIFI_Task();
+            MyWIFI_Task();
         THREAD_END(1);
         THREAD_START(0);
             MyRTCC_Task();            

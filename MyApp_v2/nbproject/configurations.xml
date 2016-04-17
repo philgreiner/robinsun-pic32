@@ -45,7 +45,6 @@
         <itemPath>RobinsunFiles/CtrlStruct_gr1.h</itemPath>
         <itemPath>RobinsunFiles/ctrl_io.h</itemPath>
         <itemPath>RobinsunFiles/ctrl_main_gr1.h</itemPath>
-        <itemPath>RobinsunFiles/ctrl_strategy_gr1.h</itemPath>
         <itemPath>RobinsunFiles/kalman_gr1.h</itemPath>
         <itemPath>RobinsunFiles/map_design_gr1.h</itemPath>
         <itemPath>RobinsunFiles/namespace_ctrl.h</itemPath>
@@ -174,14 +173,12 @@
         <itemPath>RobinsunFiles/Astar_gr1.c</itemPath>
         <itemPath>RobinsunFiles/CtrlStruct_gr1.c</itemPath>
         <itemPath>RobinsunFiles/ctrl_main_gr1.c</itemPath>
-        <itemPath>RobinsunFiles/ctrl_strategy_gr1.c</itemPath>
         <itemPath>RobinsunFiles/kalman_gr1.c</itemPath>
         <itemPath>RobinsunFiles/map_design_gr1.c</itemPath>
         <itemPath>RobinsunFiles/odometry_gr1.c</itemPath>
         <itemPath>RobinsunFiles/potentialfield_gr1.c</itemPath>
         <itemPath>RobinsunFiles/robot_detect_gr1.c</itemPath>
         <itemPath>RobinsunFiles/triangulation_gr1.c</itemPath>
-        <itemPath>RobinsunFiles/calibrate_gr1.c</itemPath>
         <itemPath>RobinsunFiles/robinsun_strategy.c</itemPath>
         <itemPath>RobinsunFiles/competition_functions.c</itemPath>
         <itemPath>RobinsunFiles/locate_opponent_gr1.c</itemPath>

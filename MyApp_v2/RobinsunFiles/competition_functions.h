@@ -21,7 +21,7 @@ typedef enum {
 } blocks_front_t;
 void blocks_front(CtrlStruct *cvs);
 
-typedef enum {GOTO_C, WAIT_FOR_POSITION_C, BACKWARDS_C, SWITCHES_C
+typedef enum {GOTO_C, WAIT_FOR_POSITION_C, BACKWARDS_C, SECOND_C, BACKWARDS_C1, SWITCHES_C
 } cabins_close_t;
 void cabins_close(CtrlStruct *cvs);
 

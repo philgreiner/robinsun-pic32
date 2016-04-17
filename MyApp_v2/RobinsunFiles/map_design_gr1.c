@@ -26,7 +26,7 @@ void game_map_drawing(CtrlStruct *cvs)
 	// All values are in [cm]
 	int x;
 	int y;
-	int radius_robot = 5;
+	int radius_robot = 4;
 
 	for (x = 0; x <= 42; x++)
 	{
