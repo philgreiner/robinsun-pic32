@@ -98,6 +98,7 @@ void controller_init(CtrlStruct *cvs) {
     cvs->state->errorAngle = 0.0;
     cvs->inputs->u_switch[R_ID] = 1;
     cvs->inputs->u_switch[L_ID] = 1;
+    cvs->state->opponent_timer = -42.0;
 }
 
 /*! \brief controller loop (called eveiry timestep)

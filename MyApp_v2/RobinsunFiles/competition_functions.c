@@ -137,7 +137,7 @@ void blocks_front(CtrlStruct *cvs) {
             cvs->state->omegaref[L_ID] = wheels[L_ID];
             
             // ACTION IS DONE
-            if ((d < 0.05) && (fabs(delta_theta)*180.0/M_PI < 10.0))
+            if (d < 0.05)
             {
                 cvs->state->current_action_progress = UNCLAMP_BF;
                 cvs->state->errorAngle = 0.0;
@@ -638,9 +638,6 @@ void blocks_cabins(CtrlStruct *cvs) {
     }
 }
 
-//typedef enum {
-//} fish_catch_t;
-
 void fish_catch(CtrlStruct *cvs) {
     double x, y, theta, x_goal, y_goal, theta_goal;
     double d, delta_theta;
@@ -685,9 +682,12 @@ void parasol_open(CtrlStruct *cvs) {
     cvs->param->ready_start_astar = 0;
     cvs->state->omegaref[R_ID] = 0;
     cvs->state->omegaref[L_ID] = 0;
+    cvs->outputs->command_blocks = 0;
+    cvs->outputs->command_fish_vertical = 0;
+    cvs->outputs->command_fish_horizontal = 0;
     
     // ACTIVATE PARASOL
-    if(cvs->inputs->t > 90)
+    if(cvs->inputs->t > 91)
     {
         MyCyclone_Write(A_PICtoFPGA, 0x0001 & 1);
         // MARK AS DONE
@@ -701,6 +701,9 @@ void parasol_open(CtrlStruct *cvs) {
 void stop_end(CtrlStruct *cvs) {
     cvs->state->omegaref[R_ID] = 0;
     cvs->state->omegaref[L_ID] = 0;
+    cvs->outputs->command_blocks = 0;
+    cvs->outputs->command_fish_vertical = 0;
+    cvs->outputs->command_fish_horizontal = 0;
     cvs->state->objectives[cvs->state->current_objective] = DONE1;
 }
 

@@ -82,6 +82,8 @@ void gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
         dist = min(sqrt((x-x0)*(x-x0)+(y-y0)*(y-y0)),sqrt((x-x1)*(x-x1)+(y-y1)*(y-y1)));
         if(dist < 0.75)
             v = 0.0;
+        if(cvs->state->opponent_timer == -42.0)
+            cvs->state->opponent_timer = cvs->inputs->t;
     }
     else if (v < 0 && cvs->state->nb_opponents_detected != 0)
     {
@@ -92,7 +94,17 @@ void gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
         dist = min(sqrt((x-x2)*(x-x2)+(y-y2)*(y-y2)),sqrt((x-x3)*(x-x3)+(y-y3)*(y-y3)));
         if(dist < 0.6)
             v = 0.0;
+        if(cvs->state->opponent_timer == -42.0)
+            cvs->state->opponent_timer = cvs->inputs->t;
     }
+    if((cvs->inputs->t - cvs->state->opponent_timer > 3) && cvs->state->opponent_timer != -42.0)
+    {
+        cvs->state->opponent_timer = -42.0;
+        cvs->state->objectives[cvs->state->current_objective] = DELAYED;
+    }
+    if(cvs->state->nb_opponents_detected == 0)
+        cvs->state->opponent_timer = -42.0;
+    
     wheels[R_ID] = (v + omega)/0.0325;
     wheels[L_ID] = (v - omega)/0.0325;
     cvs->state->errorAngle = delta_theta;
