@@ -1686,6 +1686,34 @@ void HTTPPrint_goal2(void)
     TCPPutString(sktHTTP, theStr);
 }
 
+void HTTPPrint_astaractive(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%d", cvs->state->ready_start_astar);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_intergoal0(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->state->intermediate_goal[0]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_intergoal1(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->state->intermediate_goal[1]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_intergoal2(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->state->intermediate_goal[2]*180/M_PI);
+    TCPPutString(sktHTTP, theStr);
+}
+
 void HTTPPrint_competition_state(void)
 {
     BYTE theStr[64];
@@ -1781,6 +1809,34 @@ void HTTPPrint_opponent3(void)
 {
     BYTE theStr[64];
     sprintf(theStr, "%.3f", cvs->state->opponent_position[3]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_opponent4(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->state->opponent_position[4]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_opponent5(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->state->opponent_position[5]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_opponent6(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->state->opponent_position[6]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_opponent7(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->state->opponent_position[7]);
     TCPPutString(sktHTTP, theStr);
 }
 

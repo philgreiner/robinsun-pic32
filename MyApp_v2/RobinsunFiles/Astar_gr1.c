@@ -224,8 +224,11 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
                 cvs->param->ready_start_astar = 0;
             }
             else {
-                double wheels[2], dest[3] = {(actual_step_x - 21)/20.0, (actual_step_y - 31)/20.0, cvs->state->goal_position[2]};
-                gotoPoint(cvs, dest, wheels);
+                double wheels[2];
+				cvs->state->intermediate_goal[0] = (actual_step_x - 21)/20.0;
+				cvs->state->intermediate_goal[1] = (actual_step_y - 31)/20.0;
+				cvs->state->intermediate_goal[2] = cvs->state->goal_position[2];
+                gotoPoint(cvs, wheels);
                 cvs->state->omegaref[R_ID] = wheels[R_ID];
                 cvs->state->omegaref[L_ID] = wheels[L_ID];
             }
@@ -238,8 +241,11 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 
 	// 2. NOT YET ON POSITION
 	else {
-        double wheels[2], dest[3] = {real_step_x, real_step_y, cvs->state->goal_position[2]};
-        gotoPoint(cvs, dest, wheels);
+        double wheels[2];
+		cvs->state->intermediate_goal[0] = real_step_x;
+		cvs->state->intermediate_goal[1] = real_step_y;
+		cvs->state->intermediate_goal[2] = cvs->state->goal_position[2]};
+        gotoPoint(cvs,wheels);
 		cvs->state->omegaref[R_ID] = wheels[R_ID];
 		cvs->state->omegaref[L_ID] = wheels[L_ID];
 	} // end else (not on position)

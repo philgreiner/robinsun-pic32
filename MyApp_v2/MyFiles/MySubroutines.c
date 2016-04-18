@@ -29,13 +29,16 @@ void    DutyToInf(double duty, unsigned *MSB, unsigned *LSB)
             *LSB = 3;
 }
 
-void gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
+void gotoPoint(CtrlStruct *cvs, double *wheels)
 {
-    double x, y, theta, delta_theta, delta_x, delta_y, dist;
+    double destination[3], x, y, theta, delta_theta, delta_x, delta_y, dist;
     x = cvs->state->position[0];
     y = cvs->state->position[1];
     theta = cvs->state->position[2];
-
+    destination[0] = cvs->state->intermediate_goal[0];
+    destination[1] = cvs->state->intermediate_goal[1];
+    destination[2] = cvs->state->intermediate_goal[2];
+    
     double v, omega;
     delta_x = destination[0] - x;
     delta_y = destination[1] - y;

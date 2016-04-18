@@ -31,7 +31,7 @@ void wait(CtrlStruct *cvs) {
 void blocks_front(CtrlStruct *cvs) {
     double x, y, theta, x_goal, y_goal, theta_goal;
     double d, delta_theta;
-    double wheels[2], dest[3];
+    double wheels[2];
     
     x = cvs->state->position[0];
     y = cvs->state->position[1];
@@ -60,15 +60,15 @@ void blocks_front(CtrlStruct *cvs) {
 
         case WAIT_FOR_POSITION_BF:
             // COMPUTE REMAINING DISTANCE
-            dest[0] = -0.1; 
-            dest[1] = (cvs->inputs->team_color) ? (1.25) : (-1.25);
-            dest[2] = (cvs->inputs->team_color) ? (-M_PI_2) : (M_PI_2);
+            cvs->state->intermediate_goal[0] = -0.1; 
+            cvs->state->intermediate_goal[1] = (cvs->inputs->team_color) ? (1.25) : (-1.25);
+            cvs->state->intermediate_goal[2] = (cvs->inputs->team_color) ? (-M_PI_2) : (M_PI_2);
 
-            d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
-            delta_theta = fabs(cvs->state->position[2] - dest[2]);
+            d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
+            delta_theta = fabs(cvs->state->position[2] - cvs->state->intermediate_goal[2]);
             delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
             
-            gotoPoint(cvs,dest,wheels);
+            gotoPoint(cvs,wheels);
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
 
@@ -82,14 +82,14 @@ void blocks_front(CtrlStruct *cvs) {
             cvs->param->ready_start_astar = 0;
             
             // DEFINE GOAL POSITION
-            dest[0] = -0.1; 
-            dest[1] = (cvs->inputs->team_color) ? (1.08) : (-1.08); 
-            dest[2] = (cvs->inputs->team_color) ? (-.9*M_PI_2) : (.9*M_PI_2);
-            d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
-            delta_theta = fabs(cvs->state->position[2] - dest[2]);
+            cvs->state->intermediate_goal[0] = -0.1; 
+            cvs->state->intermediate_goal[1] = (cvs->inputs->team_color) ? (1.08) : (-1.08); 
+            cvs->state->intermediate_goal[2] = (cvs->inputs->team_color) ? (-.9*M_PI_2) : (.9*M_PI_2);
+            d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
+            delta_theta = fabs(cvs->state->position[2] - cvs->state->intermediate_goal[2]);
             delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
             
-            gotoPoint(cvs,dest,wheels);
+            gotoPoint(cvs,wheels);
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
 
@@ -125,14 +125,14 @@ void blocks_front(CtrlStruct *cvs) {
             break;
 
         case PUSH_BF:
-            dest[0] = 0.0; 
-            dest[1] = (cvs->inputs->team_color) ? (0.4) : (-0.4); 
-            dest[2] = (cvs->inputs->team_color) ? (-1.1*M_PI_2) : (1.1*M_PI_2);
-            d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
-            delta_theta = fabs(cvs->state->position[2] - dest[2]);
+            cvs->state->intermediate_goal[0] = 0.0; 
+            cvs->state->intermediate_goal[1] = (cvs->inputs->team_color) ? (0.4) : (-0.4); 
+            cvs->state->intermediate_goal[2] = (cvs->inputs->team_color) ? (-1.1*M_PI_2) : (1.1*M_PI_2);
+            d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
+            delta_theta = fabs(cvs->state->position[2] - cvs->state->intermediate_goal[2]);
             delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
             
-            gotoPoint(cvs,dest,wheels);
+            gotoPoint(cvs,wheels);
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
             
@@ -169,14 +169,14 @@ void blocks_front(CtrlStruct *cvs) {
             // TURN OFF A*
             cvs->param->ready_start_astar = 0;
             
-            dest[0] = 0.0; 
-            dest[1] = (cvs->inputs->team_color) ? (0.7) : (-0.7); 
-            dest[2] = theta;
-            d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
-            delta_theta = fabs(cvs->state->position[2] - dest[2]);
+            cvs->state->intermediate_goal[0] = 0.0; 
+            cvs->state->intermediate_goal[1] = (cvs->inputs->team_color) ? (0.7) : (-0.7); 
+            cvs->state->intermediate_goal[2] = theta;
+            d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
+            delta_theta = fabs(cvs->state->position[2] - cvs->state->intermediate_goal[2]);
             delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
             
-            gotoPoint(cvs,dest,wheels);
+            gotoPoint(cvs,wheels);
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
             
@@ -190,7 +190,7 @@ void blocks_front(CtrlStruct *cvs) {
 void cabins_close(CtrlStruct *cvs) {
     double x, y, theta, x_goal, y_goal, theta_goal;
     double d, delta_theta;
-    double wheels[2], dest[3];
+    double wheels[2];
     
     x = cvs->state->position[0];
     y = cvs->state->position[1];
@@ -228,10 +228,10 @@ void cabins_close(CtrlStruct *cvs) {
             cvs->param->ready_start_astar = 0;
 
             // MOVE BACKWARDS
-            dest[0] = -1.3;
-            dest[1] = (cvs->inputs->team_color) ? (1.2) : (-1.2);
-            dest[2] = 0;
-            gotoPoint(cvs,dest,wheels);
+            cvs->state->intermediate_goal[0] = -1.3;
+            cvs->state->intermediate_goal[1] = (cvs->inputs->team_color) ? (1.2) : (-1.2);
+            cvs->state->intermediate_goal[2] = 0;
+            gotoPoint(cvs,wheels);
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
 
@@ -245,15 +245,15 @@ void cabins_close(CtrlStruct *cvs) {
         
         case SECOND_C:
             // MOVE TO START FOR SECOND CABIN
-            dest[0] = -0.5;
-            dest[1] = (cvs->inputs->team_color) ? (0.95) : (-1.025);
-            dest[2] = 0;
+            cvs->state->intermediate_goal[0] = -0.5;
+            cvs->state->intermediate_goal[1] = (cvs->inputs->team_color) ? (0.95) : (-1.025);
+            cvs->state->intermediate_goal[2] = 0;
             
-            d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
-            delta_theta = fabs(cvs->state->position[2] - dest[2]);
+            d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
+            delta_theta = fabs(cvs->state->position[2] - cvs->state->intermediate_goal[2]);
             delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
             
-            gotoPoint(cvs,dest,wheels);
+            gotoPoint(cvs,wheels);
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
             
@@ -270,10 +270,10 @@ void cabins_close(CtrlStruct *cvs) {
             cvs->param->ready_start_astar = 0;
 
             // MOVE BACKWARDS
-            dest[0] = -1.3;
-            dest[1] = (cvs->inputs->team_color) ? (0.9) : (-0.9);
-            dest[2] = 0;
-            gotoPoint(cvs,dest,wheels);
+            cvs->state->intermediate_goal[0] = -1.3;
+            cvs->state->intermediate_goal[1] = (cvs->inputs->team_color) ? (0.9) : (-0.9);
+            cvs->state->intermediate_goal[2] = 0;
+            gotoPoint(cvs,wheels);
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
 
@@ -290,12 +290,12 @@ void cabins_close(CtrlStruct *cvs) {
             cvs->param->ready_start_astar = 0;
 
             // MOVE 
-            dest[0] = -0.3;
-            dest[1] = (cvs->inputs->team_color) ? (1.1) : (-1.1);
-            dest[2] = theta;
-            d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
+            cvs->state->intermediate_goal[0] = -0.3;
+            cvs->state->intermediate_goal[1] = (cvs->inputs->team_color) ? (1.1) : (-1.1);
+            cvs->state->intermediate_goal[2] = theta;
+            d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
            
-            gotoPoint(cvs,dest,wheels);
+            gotoPoint(cvs,wheels);
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
           
@@ -311,7 +311,7 @@ void cabins_close(CtrlStruct *cvs) {
 void blocks_dune_1(CtrlStruct *cvs) {
     double x, y, theta, x_goal, y_goal, theta_goal;
     double d, delta_theta;
-    double dest[3], wheels[2];
+    double wheels[2];
     
     x = cvs->state->position[0];
     y = cvs->state->position[1];
@@ -417,14 +417,14 @@ void blocks_dune_1(CtrlStruct *cvs) {
             // TURN OFF A*
             cvs->param->ready_start_astar = 0;
             
-            dest[0] = -0.35; 
-            dest[1] = (cvs->inputs->team_color) ? (0.8) : (-0.8); 
-            dest[2] = (cvs->inputs->team_color) ? (-M_PI_4) : (M_PI_4);
-            d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
-            delta_theta = fabs(cvs->state->position[2] - dest[2]);
+            cvs->state->intermediate_goal[0] = -0.35; 
+            cvs->state->intermediate_goal[1] = (cvs->inputs->team_color) ? (0.8) : (-0.8); 
+            cvs->state->intermediate_goal[2] = (cvs->inputs->team_color) ? (-M_PI_4) : (M_PI_4);
+            d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
+            delta_theta = fabs(cvs->state->position[2] - cvs->state->intermediate_goal[2]);
             delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
             
-            gotoPoint(cvs,dest,wheels);
+            gotoPoint(cvs,wheels);
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
             
@@ -461,14 +461,14 @@ void blocks_dune_1(CtrlStruct *cvs) {
             // TURN OFF A*
             cvs->param->ready_start_astar = 0;
             
-            dest[0] = 0.15; 
-            dest[1] = (cvs->inputs->team_color) ? (0.8) : (-0.8); 
-            dest[2] = (cvs->inputs->team_color) ? (-M_PI_2) : (M_PI_2);
-            d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
-            delta_theta = fabs(cvs->state->position[2] - dest[2]);
+            cvs->state->intermediate_goal[0] = 0.15; 
+            cvs->state->intermediate_goal[1] = (cvs->inputs->team_color) ? (0.8) : (-0.8); 
+            cvs->state->intermediate_goal[2] = (cvs->inputs->team_color) ? (-M_PI_2) : (M_PI_2);
+            d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
+            delta_theta = fabs(cvs->state->position[2] - cvs->state->intermediate_goal[2]);
             delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
             
-            gotoPoint(cvs,dest,wheels);
+            gotoPoint(cvs,wheels);
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
             
@@ -641,7 +641,7 @@ void blocks_cabins(CtrlStruct *cvs) {
 void fish_catch(CtrlStruct *cvs) {
     double x, y, theta, x_goal, y_goal, theta_goal;
     double d, delta_theta;
-    double wheels[2], dest[3];
+    double wheels[2];
     
     x = cvs->state->position[0];
     y = cvs->state->position[1];

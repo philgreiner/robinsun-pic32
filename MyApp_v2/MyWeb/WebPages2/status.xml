@@ -32,10 +32,18 @@
 	<goal0>~goal0~</goal0>
 	<goal1>~goal1~</goal1>
 	<goal2>~goal2~</goal2>
+	<astaractive>~astaractive~</astaractive>
+	<intergoal0>~intergoal0~</intergoal0>
+	<intergoal1>~intergoal1~</intergoal1>
+	<intergoal2>~intergoal2~</intergoal2>
 	<opponent0>~opponent0~</opponent0>
 	<opponent1>~opponent1~</opponent1>
 	<opponent2>~opponent2~</opponent2>
 	<opponent3>~opponent3~</opponent3>
+	<opponent4>~opponent4~</opponent4>
+	<opponent5>~opponent5~</opponent5>
+	<opponent6>~opponent6~</opponent6>
+	<opponent7>~opponent7~</opponent7>
 	<opponentsdetected>~opponentsdetected~</opponentsdetected>
 	<competition_state>~competition_state~</competition_state>
 	<current_progress>~current_progress~</current_progress>
