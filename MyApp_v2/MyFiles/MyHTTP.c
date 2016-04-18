@@ -1533,14 +1533,14 @@ void HTTPPrint_buttonR(void)
 void HTTPPrint_omegaref_R(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%.3f", cvs->state->omegaref[R_ID]*.0325*100); //cvs->state->omegaref[R_ID]*.0325*100);
+    sprintf(theStr, "%.3f", cvs->inputs->odo_r_speed*.0223*100);//cvs->state->omegaref[R_ID]*.0325*100); //cvs->state->omegaref[R_ID]*.0325*100);
     TCPPutString(sktHTTP, theStr);
 }
 
 void HTTPPrint_omegaref_L(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%.3f", cvs->state->omegaref[L_ID]*.0325*100);
+    sprintf(theStr, "%.3f", cvs->inputs->odo_l_speed*.0223*100);//cvs->state->omegaref[L_ID]*.0325*100);
     TCPPutString(sktHTTP, theStr);
 }
 
