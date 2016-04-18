@@ -244,7 +244,7 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
         double wheels[2];
 		cvs->state->intermediate_goal[0] = real_step_x;
 		cvs->state->intermediate_goal[1] = real_step_y;
-		cvs->state->intermediate_goal[2] = cvs->state->goal_position[2]};
+		cvs->state->intermediate_goal[2] = cvs->state->goal_position[2];
         gotoPoint(cvs,wheels);
 		cvs->state->omegaref[R_ID] = wheels[R_ID];
 		cvs->state->omegaref[L_ID] = wheels[L_ID];

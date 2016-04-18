@@ -92,6 +92,10 @@ void controller_init(CtrlStruct *cvs) {
     for (i = 0; i < 10; i++)
         cvs->state->objectives[i] = NOTDONE1;
 
+    for(i=0;i<3;i++) {
+        cvs->state->intermediate_goal[i] = 0.0;
+        cvs->state->goal_position[i] = 0.0;
+    }
     cvs->state->current_objective = CALIBRATE;
     cvs->state->current_action_progress = 0;
     cvs->param->refspeed = 0.0;

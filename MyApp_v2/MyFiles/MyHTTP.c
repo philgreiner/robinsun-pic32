@@ -1689,7 +1689,7 @@ void HTTPPrint_goal2(void)
 void HTTPPrint_astaractive(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%d", cvs->state->ready_start_astar);
+    sprintf(theStr, "%d", cvs->param->ready_start_astar);
     TCPPutString(sktHTTP, theStr);
 }
 

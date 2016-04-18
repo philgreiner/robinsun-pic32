@@ -59,6 +59,14 @@ void HTTPPrint_opponent1(void);
 void HTTPPrint_opponent2(void);
 void HTTPPrint_opponent3(void);
 void HTTPPrint_opponentsdetected(void);
+void HTTPPrint_astaractive(void);
+void HTTPPrint_intergoal0(void);
+void HTTPPrint_intergoal1(void);
+void HTTPPrint_intergoal2(void);
+void HTTPPrint_opponent4(void);
+void HTTPPrint_opponent5(void);
+void HTTPPrint_opponent6(void);
+void HTTPPrint_opponent7(void);
 
 void HTTPPrint(DWORD callbackID)
 {
@@ -192,6 +200,30 @@ void HTTPPrint(DWORD callbackID)
 			break;
         case 0x0000008b:
 			HTTPPrint_opponentsdetected();
+			break;
+        case 0x0000008c:
+			HTTPPrint_astaractive();
+			break;
+        case 0x0000008d:
+			HTTPPrint_intergoal0();
+			break;
+        case 0x0000008e:
+			HTTPPrint_intergoal1();
+			break;
+        case 0x0000008f:
+			HTTPPrint_intergoal2();
+			break;
+        case 0x00000090:
+			HTTPPrint_opponent4();
+			break;
+        case 0x00000091:
+			HTTPPrint_opponent5();
+			break;
+        case 0x00000092:
+			HTTPPrint_opponent6();
+			break;
+        case 0x00000093:
+			HTTPPrint_opponent7();
 			break;
 		default:
 			// Output notification for undefined values
