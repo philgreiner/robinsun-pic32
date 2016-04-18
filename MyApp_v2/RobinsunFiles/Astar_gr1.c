@@ -208,7 +208,7 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
     double real_dist = sqrt((real_delta_x*real_delta_x) + (real_delta_y*real_delta_y));
     
     double delta_theta = fabs(cvs->state->position[2] - cvs->state->goal_position[2]);
-    delta_theta = (delta_theta > 2*M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
+    delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
 
 	/* B. Check if on position and act accordingly  */
 
@@ -216,7 +216,7 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 	if (real_dist < 0.055) {
 		if (cvs->param->index_path == 0) // at final destination
 		{       
-            if (delta_theta*180.0/M_PI < 4.0) {
+            if (fabs(delta_theta)*180.0/M_PI < 4.0) {
                 cvs->state->omegaref[R_ID] = 0.0;
                 cvs->state->omegaref[L_ID] = 0.0;
 
@@ -238,11 +238,6 @@ void Astar_read_path(CtrlStruct *cvs)  // Should be read at each cycle
 
 	// 2. NOT YET ON POSITION
 	else {
-		double delta_theta = atan2(delta_y,delta_x) - theta;
-
-        if (delta_theta > M_PI) delta_theta -= 2 * M_PI;
-		if (delta_theta < -M_PI) delta_theta += 2 * M_PI;
-
         double wheels[2], dest[3] = {real_step_x, real_step_y, cvs->state->goal_position[2]};
         gotoPoint(cvs, dest, wheels);
 		cvs->state->omegaref[R_ID] = wheels[R_ID];

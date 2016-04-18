@@ -29,11 +29,6 @@ void    DutyToInf(double duty, unsigned *MSB, unsigned *LSB)
             *LSB = 3;
 }
 
-int round(double num)
-{
-    return num < 0 ? num - 0.5 : num + 0.5;
-}
- 
 void gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
 {
     double x, y, theta, delta_theta, delta_x, delta_y, dist;
@@ -74,9 +69,30 @@ void gotoPoint(CtrlStruct *cvs, double *destination, double *wheels)
         if(fabs(delta_theta)*180.0/M_PI > 22.5)
             omega = max(-theta_sat, min(theta_sat, (0.375 * delta_theta)));
         else
-            omega = max(-theta_sat, min(theta_sat, (0.275 * delta_theta) + 0.45*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
+            omega = max(-theta_sat, min(theta_sat, (0.25 * delta_theta) + 0.45*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
     }
     
+    // Check if opponent is on trajectory
+    if(v > 0 && cvs->state->nb_opponents_detected != 0)
+    {
+        double x0, y0, x1, y1;
+        x0 = cvs->state->opponent_position[0]; y0 = cvs->state->opponent_position[1];
+        x1 = cvs->state->opponent_position[2]; y1 = cvs->state->opponent_position[3];
+        
+        dist = min(sqrt((x-x0)*(x-x0)+(y-y0)*(y-y0)),sqrt((x-x1)*(x-x1)+(y-y1)*(y-y1)));
+        if(dist < 0.75)
+            v = 0.0;
+    }
+    else if (v < 0 && cvs->state->nb_opponents_detected != 0)
+    {
+        double x2, y2, x3, y3;
+        x2 = cvs->state->opponent_position[4]; y2 = cvs->state->opponent_position[5];
+        x3 = cvs->state->opponent_position[6]; y3 = cvs->state->opponent_position[7];
+        
+        dist = min(sqrt((x-x2)*(x-x2)+(y-y2)*(y-y2)),sqrt((x-x3)*(x-x3)+(y-y3)*(y-y3)));
+        if(dist < 0.6)
+            v = 0.0;
+    }
     wheels[R_ID] = (v + omega)/0.0325;
     wheels[L_ID] = (v - omega)/0.0325;
     cvs->state->errorAngle = delta_theta;

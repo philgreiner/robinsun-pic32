@@ -161,6 +161,9 @@ void controller_loop(CtrlStruct *cvs) {
         triangulation(cvs);
     #endif
 
+    /* Locate the opponent */
+    locate_opponent(cvs);
+    
     if(ivs->t >= 5.0)
     {
         /* Path planning through potential field computation */
@@ -232,15 +235,11 @@ void controller_loop(CtrlStruct *cvs) {
         ovs->wheel_commands[L_ID] = wheels[L_ID];
     #endif
 
-    /* Locate the opponent */
-    //robot_Detect(cvs);
-//    locate_opponent(cvs);
-
-    if(cvs->state->nb_opponents_detected != 0)
-    {
-        ovs->wheel_commands[R_ID] = 0.0;
-        ovs->wheel_commands[L_ID] = 0.0;
-    }
+//    if(cvs->state->nb_opponents_detected != 0)
+//    {
+//        ovs->wheel_commands[R_ID] = 0.0;
+//        ovs->wheel_commands[L_ID] = 0.0;
+//    }
         
     cvs->state->lastT = ivs->t;
 }

@@ -16,7 +16,7 @@
 NAMESPACE_INIT(ctrlGr1);
 
 void locate_opponent(CtrlStruct *cvs);
-int isMeasureRelevant(double xFound, double yFound);
+int isMeasureRelevant(CtrlStruct *cvs, double xFound, double yFound);
 
 NAMESPACE_CLOSE();
 

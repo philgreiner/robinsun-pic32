@@ -39,7 +39,7 @@ typedef struct CtrlState
 	double position[3];
 	double position_odo[3];
 	double position_triang[3];
-	double opponent_position[4];
+	double opponent_position[8];
     int    nb_opponents_detected;
 	double goal_position[3];
 
@@ -61,7 +61,7 @@ typedef struct CtrlState
     state             objectives[10];
     robinsun_competition current_objective;
     int               current_action_progress;
-	double			  timer, objective_timer;
+	double			  timer, objective_timer, opponent_timer;
     int               direction;
 } CtrlState;
 

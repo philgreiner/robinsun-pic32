@@ -137,7 +137,7 @@ void blocks_front(CtrlStruct *cvs) {
             cvs->state->omegaref[L_ID] = wheels[L_ID];
             
             // ACTION IS DONE
-            if ((d < 0.05) && (fabs(delta_theta)*180.0/M_PI < 5.0))
+            if ((d < 0.05) && (fabs(delta_theta)*180.0/M_PI < 10.0))
             {
                 cvs->state->current_action_progress = UNCLAMP_BF;
                 cvs->state->errorAngle = 0.0;
@@ -246,7 +246,7 @@ void cabins_close(CtrlStruct *cvs) {
         case SECOND_C:
             // MOVE TO START FOR SECOND CABIN
             dest[0] = -0.5;
-            dest[1] = (cvs->inputs->team_color) ? (1.025) : (-1.025);
+            dest[1] = (cvs->inputs->team_color) ? (0.95) : (-1.025);
             dest[2] = 0;
             
             d = sqrt((x - dest[0])*(x - dest[0]) + (y - dest[1])*(y - dest[1]));
@@ -661,15 +661,13 @@ void fish_catch(CtrlStruct *cvs) {
             cvs->state->goal_position[2] = 0;
 
             // ACTIVATE A*
-            cvs->param->ready_start_astar = 0;
+            cvs->param->ready_start_astar = 1;
             cvs->param->Astar_path_active = 0;
             
-            // START OPENING CLAMP
-            cvs->outputs->command_blocks = 0;
-                            cvs->state->omegaref[R_ID] = 0.0;
-                cvs->state->omegaref[L_ID] = 0.0;
+            // MAKE SURE CLAMP IS CLOSED
+            cvs->outputs->command_blocks = 20;
             // GO TO WAIT FOR DESTINATION
-//            cvs->state->current_action_progress = WAIT_FOR_POSITION_FC;
+            cvs->state->current_action_progress = WAIT_FOR_POSITION_FC;
             break;
             
         case WAIT_FOR_POSITION_FC:
@@ -680,7 +678,6 @@ void fish_catch(CtrlStruct *cvs) {
             }
             break;
     }
-    
 }
 
 void parasol_open(CtrlStruct *cvs) {
