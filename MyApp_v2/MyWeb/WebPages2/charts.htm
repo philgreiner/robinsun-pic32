@@ -57,8 +57,8 @@
 	<img src="../images/map.png" alt="map" id="map" onmousemove="move(event);" onclick="click(event);" height="720" width="960"/>
 	<h2> Position X: <span id="position0" style="font-weight:normal">-</span> [m] - Y: <span id="position1" style="font-weight:normal">-</span> [m] - Theta: <span id="position2" style="font-weight:normal">-</span> [deg]</h2>
 	<h3> Goal (<span id="goal0" style="font-weight:normal">-</span> m, <span id="goal1" style="font-weight:normal">-</span> m, <span id="goal2" style="font-weight:normal">-</span> &deg); Intermediate goal (<span id="intergoal0" style="font-weight:normal">-</span> m, <span id="intergoal1" style="font-weight:normal">-</span> m, <span id="intergoal2" style="font-weight:normal">-</span> &deg)</h3>
-	<h3> Opponent 1 (<span id="opponent0" style="font-weight:normal">-</span> m, <span id="opponent1" style="font-weight:normal">-</span> m) -- Opponent 2 (<span id="opponent2" style="font-weight:normal">-</span> m, <span id="opponent3" style="font-weight:normal">-</span> &deg)</h3>
-	<h3> Opponent 3 (<span id="opponent4" style="font-weight:normal">-</span> m, <span id="opponent5" style="font-weight:normal">-</span> m) -- Opponent 4 (<span id="opponent6" style="font-weight:normal">-</span> m, <span id="opponent7" style="font-weight:normal">-</span> &deg)</h3>
+	<h3> Opponent 1 (<span id="opponent0" style="font-weight:normal">-</span> m, <span id="opponent1" style="font-weight:normal">-</span> m) -- Opponent 2 (<span id="opponent2" style="font-weight:normal">-</span> m, <span id="opponent3" style="font-weight:normal">-</span> m)</h3>
+	<h3> Opponent 3 (<span id="opponent4" style="font-weight:normal">-</span> m, <span id="opponent5" style="font-weight:normal">-</span> m) -- Opponent 4 (<span id="opponent6" style="font-weight:normal">-</span> m, <span id="opponent7" style="font-weight:normal">-</span> m)</h3>
 	<h3> Opponents detected : <span id="opponentsdetected" style="font-weight:normal">-</span></h3>
 	<h3> Mouse  <span id="mousepos" style="font-weight:normal">-</span> </h3>
 </div> <!-- map !-->
@@ -229,6 +229,8 @@ function move(event){
 
     position_x = point_x*3/880 - 1.63;
     position_y = point_y*2/605 - 1.12;
+	position_x = (position_x > 1.5) ? 1.5 : (position_x < -1.5) -1.5 : position_x;
+	position_y = (position_y > 1.0) ? 1.0 : (position_y < -1.0) -1.0 : position_y;
     document.getElementById("mousepos").innerHTML = "X = " + position_y.toFixed(3) + " [m]; Y = " + position_x.toFixed(3)  + " [m]";
 
     pixX = mouse_x + scroll_x;
