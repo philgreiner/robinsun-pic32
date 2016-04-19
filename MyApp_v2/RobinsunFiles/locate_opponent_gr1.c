@@ -31,13 +31,13 @@ void locate_opponent(CtrlStruct *cvs)
 	// Position of Robinsun
 	double x_robinsun 	  = cvs->state->position[0];
 	double y_robinsun 	  = cvs->state->position[1];
-	double theta_robinsun = cvs->state->position[2];
+	double tr             = cvs->state->position[2];
+    double phi = 15*M_PI/180.0, cr = cos(tr), sr = sin(tr);
 
 	// Position of each sonar and their respective readings
 	double xdistf = 0.1; // distance from the center of Robinsun along the x-axis of the mobile frame 
     double xdistb = 0.14;
-	double ydist = 0.075; // distance from the center of Robinsun along the y-axis of the mobile frame															
-    double cr = cos(theta_robinsun), sr = sin(theta_robinsun);
+	double ydist = 0.075; // distance from the center of Robinsun along the y-axis of the mobile frame
 											
 	double x_sonars[6] = {x_robinsun + xdistf*cr - ydist*sr, x_robinsun + xdistf*cr,
                           x_robinsun + xdistf*cr + ydist*sr, x_robinsun - xdistb*cr - ydist*sr,
@@ -77,13 +77,13 @@ void locate_opponent(CtrlStruct *cvs)
 			{ // left and center
 				if (dist[i+2] < max_dist)
 				{ // left, center and right --> opponent in front of the center sonar
-					xpos = x_sonars[i+1] + sign[i]*(min(min(dist[i],dist[i+1]),dist[i+2])/100.0 + opponent_radius)*cr;
-					ypos = y_sonars[i+1] + sign[i]*(min(min(dist[i],dist[i+1]),dist[i+2])/100.0 + opponent_radius)*sr;
+					xpos = x_sonars[i+1] + sign[i]*(min(min(dist[i],dist[i+1]),dist[i+2])/100.0 + opponent_radius)*cos(tr);
+					ypos = y_sonars[i+1] + sign[i]*(min(min(dist[i],dist[i+1]),dist[i+2])/100.0 + opponent_radius)*sin(tr);
 				} // left, center and right
 				else
 				{ // left and center only --> opponent in front of the left sonar
-					xpos = x_sonars[i] + sign[i]*(min(dist[i],dist[i+1])/100.0 + opponent_radius)*cr;
-					ypos = y_sonars[i] + sign[i]*(min(dist[i],dist[i+1])/100.0 + opponent_radius)*sr; 
+					xpos = x_sonars[i] + sign[i]*(min(dist[i],dist[i+1])/100.0 + opponent_radius)*cos(tr);
+					ypos = y_sonars[i] + sign[i]*(min(dist[i],dist[i+1])/100.0 + opponent_radius)*sin(tr); 
 				} // left and center only
 
 				if (isMeasureRelevant(cvs, xpos,ypos))
@@ -97,8 +97,8 @@ void locate_opponent(CtrlStruct *cvs)
 			else if (dist[i+2] < max_dist)
 			{ // left and right --> 2 opponents : one on the left of the left sonar, 
 			  //								  the other on the right of the right sonar
-				xpos = x_sonars[i] + sign[i]*(dist[i]/100.0 + opponent_radius)*cr - opponent_radius*sr;
-				ypos = y_sonars[i] + sign[i]*(dist[i]/100.0 + opponent_radius)*sr + opponent_radius*cr; 
+				xpos = x_sonars[i] + sign[i]*(dist[i]/100.0 + opponent_radius)*cos(tr+sign[i]*phi) - opponent_radius*sin(tr+sign[i]*phi);
+				ypos = y_sonars[i] + sign[i]*(dist[i]/100.0 + opponent_radius)*sin(tr+sign[i]*phi) + opponent_radius*cos(tr+sign[i]*phi); 
 				if (isMeasureRelevant(cvs, xpos,ypos))
 				{
 					opponents_xpos[dirsonar] = xpos;
@@ -106,8 +106,8 @@ void locate_opponent(CtrlStruct *cvs)
 					opponents_detected += 1;
 				}
 
-				xpos = x_sonars[i+2] + sign[i]*(dist[i+2]/100.0 + opponent_radius)*cr + opponent_radius*sr;
-				ypos = y_sonars[i+2] + sign[i]*(dist[i+2]/100.0 + opponent_radius)*sr - opponent_radius*cr; 
+				xpos = x_sonars[i+2] + sign[i]*(dist[i+2]/100.0 + opponent_radius)*cos(tr-sign[i]*phi) + opponent_radius*sin(tr-sign[i]*phi);
+				ypos = y_sonars[i+2] + sign[i]*(dist[i+2]/100.0 + opponent_radius)*sin(tr-sign[i]*phi) - opponent_radius*cos(tr-sign[i]*phi); 
 
 				if (isMeasureRelevant(cvs, xpos,ypos))
 				{
@@ -120,8 +120,8 @@ void locate_opponent(CtrlStruct *cvs)
 			else
 			{ // left only --> opponent on the left of the left sonar
 
-				xpos = x_sonars[i] + sign[i]*(dist[i]/100.0 + opponent_radius)*cr - opponent_radius*sr;
-				ypos = y_sonars[i] + sign[i]*(dist[i]/100.0 + opponent_radius)*sr + opponent_radius*cr;
+				xpos = x_sonars[i] + sign[i]*(dist[i]/100.0 + opponent_radius)*cos(tr+sign[i]*phi) - opponent_radius*sin(tr+sign[i]*phi);
+				ypos = y_sonars[i] + sign[i]*(dist[i]/100.0 + opponent_radius)*sin(tr+sign[i]*phi) + opponent_radius*cos(tr+sign[i]*phi);
 
 				if (isMeasureRelevant(cvs, xpos,ypos))
 				{
@@ -136,8 +136,8 @@ void locate_opponent(CtrlStruct *cvs)
 		{ // right
 			if (dist[i+1] < max_dist)
 			{ // right and center
-				xpos = x_sonars[i+2] + sign[i]*(min(dist[i+1],dist[i+2])/100.0 + opponent_radius)*cr;
-				ypos = y_sonars[i+2] + sign[i]*(min(dist[i+1],dist[i+2])/100.0 + opponent_radius)*sr; 
+				xpos = x_sonars[i+2] + sign[i]*(min(dist[i+1],dist[i+2])/100.0 + opponent_radius)*cos(tr);
+				ypos = y_sonars[i+2] + sign[i]*(min(dist[i+1],dist[i+2])/100.0 + opponent_radius)*sin(tr); 
 
 				if (isMeasureRelevant(cvs, xpos,ypos))
 				{
@@ -149,8 +149,8 @@ void locate_opponent(CtrlStruct *cvs)
 			
 			else
 			{ // right only
-				xpos = x_sonars[i+2] + sign[i]*(dist[i+2]/100.0 + opponent_radius)*cr + opponent_radius*sr;
-				ypos = y_sonars[i+2] + sign[i]*(dist[i+2]/100.0 + opponent_radius)*sr - opponent_radius*cr; 
+				xpos = x_sonars[i+2] + sign[i]*(dist[i+2]/100.0 + opponent_radius)*cos(tr-sign[i]*phi) + opponent_radius*sin(tr-sign[i]*phi);
+				ypos = y_sonars[i+2] + sign[i]*(dist[i+2]/100.0 + opponent_radius)*sin(tr-sign[i]*phi) - opponent_radius*cos(tr-sign[i]*phi); 
 
 				if (isMeasureRelevant(cvs, xpos,ypos))
 				{
@@ -163,8 +163,8 @@ void locate_opponent(CtrlStruct *cvs)
 
 		else if (dist[i+1] < max_dist)
 		{ // center only --> opponent in front of the center sonar
-			xpos = x_sonars[i+1] + sign[i]*(dist[i+1]/100.0 + opponent_radius)*cr;
-			ypos = y_sonars[i+1] + sign[i]*(dist[i+1]/100.0 + opponent_radius)*sr;
+			xpos = x_sonars[i+1] + sign[i]*(dist[i+1]/100.0 + opponent_radius)*cos(tr);
+			ypos = y_sonars[i+1] + sign[i]*(dist[i+1]/100.0 + opponent_radius)*sin(tr);
 			 
 			if (isMeasureRelevant(cvs, xpos,ypos))
 			{

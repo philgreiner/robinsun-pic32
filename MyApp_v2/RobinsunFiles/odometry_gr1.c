@@ -51,7 +51,7 @@ void odometry_estimate(CtrlStruct * cvs)
 
 	// We consider the whole movement is done in the new direction
 	// Update of the mean
-    if(fabs(angleDiff) < M_PI_4)
+    if(fabs(cvs->inputs->odo_r_speed) < 1.0 && fabs(cvs->inputs->odo_l_speed) < 1.0)
     {
         cvs->state->position_odo[2] = cvs->state->position[2] + angleDiff;
         if(cvs->state->position_odo[2] > M_PI)
