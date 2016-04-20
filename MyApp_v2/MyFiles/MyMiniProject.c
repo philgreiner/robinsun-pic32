@@ -141,7 +141,6 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         
         // Are the data sent to ROBINSUN ?
         cvs->inputs->ready_signal = (lt24 >> 8)%2;
-        
         cvs->inputs->start_signal = lt24 >> 15;
         
         unsigned int sonar12 = MyCyclone_Read(A_sonar12);
