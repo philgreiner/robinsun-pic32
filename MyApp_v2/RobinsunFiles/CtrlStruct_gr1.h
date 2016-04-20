@@ -58,7 +58,6 @@ typedef struct CtrlState
     double r[3];
 
 	// Strategy parameters
-    double            competition_start;
     state             objectives[10];
     robinsun_competition current_objective;
     int               current_action_progress;

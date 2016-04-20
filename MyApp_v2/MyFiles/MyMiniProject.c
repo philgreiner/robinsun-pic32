@@ -115,9 +115,6 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         unsigned int ADC = MyCyclone_Read(A_adc);
         cvs->inputs->irR = ((float) ((ADC & 0xff00) >> 8)) * 3.3/255.0;
         cvs->inputs->irL = ((float) (ADC & 0x00ff))        * 3.3/255.0;
-        char msg[1024];
-//        sprintf(msg, "IR left: %f, IR right: %f\n", cvs->inputs->irR, cvs->inputs->irL);
-//        MyConsole_SendMsg(msg);
         
         unsigned int lt24 = MyCyclone_Read(A_lt24);
         // Team color defined
@@ -160,17 +157,10 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         //locate_opponent(cvs);
         
         int speedClamp = MyCyclone_Read(A_speedB);
-        sprintf(msg, "Measured ticks: %d (# of ticks)\n", speedClamp);
-//        MyConsole_SendMsg(msg);
         speedClamp = ((speedClamp >> 15) == 1)? speedClamp-65535 : speedClamp;
-        sprintf(msg, "Measured ticks: %d (ticks + or -)\n", speedClamp);
-//        MyConsole_SendMsg(msg);
         cvs->inputs->speed_blocks = (double) -speedClamp*2*M_PI/(4096.0*0.025);
-        sprintf(msg, "Measured speed: %f (cm/s)\n", cvs->inputs->speed_blocks);
-//        MyConsole_SendMsg(msg);
-                
     #endif
-    cvs->inputs->t = (ReadCoreTimer()/(SYS_FREQ/2.0)) - MyMiniProject_tStart; // - cvs->state->competition_start; // time in seconds
+    cvs->inputs->t = (ReadCoreTimer()/(SYS_FREQ/2.0)) - MyMiniProject_tStart; // time in seconds
     while (cvs->inputs->t < cvs->state->lastT) cvs->inputs->t += 107.3741823075;
 }
 

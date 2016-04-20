@@ -169,33 +169,25 @@ void controller_loop(CtrlStruct *cvs) {
     /* Locate the opponent */
     locate_opponent(cvs);
     
-    if(ivs->t >= 5.0)
-    {
         /* Path planning through potential field computation */
         // Choice of the path planning algorithm
             //strategy_objective(cvs);
-        robinsun_main(cvs);
-    //        cvs->state->omegaref[R_ID] = cvs->param->refspeed/.0325;
-    //        cvs->state->omegaref[L_ID] = cvs->param->refspeed/.0325;
-        #ifdef POTENTIAL
-            potential_Field(cvs);
-        #endif
-        #ifdef ASTAR
-            if (cvs->param->ready_start_astar == 1) // If objective
-            {
-                if (cvs->param->Astar_path_active == 0) {
-                    Astar_get_path(cvs);
-                    cvs->param->Astar_path_active = 1; // A path was found and saved
-                }
-                Astar_read_path(cvs);
+    robinsun_main(cvs);
+//        cvs->state->omegaref[R_ID] = cvs->param->refspeed/.0325;
+//        cvs->state->omegaref[L_ID] = cvs->param->refspeed/.0325;
+    #ifdef POTENTIAL
+        potential_Field(cvs);
+    #endif
+    #ifdef ASTAR
+        if (cvs->param->ready_start_astar == 1) // If objective
+        {
+            if (cvs->param->Astar_path_active == 0) {
+                Astar_get_path(cvs);
+                cvs->param->Astar_path_active = 1; // A path was found and saved
             }
-        #endif
-    }
-    else
-    {
-        cvs->state->omegaref[R_ID] = 0.0;
-        cvs->state->omegaref[L_ID] = 0.0;
-    }
+            Astar_read_path(cvs);
+        }
+    #endif
 
     // Constant speed references for wheel calibrations
     #ifdef TEST_ROBINSUN
@@ -231,7 +223,9 @@ void controller_loop(CtrlStruct *cvs) {
     //cvs->state->omegaref[R_ID] = M_PI;
     //cvs->state->omegaref[L_ID] = M_PI;
     double wheels[2];
-    motors_control(cvs, wheels);
+    if(ivs->t != 0.0)
+    {
+        motors_control(cvs, wheels);
     #ifdef MINIBOT
         ovs->wheel_commands[R_ID] = wheels[L_ID];
         ovs->wheel_commands[L_ID] = wheels[R_ID];
@@ -239,6 +233,7 @@ void controller_loop(CtrlStruct *cvs) {
         ovs->wheel_commands[R_ID] = wheels[R_ID];
         ovs->wheel_commands[L_ID] = wheels[L_ID];
     #endif
+    }
 
 //    if(cvs->state->nb_opponents_detected != 0)
 //    {

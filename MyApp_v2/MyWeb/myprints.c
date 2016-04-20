@@ -78,10 +78,24 @@ const char* getProgress(robinsun_competition state, int current_progress)
                case MOVE_BACK_BC:           return "Move backwards (last)";
                default:                     return "Unknown progression";
            }
-       case FISH:           return "NOT IMPLEMENTED LOL";
+       case FISH:
+           switch((fish_catch_t) current_progress)
+           {
+               case GOTO_FC:                return "Going to starting point...";
+               case WAIT_FOR_POSITION_FC:   return "Waiting for starting point.";
+               case POSITION_FC:            return "Taking position for maneuver";
+               case GO_CATCH_FC:            return "Maneuvring backwards";
+               case BRING_OUT_FC:           return "Bringing out the plate";
+               case LOWER_FC:               return "Lowering the plate";
+               case SWEEP_FC:               return "Sweeping across ";
+               case GO_UP_FC:               return "Bring the plate back up";
+               case GO_NET_FC:              return "Going to the net";
+               case BRING_IN_FC:            return "Letting go of the fish";
+               default:                     return "Unknown progression";
+           }
        case PARASOL:        return "You can't CI me";
-       case STOP:           return "What did you expect ?";
-       default:             return "YOU GUESSED IT...";
+       case STOP:           return "Time has run out...";
+       default:             return "I have no idea what I'm doing...";
     }
 }
 
