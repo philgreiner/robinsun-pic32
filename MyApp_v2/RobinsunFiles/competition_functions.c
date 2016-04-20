@@ -8,7 +8,7 @@
 NAMESPACE_INIT(ctrlGr1);
 
 void calibrate(CtrlStruct *cvs) {
-    if(cvs->inputs->ready_signal || cvs->inputs->start_signal)
+    if(cvs->inputs->ready_signal)
     {
         cvs->state->objectives[cvs->state->current_objective] = DONE1;
         cvs->state->position[0] = (cvs->inputs->team_color) ? (-0.09) : (-0.16);
