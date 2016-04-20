@@ -209,7 +209,7 @@ void cabins_close(CtrlStruct *cvs) {
         case GOTO_C:
             // SET GOAL POSITION
             cvs->state->goal_position[0] = -0.5;
-            cvs->state->goal_position[1] = (cvs->inputs->team_color) ? (1.25) : (-1.25);
+            cvs->state->goal_position[1] = (cvs->inputs->team_color) ? (1.2) : (-1.2);
             cvs->state->goal_position[2] = 0;
 
             // ACTIVATE A*
@@ -235,7 +235,7 @@ void cabins_close(CtrlStruct *cvs) {
 
             // MOVE BACKWARDS
             cvs->state->intermediate_goal[0] = -1.1;
-            cvs->state->intermediate_goal[1] = (cvs->inputs->team_color) ? (1.2) : (-1.2);
+            cvs->state->intermediate_goal[1] = (cvs->inputs->team_color) ? (1.15) : (-1.15);
             cvs->state->intermediate_goal[2] = 0;
             gotoPoint(cvs,wheels);
             cvs->state->omegaref[R_ID] = wheels[R_ID];
@@ -719,7 +719,7 @@ void fish_catch(CtrlStruct *cvs) {
             cvs->state->omegaref[L_ID] = wheels[L_ID];
             
             // ACTION IS DONE
-            if ((d < 0.05) && (fabs(delta_theta)*180.0/M_PI < 3.5)) {
+            if ((d < 0.05) && (fabs(delta_theta)*180.0/M_PI < 0.5)) {
                 cvs->state->current_action_progress = BRING_OUT_FC;
                 cvs->state->omegaref[R_ID] = 0.0;
                 cvs->state->omegaref[L_ID] = 0.0;
@@ -757,13 +757,16 @@ void fish_catch(CtrlStruct *cvs) {
             
         case SWEEP_FC:
             cvs->state->omegaref[R_ID] = M_PI;
-            cvs->state->omegaref[L_ID] = 2*M_PI;
+            cvs->state->omegaref[L_ID] = 3*M_PI;
             
-            if(fabs(cvs->state->position[1]) < 0.75) {
+            if(fabs(cvs->inputs->odo_r_speed - cvs->inputs->r_wheel_speed) > M_PI_2 && fabs(cvs->inputs->odo_l_speed - cvs->inputs->l_wheel_speed) > M_PI) {
                 cvs->state->omegaref[R_ID] = 0.0;
                 cvs->state->omegaref[L_ID] = 0.0;
                 cvs->state->errorIntR = 0.0;
                 cvs->state->errorIntL = 0.0;
+                cvs->state->position[0] = .875;
+                cvs->state->position[1] = (cvs->inputs->team_color) ? .715  : (-.71);
+                cvs->state->position[2] = M_PI_2;
                 cvs->outputs->command_fish_vertical = -60;
                 cvs->state->current_action_progress = GO_UP_FC;
                 cvs->state->timer = cvs->inputs->t;
@@ -771,14 +774,14 @@ void fish_catch(CtrlStruct *cvs) {
             break;
             
         case GO_UP_FC:
-            cvs->state->omegaref[R_ID] = 0.0;
-            cvs->state->omegaref[L_ID] = 0.0;
+            cvs->state->omegaref[R_ID] = (cvs->inputs->team_color) ? M_PI : -M_PI;
+            cvs->state->omegaref[L_ID] = (cvs->inputs->team_color) ? M_PI : -M_PI;
             cvs->outputs->command_fish_vertical = -60;
             if(cvs->inputs->t - cvs->state->timer > 1.0) {
                 cvs->state->current_action_progress = LEAVE_SWEEP_FC;
                 cvs->state->intermediate_goal[0] = 0.75;
                 cvs->state->intermediate_goal[1] = (cvs->inputs->team_color) ? (0.6) : (-0.6);
-                cvs->state->intermediate_goal[2] = (cvs->inputs->team_color) ? -M_PI_2 : M_PI_2;
+                cvs->state->intermediate_goal[2] = M_PI_2;
             }
             break;
             

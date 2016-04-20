@@ -5,7 +5,7 @@ const char* getStateName(robinsun_competition state)
 {
    switch (state) 
    {
-       case CALIBRATE:      return "CALIBRATE";
+       case CALIBRATE:      return "Configuration";
        case WAIT_FOR_START1:return "WAIT_FOR_START";
        case BLOCKS_FRONT:   return "BLOCKS_FRONT";
        case CABINS:         return "CABINS";
@@ -24,7 +24,7 @@ const char* getProgress(robinsun_competition state, int current_progress)
     switch(state)
     {
        case CALIBRATE:      
-           return   "CONFIGURE AND CALIBRATE";
+           return   "Configure on LT24";
        case WAIT_FOR_START1:
            return   "REMOVE THE JUMPER MAYBE ?";
        case BLOCKS_FRONT:   
