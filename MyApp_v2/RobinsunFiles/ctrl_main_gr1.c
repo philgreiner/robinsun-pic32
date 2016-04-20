@@ -38,11 +38,11 @@ void controller_init(CtrlStruct *cvs) {
     #ifdef ROBINSUN
         //                  Right: 5.975 kg     Left: 4.6 kg
         // In charge        Right: 9.0 kg       Left: 3.0 kg
-        cvs->param->Kp[L_ID] = -0.0365;//-0.0631;
-        cvs->param->Ki[L_ID] = 2.6883;//2.1572;
+        cvs->param->Kp[L_ID] = -0.0631;
+        cvs->param->Ki[L_ID] = 2.1572;
         cvs->param->Kd[L_ID] = 0.001;
-        cvs->param->Kp[R_ID] = -0.0727;//-0.0548;
-        cvs->param->Ki[R_ID] = 1.9641;//2.3232;
+        cvs->param->Kp[R_ID] = -0.0548;
+        cvs->param->Ki[R_ID] = 2.3232;
         cvs->param->Kd[R_ID] = 0.001;
     #else
         cvs->param->Kp = -0.031;
@@ -103,6 +103,10 @@ void controller_init(CtrlStruct *cvs) {
     cvs->inputs->u_switch[R_ID] = 1;
     cvs->inputs->u_switch[L_ID] = 1;
     cvs->state->opponent_timer = -42.0;
+    
+    // Initializing last valid Astar position
+    cvs->state->last_astarPos[0] = 0.0;
+    cvs->state->last_astarPos[1] = (cvs->inputs->team_color) ? (1.0) : (-1.0);
 }
 
 /*! \brief controller loop (called eveiry timestep)
@@ -148,10 +152,19 @@ void controller_loop(CtrlStruct *cvs) {
     cvs->state->avSpeedR = cvs->state->avSpeedR / 10.0;
     cvs->state->avSpeedL = cvs->state->avSpeedL / 10.0;
  
-    
+    // Retrieve sonar values
     for (j = 0; j < 6; j++) {
         //cvs->state->avSonar[j] = ((cvs->state->avSonar[j]/10.0) > 200.0) ? (cvs->state->prevAvSonar[j]) : (cvs->state->avSonar[j]/10.0);
         cvs->state->avSonar[j] = ((cvs->state->avSonar[j]/10.0) < 5.0) ? (cvs->state->prevAvSonar[j]) : (cvs->state->avSonar[j]/10.0);
+    }
+    
+    // Save last valid Astar position
+    int x_astar = (int) (cvs->state->position[0] * 20 + 21);                      
+	int y_astar = (int) (cvs->state->position[1] * 20 + 31);
+    
+    if(cvs->param->game_map[x_astar][y_astar]) {
+        cvs->state->last_astarPos[0] = (double) (x_astar - 21.0)/20.0;
+        cvs->state->last_astarPos[1] = (double) (y_astar - 31.0)/20.0;
     }
 
     // Choice of the localization method
@@ -181,9 +194,8 @@ void controller_loop(CtrlStruct *cvs) {
     #ifdef ASTAR
         if (cvs->param->ready_start_astar == 1) // If objective
         {
-            if (cvs->param->Astar_path_active == 0) {
+            if (!cvs->param->Astar_path_active) {
                 Astar_get_path(cvs);
-                cvs->param->Astar_path_active = 1; // A path was found and saved
             }
             Astar_read_path(cvs);
         }
