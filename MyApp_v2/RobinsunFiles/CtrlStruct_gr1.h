@@ -49,6 +49,7 @@ typedef struct CtrlState
     double prev_theta;
 	double lastT_pot;
 	double lastT_astar;
+    double last_astarPos[2];
 
 	//Kalman filter parameters
 	double covariance[3][3];

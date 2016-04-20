@@ -114,10 +114,16 @@ void Astar_get_path(CtrlStruct *cvs)
 					y_f_min = yj + y - 1;
 				} //end if
 
-		// When all the adjacent node are in the closed_list, take the one that has the lowest F
-		if (counter == 9)
-			return;
+		if (counter == 9) {
+            double wheels[2];
+			cvs->state->intermediate_goal[0] = cvs->state->last_astarPos[0];
+            cvs->state->intermediate_goal[1] = cvs->state->last_astarPos[1];
 
+            gotoPoint(cvs,wheels);
+            cvs->state->omegaref[R_ID] = wheels[R_ID];
+            cvs->state->omegaref[L_ID] = wheels[L_ID];
+            return;
+        }
 		// Step 2.6 Change value of x and y and save the chosen node value in close list
 		x = x_f_min;
 		y = y_f_min;
@@ -154,7 +160,8 @@ void Astar_get_path(CtrlStruct *cvs)
 		check_node = astar_parent_table[x_check_node][y_check_node]; // new node to check is the mother node
 	}
 	cvs->param->path[cvs->param->index_path] = check_node;		// put the intial starting_node in the path array
-
+                
+    cvs->param->Astar_path_active = 1; // A path was found and saved
 	cvs->param->index_path -= 3;
 }//end function
 
