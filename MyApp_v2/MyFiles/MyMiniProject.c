@@ -113,8 +113,8 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         cvs->inputs->odo_l_speed = (double) speedOdoL*2*M_PI/(8192*.025);
     
         unsigned int ADC = MyCyclone_Read(A_adc);
-        cvs->inputs->irR = ((float) ((ADC & 0xff00) >> 8)) * 3.3/255.0;
-        cvs->inputs->irL = ((float) (ADC & 0x00ff))        * 3.3/255.0;
+        cvs->inputs->irL = ((float) ((ADC & 0xff00) >> 8)) * 3.3/255.0;
+        cvs->inputs->irR = ((float) (ADC & 0x00ff))        * 3.3/255.0;
         
         unsigned int lt24 = MyCyclone_Read(A_lt24);
         // Team color defined

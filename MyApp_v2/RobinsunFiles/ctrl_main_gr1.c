@@ -194,10 +194,10 @@ void controller_loop(CtrlStruct *cvs) {
     #ifdef ASTAR
         if (cvs->param->ready_start_astar == 1) // If objective
         {
-            if (!cvs->param->Astar_path_active) {
+            if (!cvs->param->Astar_path_active)
                 Astar_get_path(cvs);
-            }
-            Astar_read_path(cvs);
+            if(cvs->param->Astar_path_active)
+                Astar_read_path(cvs);
         }
     #endif
 

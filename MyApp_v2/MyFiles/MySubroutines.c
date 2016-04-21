@@ -52,13 +52,13 @@ void gotoPoint(CtrlStruct *cvs, double *wheels)
         if(-M_PI_2 <= delta_theta && M_PI_2 >= delta_theta) // Go forward
         {
             v = (fabs(delta_theta) > 45.0*M_PI/180.0) ? 0.0 : max(-lin_sat, min(lin_sat, (1.5 * dist)));
-            omega = max(-theta_sat, min(theta_sat, (0.25 * delta_theta) + 0.45*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
+            omega = max(-theta_sat, min(theta_sat, (0.25 * delta_theta) + 0.3*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
         }
         else
         {
             delta_theta = (delta_theta < 0) ? delta_theta + M_PI : delta_theta - M_PI;
             v = (fabs(delta_theta) > 45.0*M_PI/180.0) ? 0.0 : -max(-lin_sat, min(lin_sat, (1.5 * dist)));
-            omega = max(-theta_sat, min(theta_sat, (0.25 * delta_theta) + 0.45*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
+            omega = max(-theta_sat, min(theta_sat, (0.25 * delta_theta) + 0.3*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
         }
     }
     else    // Orientation to objective
@@ -69,10 +69,10 @@ void gotoPoint(CtrlStruct *cvs, double *wheels)
 //        omega = 0.3 * delta_theta;
 //        omega = (omega > 0.15*M_PI_2) ? (0.15*M_PI_2) : (omega);
 //        omega = (omega < -0.15*M_PI_2) ? (-0.15*M_PI_2) : (omega);
-        if(fabs(delta_theta)*180.0/M_PI > 22.5)
-            omega = max(-theta_sat, min(theta_sat, (0.375 * delta_theta)));
-        else
-            omega = max(-theta_sat, min(theta_sat, (0.25 * delta_theta) + 0.45*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
+//        if(fabs(delta_theta)*180.0/M_PI > 22.5)
+//            omega = max(-theta_sat, min(theta_sat, (0.375 * delta_theta)));
+//        else
+            omega = max(-theta_sat, min(theta_sat, (0.25 * delta_theta) + 0.3*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
     }
     
     // Check if opponent is on trajectory
@@ -104,6 +104,8 @@ void gotoPoint(CtrlStruct *cvs, double *wheels)
     {
         cvs->state->opponent_timer = -42.0;
         cvs->state->objectives[cvs->state->current_objective] = DELAYED;
+        cvs->param->ready_start_astar = 0;
+        cvs->param->Astar_path_active = 0;
     }
     if(cvs->state->nb_opponents_detected == 0)
         cvs->state->opponent_timer = -42.0;

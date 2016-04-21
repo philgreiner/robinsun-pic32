@@ -106,15 +106,16 @@ void Astar_get_path(CtrlStruct *cvs)
 
 		for (xj = 0; xj < 3; xj++)
 			for (yj = 0; yj < 3; yj++)
-				if (astar_closed_list[(x + xj - 1)][(yj + y - 1)] != empty) counter++;	// Avoid to choose its parent node
+				if (astar_closed_list[(x + xj - 1)][(yj + y - 1)] != empty || !cvs->param->game_map[(x + xj - 1)][(yj + y - 1)]) counter++;	// Avoid to choose its parent node
 				else if (F[xj][yj] != empty && minimum >= F[xj][yj])
 				{
 					minimum = F[xj][yj];
 					x_f_min = xj + x - 1;
 					y_f_min = yj + y - 1;
 				} //end if
+                else  counter++;
 
-		if (counter == 9) {
+		if (counter > 8 || minimum == INT_MAX) {
             double wheels[2];
 			cvs->state->intermediate_goal[0] = cvs->state->last_astarPos[0];
             cvs->state->intermediate_goal[1] = cvs->state->last_astarPos[1];
@@ -162,7 +163,7 @@ void Astar_get_path(CtrlStruct *cvs)
 	cvs->param->path[cvs->param->index_path] = check_node;		// put the intial starting_node in the path array
                 
     cvs->param->Astar_path_active = 1; // A path was found and saved
-	cvs->param->index_path -= 3;
+	cvs->param->index_path -= 1;
 }//end function
 
 /*
