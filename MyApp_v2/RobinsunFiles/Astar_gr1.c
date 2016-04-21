@@ -163,7 +163,7 @@ void Astar_get_path(CtrlStruct *cvs)
 	cvs->param->path[cvs->param->index_path] = check_node;		// put the intial starting_node in the path array
                 
     cvs->param->Astar_path_active = 1; // A path was found and saved
-	cvs->param->index_path -= 1;
+	//cvs->param->index_path -= 1;
 }//end function
 
 /*

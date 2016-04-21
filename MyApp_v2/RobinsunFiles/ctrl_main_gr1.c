@@ -37,13 +37,12 @@ void controller_init(CtrlStruct *cvs) {
     // Controller parameters
     #ifdef ROBINSUN
         //                  Right: 5.975 kg     Left: 4.6 kg
-        // In charge        Right: 9.0 kg       Left: 3.0 kg
-        cvs->param->Kp[L_ID] = -0.0631;
-        cvs->param->Ki[L_ID] = 2.1572;
-        cvs->param->Kd[L_ID] = 0.001;
-        cvs->param->Kp[R_ID] = -0.0548;
-        cvs->param->Ki[R_ID] = 2.3232;
-        cvs->param->Kd[R_ID] = 0.001;
+        cvs->param->Kp[L_ID] = 0.1769;//-0.0631;
+        cvs->param->Ki[L_ID] = 6.9572;//2.1572;
+        cvs->param->Kd[L_ID] = 0.008;//0.001;
+        cvs->param->Kp[R_ID] = 0.0373;//-0.0548;
+        cvs->param->Ki[R_ID] = 4.1646;//2.3232;
+        cvs->param->Kd[R_ID] = 0.002;//0.001;
     #else
         cvs->param->Kp = -0.031;
         cvs->param->Ki = 2.1729;
@@ -120,9 +119,9 @@ void controller_loop(CtrlStruct *cvs) {
     ivs = cvs->inputs;
     ovs = cvs->outputs;
 
-    if (fabs(ivs->r_wheel_speed - cvs->state->lastMesR[0]) > 3 * M_PI)
+    if (fabs(ivs->r_wheel_speed)*0.0325 > .7)
         ivs->r_wheel_speed = cvs->state->lastMesR[0];
-    if (fabs(ivs->l_wheel_speed - cvs->state->lastMesL[0]) > 3 * M_PI)
+    if (fabs(ivs->l_wheel_speed)*0.0325 > .7)
         ivs->l_wheel_speed = cvs->state->lastMesL[0];
 
     // Computation of the average speed
@@ -151,7 +150,11 @@ void controller_loop(CtrlStruct *cvs) {
 
     cvs->state->avSpeedR = cvs->state->avSpeedR / 10.0;
     cvs->state->avSpeedL = cvs->state->avSpeedL / 10.0;
- 
+    if(fabs(ivs->r_wheel_speed - cvs->state->avSpeedR) > 3*M_PI)
+        ivs->r_wheel_speed = cvs->state->lastMesR[1];
+    if(fabs(ivs->l_wheel_speed - cvs->state->avSpeedL) > 3*M_PI)
+        ivs->l_wheel_speed = cvs->state->lastMesL[1];
+    
     // Retrieve sonar values
     for (j = 0; j < 6; j++) {
         //cvs->state->avSonar[j] = ((cvs->state->avSonar[j]/10.0) > 200.0) ? (cvs->state->prevAvSonar[j]) : (cvs->state->avSonar[j]/10.0);
@@ -181,7 +184,7 @@ void controller_loop(CtrlStruct *cvs) {
 
     /* Locate the opponent */
     locate_opponent(cvs);
-    
+   
         /* Path planning through potential field computation */
         // Choice of the path planning algorithm
             //strategy_objective(cvs);

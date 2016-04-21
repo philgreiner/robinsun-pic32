@@ -205,7 +205,7 @@ int isMeasureRelevant(CtrlStruct *cvs, double xFound, double yFound)
 
 	double central_wall_min_x = -0.3;
 	double central_wall_max_x = 0.4;
-	double central_wall_max_y = 0.1;
+	double central_wall_max_y = 0.15;
 
 	 if ((fabs(xFound) > external_walls_max_x) || (fabs(yFound) > external_walls_max_y)) // if the obstacle detected is located beyond the external walls
 	 	return 0;

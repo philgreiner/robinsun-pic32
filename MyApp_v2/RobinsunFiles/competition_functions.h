@@ -34,7 +34,7 @@ typedef enum {GOTO_FC, WAIT_FOR_POSITION_FC, POSITION_FC, GO_CATCH_FC, PARK_FC, 
 } fish_catch_t;
 void fish_catch(CtrlStruct *cvs);
 
-typedef enum {GOTO_BC, WAIT_FOR_POSITION_BC, TURN_BC, FORWARD_BC, CLAMP_BC, BACKWARDS_BC, BRING_BC, UNCLAMP_BC, MOVE_BACK_BC
+typedef enum {GOTO_BC, WAIT_FOR_POSITION_BC, CALIBRATE_BC, POSITION_BC, FORWARD_BC, CLAMP_BC, BACKWARDS_W1_BC, BACKWARDS_W2_BC, BRING_BC, UNCLAMP_BC, MOVE_BACK_BC
 } blocks_cabins_t;
 void blocks_cabins(CtrlStruct *cvs);
 void parasol_open(CtrlStruct *cvs);

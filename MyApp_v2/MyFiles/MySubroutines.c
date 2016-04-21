@@ -49,16 +49,17 @@ void gotoPoint(CtrlStruct *cvs, double *wheels)
     double lin_sat = 0.4, theta_sat = 0.19;
     if(dist > 0.035) // Go to point
     {
+        if(dist < 0.07) dist = 0.07;
         if(-M_PI_2 <= delta_theta && M_PI_2 >= delta_theta) // Go forward
         {
             v = (fabs(delta_theta) > 45.0*M_PI/180.0) ? 0.0 : max(-lin_sat, min(lin_sat, (1.5 * dist)));
-            omega = max(-theta_sat, min(theta_sat, (0.25 * delta_theta) + 0.3*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
+            omega = max(-theta_sat, min(theta_sat, (0.25 * delta_theta) + 0.45*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
         }
         else
         {
             delta_theta = (delta_theta < 0) ? delta_theta + M_PI : delta_theta - M_PI;
             v = (fabs(delta_theta) > 45.0*M_PI/180.0) ? 0.0 : -max(-lin_sat, min(lin_sat, (1.5 * dist)));
-            omega = max(-theta_sat, min(theta_sat, (0.25 * delta_theta) + 0.3*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
+            omega = max(-theta_sat, min(theta_sat, (0.25 * delta_theta) + 0.45*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
         }
     }
     else    // Orientation to objective
@@ -72,7 +73,7 @@ void gotoPoint(CtrlStruct *cvs, double *wheels)
 //        if(fabs(delta_theta)*180.0/M_PI > 22.5)
 //            omega = max(-theta_sat, min(theta_sat, (0.375 * delta_theta)));
 //        else
-            omega = max(-theta_sat, min(theta_sat, (0.25 * delta_theta) + 0.3*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
+            omega = max(-theta_sat, min(theta_sat, (0.25 * delta_theta) + 0.07*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
     }
     
     // Check if opponent is on trajectory
