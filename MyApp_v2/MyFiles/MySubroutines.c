@@ -113,6 +113,10 @@ void gotoPoint(CtrlStruct *cvs, double *wheels)
     
     wheels[R_ID] = (v + omega)/0.0325;
     wheels[L_ID] = (v - omega)/0.0325;
+    
+    wheels[R_ID] = cvs->param->gotoPointSpeed ? wheels[R_ID]/2.0 : wheels[R_ID];
+    wheels[L_ID] = cvs->param->gotoPointSpeed ? wheels[L_ID]/2.0 : wheels[L_ID];
+    
     cvs->state->errorAngle = delta_theta;
     cvs->state->prev_theta = theta;
 }

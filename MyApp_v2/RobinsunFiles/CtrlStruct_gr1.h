@@ -22,7 +22,7 @@
 
 NAMESPACE_INIT(ctrlGr1);
 
-typedef enum {CALIBRATE, WAIT_FOR_START1, BLOCKS_FRONT, CABINS, BLOCKS_CABINS, BLOCKS_DUNE_1, FISH, BLOCKS_DUNE_2, PARASOL, STOP} robinsun_competition;
+typedef enum {CALIBRATE, WAIT_FOR_START1, BLOCKS_DUNE_1, CABINS, BLOCKS_CABINS, FISH, BLOCKS_FRONT, BLOCKS_DUNE_2, PARASOL, STOP} robinsun_competition;
 typedef enum {NOTDONE1, DELAYED, DONE1} state;
 
 typedef struct CtrlState
@@ -72,6 +72,7 @@ typedef struct CtrlParam{
 	double beacons[6];
 
     double refspeed;
+    int gotoPointSpeed; // 0 = default; 1 = slower;
 	// Non-deterministic parameters of the motor drive and the wheel-floor interaction
 	double kr;
 	double kl;

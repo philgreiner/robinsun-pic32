@@ -89,6 +89,7 @@ void robinsun_next(CtrlStruct *cvs) {
         for(i = 0; i < 8; i++)
             if(cvs->state->objectives[i] == NOTDONE1) {
                 cvs->state->current_objective = (robinsun_competition) i;
+                cvs->state->objective_timer = cvs->inputs->t;
                 return;
             }
         
@@ -96,12 +97,14 @@ void robinsun_next(CtrlStruct *cvs) {
         for(i = 0; i < 8; i++)
             if(cvs->state->objectives[i] == DELAYED) {
                 cvs->state->current_objective = (robinsun_competition) i;
+                cvs->state->objective_timer = cvs->inputs->t;
                 return;
             }
         
         // IF EVERYTHING IS DONE, TAKE MORE BLOCKS
         cvs->state->objectives[BLOCKS_DUNE_2] = NOTDONE1;
         cvs->state->current_objective = BLOCKS_DUNE_2;
+        cvs->state->objective_timer = cvs->inputs->t;
     }
 }
 

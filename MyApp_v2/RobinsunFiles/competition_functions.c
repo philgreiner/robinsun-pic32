@@ -11,9 +11,9 @@ void calibrate(CtrlStruct *cvs) {
     if(cvs->inputs->ready_signal || cvs->inputs->start_signal)
     {
         cvs->state->objectives[cvs->state->current_objective] = DONE1;
-        cvs->state->position[0] = (cvs->inputs->team_color) ? (-0.09) : (-0.16);
+        cvs->state->position[0] = (cvs->inputs->team_color) ? (-0.09) : (-0.09);
         cvs->state->position[1] = (cvs->inputs->team_color) ? (1.34) : (-1.34);
-        cvs->state->position[2] = (cvs->inputs->team_color) ? (-M_PI) : (0);
+        cvs->state->position[2] = (cvs->inputs->team_color) ? (-M_PI) : (-M_PI);
     }
 }
 
@@ -137,7 +137,7 @@ void blocks_front(CtrlStruct *cvs) {
             gotoPoint(cvs,wheels);
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
-            
+
             // ACTION IS DONE
             if (d < 0.05)
             {
@@ -399,6 +399,7 @@ void blocks_dune_1(CtrlStruct *cvs) {
             break;
             
         case MOVE_BACK_BD1:
+            cvs->param->gotoPointSpeed = 1;
             cvs->state->intermediate_goal[0] = -0.5; 
             cvs->state->intermediate_goal[1] = (cvs->inputs->team_color) ? 0.85 : -0.85; 
             cvs->state->intermediate_goal[2] = (cvs->inputs->team_color) ? (0.8*M_PI_2) : (-1.2*M_PI_2);
@@ -420,37 +421,52 @@ void blocks_dune_1(CtrlStruct *cvs) {
             
         case POS_BD1:
             // TURN OFF A*
-            cvs->param->ready_start_astar = 1;
-            cvs->param->Astar_path_active = 0;
+//            cvs->param->ready_start_astar = 1;
+//            cvs->param->Astar_path_active = 0;
             
-            cvs->state->goal_position[0] = 0.1;
-            cvs->state->goal_position[1] = cvs->inputs->team_color ? 0.5 : -0.5;
-            cvs->state->goal_position[2] = cvs->inputs->team_color ? -M_PI_2 : M_PI_2;
-            
-//            cvs->state->intermediate_goal[0] = -0.35; 
-//            cvs->state->intermediate_goal[1] = (cvs->inputs->team_color) ? (0.8) : (-0.8); 
-//            cvs->state->intermediate_goal[2] = (cvs->inputs->team_color) ? (-M_PI_4) : (M_PI_4);
-//            d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
-//            delta_theta = fabs(cvs->state->position[2] - cvs->state->intermediate_goal[2]);
-//            delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
+//            cvs->state->goal_position[0] = 0.1;
+//            cvs->state->goal_position[1] = cvs->inputs->team_color ? 0.5 : -0.5;
+//            cvs->state->goal_position[2] = cvs->inputs->team_color ? -M_PI_2 : M_PI_2;
 //            
-//            gotoPoint(cvs,wheels);
-//            cvs->state->omegaref[R_ID] = wheels[R_ID];
-//            cvs->state->omegaref[L_ID] = wheels[L_ID];
+            cvs->state->intermediate_goal[0] = -0.35; 
+            cvs->state->intermediate_goal[1] = (cvs->inputs->team_color) ? (1.2) : (-1.2); 
+            cvs->state->intermediate_goal[2] = (cvs->inputs->team_color) ? (-M_PI_4) : (M_PI_4);
+            d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
+            delta_theta = fabs(cvs->state->position[2] - cvs->state->intermediate_goal[2]);
+            delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
+            
+            gotoPoint(cvs,wheels);
+            cvs->state->omegaref[R_ID] = wheels[R_ID];
+            cvs->state->omegaref[L_ID] = wheels[L_ID];
             
             // ACTION IS DONE
-//            if ((d < 0.05) && (fabs(delta_theta)*180.0/M_PI < 3.5))
+            if ((d < 0.05) && (fabs(delta_theta)*180.0/M_PI < 3.5))
                 cvs->state->current_action_progress = BRING_BD1;
             break;
             
         case BRING_BD1:
             // GO TO UNCLAMP
-            if (!cvs->param->ready_start_astar)
+            cvs->state->intermediate_goal[0] = 0.1;
+            cvs->state->intermediate_goal[1] = cvs->inputs->team_color ? 0.5 : -0.5;
+            cvs->state->intermediate_goal[2] = cvs->inputs->team_color ? -M_PI_2 : M_PI_2;
+            
+            d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
+            delta_theta = fabs(cvs->state->position[2] - cvs->state->intermediate_goal[2]);
+            delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
+            
+            gotoPoint(cvs,wheels);
+            cvs->state->omegaref[R_ID] = wheels[R_ID];
+            cvs->state->omegaref[L_ID] = wheels[L_ID];
+            
+            // ACTION IS DONE
+            if ((d < 0.05) && (fabs(delta_theta)*180.0/M_PI < 3.5))
+//            if (!cvs->param->ready_start_astar)
                 cvs->state->current_action_progress = UNCLAMP_BD1;
             break;
             
         case UNCLAMP_BD1:
             // TURN OFF A*
+            cvs->param->gotoPointSpeed = 0;
             cvs->param->ready_start_astar = 0;
 
             // DON'T MOVE
@@ -617,7 +633,8 @@ void blocks_cabins(CtrlStruct *cvs) {
             break;
             
         case BACKWARDS_W1_BC:
-            // TURN OFF A*
+            // TURN ON A*
+            cvs->param->gotoPointSpeed = 1;
             cvs->param->ready_start_astar = 1;
             cvs->param->Astar_path_active = 0;
 
@@ -665,6 +682,7 @@ void blocks_cabins(CtrlStruct *cvs) {
             break;
 
         case BRING_BC:
+            cvs->param->gotoPointSpeed = 0;
             cvs->state->intermediate_goal[0] = 0.0; 
             cvs->state->intermediate_goal[1] = (cvs->inputs->team_color) ? (0.5) : (-0.5); 
             cvs->state->intermediate_goal[2] = (cvs->inputs->team_color) ? (-M_PI_2) : (M_PI_2); 
@@ -858,22 +876,35 @@ void fish_catch(CtrlStruct *cvs) {
             if(fabs(cvs->inputs->odo_r_speed - cvs->inputs->r_wheel_speed) > M_PI && fabs(cvs->inputs->odo_l_speed - cvs->inputs->l_wheel_speed) > M_PI && (cvs->inputs->t - cvs->state->timer > 2)) {
                 cvs->state->omegaref[R_ID] = 0.0;
                 cvs->state->omegaref[L_ID] = 0.0;
-                cvs->state->errorIntR = 0.0;
-                cvs->state->errorIntL = 0.0;
-                cvs->state->position[0] = .875;
-                cvs->state->position[1] = (cvs->inputs->team_color) ? .715  : (-.71);
-                cvs->state->position[2] = M_PI_2;
-                cvs->outputs->command_fish_vertical = -60;
+//                cvs->state->errorIntR = 0.0;
+//                cvs->state->errorIntL = 0.0;
+//                cvs->state->position[0] = .875;
+//                cvs->state->position[1] = (cvs->inputs->team_color) ? .715  : (-.71);
+//                cvs->state->position[2] = M_PI_2;
+//                cvs->outputs->command_fish_vertical = -60;
+                cvs->state->current_action_progress = BACKWARDS_FC;
+                cvs->state->timer = cvs->inputs->t;
+            }
+            break;
+            
+        case BACKWARDS_FC:
+            cvs->state->omegaref[R_ID] = (cvs->inputs->team_color) ? M_PI : -M_PI;
+            cvs->state->omegaref[L_ID] = (cvs->inputs->team_color) ? M_PI : -M_PI;
+            
+            if(cvs->inputs->t - cvs->state->timer > 3) {
                 cvs->state->current_action_progress = GO_UP_FC;
                 cvs->state->timer = cvs->inputs->t;
             }
             break;
             
         case GO_UP_FC:
-            cvs->state->omegaref[R_ID] = (cvs->inputs->team_color) ? M_PI : -M_PI;
-            cvs->state->omegaref[L_ID] = (cvs->inputs->team_color) ? M_PI : -M_PI;
+//            cvs->state->omegaref[R_ID] = (cvs->inputs->team_color) ? M_PI : -M_PI;
+//            cvs->state->omegaref[L_ID] = (cvs->inputs->team_color) ? M_PI : -M_PI;
+            cvs->state->omegaref[R_ID] = 0.0;
+            cvs->state->omegaref[L_ID] = 0.0;
+            
             cvs->outputs->command_fish_vertical = -60;
-            if(cvs->inputs->t - cvs->state->timer > 3) {
+            if(cvs->inputs->t - cvs->state->timer > 2) {
                 cvs->state->current_action_progress = SOMEWHAT_IN_FC;
                 cvs->state->timer = cvs->inputs->t;
             }
@@ -883,15 +914,16 @@ void fish_catch(CtrlStruct *cvs) {
             cvs->outputs->command_fish_horizontal = -25;
             cvs->outputs->command_fish_vertical = -50;
             
-            if(cvs->inputs->t - cvs->state->timer > 2)  {
+            if(cvs->inputs->t - cvs->state->timer > 1)  {
                 cvs->state->current_action_progress = LEAVE_SWEEP_FC;
                 cvs->state->intermediate_goal[0] = 0.75;
-                cvs->state->intermediate_goal[1] = (cvs->inputs->team_color) ? (0.5) : (-0.5);
-                cvs->state->intermediate_goal[2] = M_PI;
+                cvs->state->intermediate_goal[1] = (cvs->inputs->team_color) ? (0.7) : (-0.7);
+                cvs->state->intermediate_goal[2] = (cvs->inputs->team_color) ? -0.95*M_PI_2 : 0.95*M_PI_2;
             }
             break;
             
         case LEAVE_SWEEP_FC:
+            cvs->param->gotoPointSpeed = 1;
             d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
             delta_theta = fabs(cvs->state->position[2] - cvs->state->intermediate_goal[2]);
             delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
@@ -900,7 +932,7 @@ void fish_catch(CtrlStruct *cvs) {
             cvs->state->omegaref[R_ID] = wheels[R_ID];
             cvs->state->omegaref[L_ID] = wheels[L_ID];
             
-            if((d < 0.05) && (fabs(delta_theta)*180.0/M_PI < 3.5)) {
+            if((d < 0.07) && (fabs(delta_theta)*180.0/M_PI < 5)) {
                 cvs->state->current_action_progress = GO_NET_FC;
                 cvs->state->intermediate_goal[0] = 0.86;
                 cvs->state->intermediate_goal[1] = (cvs->inputs->team_color) ? (0.3) : (-0.3);
@@ -928,6 +960,7 @@ void fish_catch(CtrlStruct *cvs) {
             break;
             
         case BRING_IN_FC:
+            cvs->param->gotoPointSpeed = 0;
             cvs->outputs->command_fish_vertical = -50;
             cvs->outputs->command_fish_horizontal = -55;
 

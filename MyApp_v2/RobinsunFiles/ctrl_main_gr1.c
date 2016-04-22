@@ -106,6 +106,8 @@ void controller_init(CtrlStruct *cvs) {
     // Initializing last valid Astar position
     cvs->state->last_astarPos[0] = 0.0;
     cvs->state->last_astarPos[1] = (cvs->inputs->team_color) ? (1.0) : (-1.0);
+    
+    cvs->param->gotoPointSpeed = 0;
 }
 
 /*! \brief controller loop (called eveiry timestep)
