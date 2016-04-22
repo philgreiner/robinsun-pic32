@@ -165,7 +165,7 @@ void controller_loop(CtrlStruct *cvs) {
     int x_astar = (int) (cvs->state->position[0] * 20 + 21);                      
 	int y_astar = (int) (cvs->state->position[1] * 20 + 31);
     
-    if(cvs->param->game_map[x_astar][y_astar]) {
+    if(cvs->param->game_map[x_astar][y_astar] && cvs->state->position[0] > -0.7) {
         cvs->state->last_astarPos[0] = (double) (x_astar - 21.0)/20.0;
         cvs->state->last_astarPos[1] = (double) (y_astar - 31.0)/20.0;
     }
