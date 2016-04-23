@@ -23,6 +23,7 @@ void controller_init(CtrlStruct *cvs) {
     cvs->state->errorIntL = 0.0;
     cvs->state->avSpeedR = 0.0;
     cvs->state->avSpeedL = 0.0;
+    cvs->inputs->mode = 0;
 
     int zeta;
     for (zeta = 0; zeta < 10; zeta++) {
@@ -37,17 +38,32 @@ void controller_init(CtrlStruct *cvs) {
     // Controller parameters
     #ifdef ROBINSUN
         //                  Right: 5.975 kg     Left: 4.6 kg
-        cvs->param->Kp[L_ID] = 0.1769;//-0.0631;
-        cvs->param->Ki[L_ID] = 6.9572;//2.1572;
-        cvs->param->Kd[L_ID] = 0.008;//0.001;
-        cvs->param->Kp[R_ID] = 0.0373;//-0.0548;
-        cvs->param->Ki[R_ID] = 4.1646;//2.3232;
-        cvs->param->Kd[R_ID] = 0.002;//0.001;
+        cvs->param->Kp[L_ID] = -0.0631;
+        cvs->param->Ki[L_ID] = 2.1572;
+        cvs->param->Kd[L_ID] = 0.008;
+        cvs->param->Kp[R_ID] = -0.0487;
+        cvs->param->Ki[R_ID] = 2.4439;
+        cvs->param->Kd[R_ID] = 0.001;
     #else
         cvs->param->Kp = -0.031;
         cvs->param->Ki = 2.1729;
     #endif
-
+    
+    cvs->param->linsatv = 0.5;
+    cvs->param->linsatw = 0.0;
+    cvs->param->angsatv = 0.09;
+    cvs->param->angsatw = 0.15;
+    cvs->param->kpangv = 0.25;
+    cvs->param->kpangw = 0.5;
+    cvs->param->kdangv = 0.45;
+    cvs->param->kdangw = 0.17;
+    cvs->param->kplin = 1.5;
+    cvs->param->distmin = 0.15;
+    cvs->param->minspeed = .30;
+    cvs->param->anglev = 45;
+    cvs->param->refangle = 0;
+    cvs->param->xref = -0.16;
+    cvs->param->yref = -1.34;
     // Kalman filter uncertainties
     #ifdef KALMAN // Using Decawave
         cvs->param->kr = 1; // FIND APPROPRIATE VALUES !
@@ -121,10 +137,14 @@ void controller_loop(CtrlStruct *cvs) {
     ivs = cvs->inputs;
     ovs = cvs->outputs;
 
-    if (fabs(ivs->r_wheel_speed)*0.0325 > .7)
+    if (fabs(ivs->r_wheel_speed)*0.0325 > .9)
+    {
         ivs->r_wheel_speed = cvs->state->lastMesR[0];
-    if (fabs(ivs->l_wheel_speed)*0.0325 > .7)
+    }
+    if (fabs(ivs->l_wheel_speed)*0.0325 > .9)
+    {
         ivs->l_wheel_speed = cvs->state->lastMesL[0];
+    }
 
     // Computation of the average speed
     int i, j;
@@ -152,10 +172,14 @@ void controller_loop(CtrlStruct *cvs) {
 
     cvs->state->avSpeedR = cvs->state->avSpeedR / 10.0;
     cvs->state->avSpeedL = cvs->state->avSpeedL / 10.0;
-    if(fabs(ivs->r_wheel_speed - cvs->state->avSpeedR) > 3*M_PI)
+    if(fabs(ivs->r_wheel_speed - cvs->state->avSpeedR) > 6*M_PI)
+    {
         ivs->r_wheel_speed = cvs->state->lastMesR[1];
-    if(fabs(ivs->l_wheel_speed - cvs->state->avSpeedL) > 3*M_PI)
+    }
+    if(fabs(ivs->l_wheel_speed - cvs->state->avSpeedL) > 6*M_PI)
+    {
         ivs->l_wheel_speed = cvs->state->lastMesL[1];
+    }
     
     // Retrieve sonar values
     for (j = 0; j < 6; j++) {
@@ -235,6 +259,20 @@ void controller_loop(CtrlStruct *cvs) {
             cvs->state->omegaref[L_ID] = 0;
         }
     #endif
+
+//    if(cvs->inputs->start_signal) {
+//            cvs->state->intermediate_goal[0] = cvs->param->xref; 
+//            cvs->state->intermediate_goal[1] = cvs->param->yref; 
+//            cvs->state->intermediate_goal[2] = cvs->param->refangle*M_PI/180.0;
+//            double x = cvs->state->position[0], y = cvs->state->position[1]; 
+//            double wheels[2], d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
+//            double delta_theta = fabs(cvs->state->position[2] - cvs->state->intermediate_goal[2]);
+//            delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
+//            
+//            gotoPoint(cvs,wheels);
+//            cvs->state->omegaref[R_ID] = wheels[R_ID];
+//            cvs->state->omegaref[L_ID] = wheels[L_ID];
+//    }
 
     /* Computation of the motor voltages */
     //cvs->state->omegaref[R_ID] = M_PI;

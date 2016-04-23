@@ -5,11 +5,12 @@
 <p id="top"> To modify the values of the controller parameters, just type in the desired values in the corresponding fields. Then, click on 'Update value' to update the value.</p>
 <p> After your modifications are finished, don't hesitate to go to <a href="/charts.htm"> the charts page</a> to visualize the live results. </p>
 <form method="post" id="form2">
+<h2> PID Controller (low level) </h2>
 <table id="autocontrol">
 	<tr>
-		<th colspan="2"> Pi Parameters (left) </th>
+		<th colspan="2"> PID Parameters (left) </th>
 		<th></th>
-		<th colspan="2"> PI Parameters (right) </th>
+		<th colspan="2"> PID Parameters (right) </th>
 	</tr>
 	<tr>
 		<td> Kp left </td>
@@ -25,12 +26,83 @@
 		<td> Ki right</td>
 		<td> <input type="text" name="kiright" id="kiright" value="~kiright~"> </td>
 	</tr>
+	<tr>
+		<td> Kd left</td>
+		<td> <input type="text" name="kdleft" id="kdleft" value="~kdleft~"> </td>
+		<td class="mid"> </td>
+		<td> Kd right</td>
+		<td> <input type="text" name="kdright" id="kdright" value="~kdright~"> </td>
+	</tr>
 </table>
 <input type="submit" value="Update"></form>
 	<div>
+<form method="post" id="form3">
+<h2> Position Controller (high level) </h2>
+<table id="autocontrol">
+	<tr>
+		<th colspan="2"> Movement Parameters </th>
+		<th></th>
+		<th colspan="2"> Orientation Parameters </th>
+	</tr>
+	<tr>
+		<td> Linear sat </td>
+		<td> <input type="text" name="linsatv" id="linsatv" value="~linsatv~"> </td>
+		<td class="mid"> </td>
+		<td> Linear sat </td>
+		<td> <input type="text" name="linsatw" id="linsatw" value="~linsatw~"> </td>
+	</tr>
+	<tr>
+		<td> Angular sat</td>
+		<td> <input type="text" name="angsatv" id="angsatv" value="~angsatv~"> </td>
+		<td class="mid"> </td>
+		<td> Angular sat</td>
+		<td> <input type="text" name="angsatw" id="angsatw" value="~angsatw~"> </td>
+	</tr>
+	<tr>
+		<td> Kp </td>
+		<td> <input type="text" name="kpangv" id="kpangv" value="~kpangv~"> </td>
+		<td class="mid"> </td>
+		<td> Kp </td>
+		<td> <input type="text" name="kpangw" id="kpangw" value="~kpangw~"> </td>
+	</tr>
+	<tr>
+		<td> Kd </td>
+		<td> <input type="text" name="kdangv" id="kdangv" value="~kdangv~"> </td>
+		<td class="mid"> </td>
+		<td> Kd </td>
+		<td> <input type="text" name="kdangw" id="kdangw" value="~kdangw~"> </td>
+	</tr>
+	<tr>
+		<td> Kp (linear) </td>
+		<td> <input type="text" name="kplin" id="kplin" value="~kplin~"> </td>
+		<td class="mid"> </td>
+		<td> Max angle error (movement) </td>
+		<td> <input type="text" name="anglev" id="anglev" value="~anglev~"> </td>
+	</tr>
+	<tr>
+		<td> Min distance </td>
+		<td> <input type="text" name="distmin" id="distmin" value="~distmin~"> </td>
+		<td class="mid"> </td>
+		<td> Min speed </td>
+		<td> <input type="text" name="minspeed" id="minspeed" value="~minspeed~"></td>
+	</tr>
+</table>
+<input type="submit" value="Update"></form>
+
 	<p>Reference speed (linear)</p>
 	<form method="post" id="form5"><input type="text" name="refspeed" id="refspeed" value="~refspeed~"><input type="submit" value="Update"></form>
 	</div>
+	<p>Reference position</p>
+	<form method="post" id="form5">
+	<table>
+	<td> X </td>
+	<td> <input type="text" name="x" id="x" value="~x~"> </td>
+	<td> Y </td>
+	<td> <input type="text" name="y" id="y" value="~y~"> </td>
+	<td> Theta </td>
+	<td> <input type="text" name="refangle" id="refangle" value="~refangle~"> </td>
+	</table>
+	<input type="submit" value="Update"></form>
 	
 	
 </div>

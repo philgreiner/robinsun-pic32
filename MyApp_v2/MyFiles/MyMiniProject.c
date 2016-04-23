@@ -47,7 +47,8 @@ void MyMiniProject_Init(void)
 
     #ifdef ROBINSUN
         /* \brief Initialize fish motors */   
-        MyCAN_TxMsg(FishSID, GPLAT);
+        char GPLAT2[3] = {0x1e, 0x70, 0xff};
+        MyCAN_TxMsg(FishSID, GPLAT2);
 
         MyCAN_TxMsg(FishSID,T1CON);
         MyCAN_TxMsg(FishSID,T2CON);
@@ -135,9 +136,10 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         
         // Number of opponents detected
         if((lt24 >> 6)%2)
-            cvs->inputs->nb_opponents = 1;
+            cvs->inputs->mode = 1;
         else
-            cvs->inputs->nb_opponents = 2;
+            cvs->inputs->mode = 0;
+        
         
         // Are the data sent to ROBINSUN ?
         cvs->inputs->ready_signal = (lt24 >> 8)%2;

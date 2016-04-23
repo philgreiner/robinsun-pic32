@@ -1436,7 +1436,41 @@ static HTTP_IO_RESULT HTTPautocontrol(void)
                 formInput = 4;
             else if (!strcmppgm2ram((char *) ptr, (ROM char*) "refspeed"))
                 formInput = 5;
-
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "kdright"))
+                formInput = 6;
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "kdleft"))
+                formInput = 7;
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "linsatv"))
+                formInput = 8;
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "linsatw"))
+                formInput = 9;
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "angsatv"))
+                formInput = 10;
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "angsatw"))
+                formInput = 11;
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "kpangv"))
+                formInput = 12;
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "kpangw"))
+                formInput = 13;
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "kdangv"))
+                formInput = 14;
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "kdangw"))
+                formInput = 15;
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "kplin"))
+                formInput = 16;
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "distmin"))
+                formInput = 17;
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "minspeed"))
+                formInput = 18;
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "anglev"))
+                formInput = 19;
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "refangle"))
+                formInput = 20;
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "x"))
+                formInput = 21;
+            else if (!strcmppgm2ram((char *) ptr, (ROM char*) "y"))
+                formInput = 22;
+            
             if (HTTPReadPostValue(ptr, HTTP_MAX_DATA_LEN) == HTTP_READ_INCOMPLETE)
                 return HTTP_IO_NEED_DATA;
 
@@ -1450,6 +1484,40 @@ static HTTP_IO_RESULT HTTPautocontrol(void)
                 cvs->param->Kp[R_ID] = atof(ptr);
             } else if (formInput == 5) {
                 cvs->param->refspeed = atof(ptr);
+            } else if (formInput == 6) {
+                cvs->param->Kd[R_ID] = atof(ptr);
+            } else if (formInput == 7) {
+                cvs->param->Kd[L_ID] = atof(ptr);
+            } else if (formInput == 8) {
+                cvs->param->linsatv = atof(ptr);
+            } else if (formInput == 9) {
+                cvs->param->linsatw = atof(ptr);
+            } else if (formInput == 10) {
+                cvs->param->angsatv = atof(ptr);
+            } else if (formInput == 11) {
+                cvs->param->angsatw = atof(ptr);
+            } else if (formInput == 12) {
+                cvs->param->kpangv = atof(ptr);
+            } else if (formInput == 13) {
+                cvs->param->kpangw = atof(ptr);
+            } else if (formInput == 14) {
+                cvs->param->kdangv = atof(ptr);
+            } else if (formInput == 15) {
+                cvs->param->kdangw = atof(ptr);
+            } else if (formInput == 16) {
+                cvs->param->kplin = atof(ptr);
+            } else if (formInput == 17) {
+                cvs->param->distmin = atof(ptr);
+            } else if (formInput == 18) {
+                cvs->param->minspeed = atof(ptr);
+            } else if (formInput == 19) {
+                cvs->param->anglev = atof(ptr);
+            } else if (formInput == 20) {
+                cvs->param->refangle = atof(ptr);
+            } else if (formInput == 21) {
+                cvs->param->xref = atof(ptr);
+            } else if (formInput == 22) {
+                cvs->param->yref = atof(ptr);
             }
 
             curHTTP.smPost = POST_READ;
@@ -1763,6 +1831,20 @@ void HTTPPrint_kiright(void)
     TCPPutString(sktHTTP, theStr);
 }
 
+void HTTPPrint_kdleft(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.4f", cvs->param->Kd[L_ID]);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_kdright(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.4f", cvs->param->Kd[R_ID]);
+    TCPPutString(sktHTTP, theStr);
+}
+
 void HTTPPrint_refspeed(void)
 {
     BYTE theStr[64];
@@ -1844,6 +1926,111 @@ void HTTPPrint_opponentsdetected(void)
 {
     BYTE theStr[64];
     sprintf(theStr, "%d", cvs->state->nb_opponents_detected);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_linsatv(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->param->linsatv);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_linsatw(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->param->linsatw);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_angsatv(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->param->angsatv);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_angsatw(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->param->angsatw);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_kpangv(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->param->kpangv);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_kpangw(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->param->kpangw);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_kdangv(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->param->kdangv);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_kdangw(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->param->kdangw);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_kplin(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->param->kplin);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_distmin(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->param->distmin);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_minspeed(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.3f", cvs->param->minspeed);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_anglev(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.1f", cvs->param->anglev);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_refangle(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.1f", cvs->param->refangle);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_x(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.1f", cvs->param->xref);
+    TCPPutString(sktHTTP, theStr);
+}
+
+void HTTPPrint_y(void)
+{
+    BYTE theStr[64];
+    sprintf(theStr, "%.1f", cvs->param->yref);
     TCPPutString(sktHTTP, theStr);
 }
 

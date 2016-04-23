@@ -22,7 +22,7 @@
 
 NAMESPACE_INIT(ctrlGr1);
 
-typedef enum {CALIBRATE, WAIT_FOR_START1, BLOCKS_DUNE_1, CABINS, BLOCKS_CABINS, FISH, BLOCKS_FRONT, BLOCKS_DUNE_2, PARASOL, STOP} robinsun_competition;
+typedef enum {CALIBRATE, WAIT_FOR_START1, BLOCKS_FRONT, CABINS, BLOCKS_CABINS, FISH, BLOCKS_DUNE_1, BLOCKS_DUNE_2, PARASOL, STOP} robinsun_competition;
 typedef enum {NOTDONE1, DELAYED, DONE1} state;
 
 typedef struct CtrlState
@@ -63,6 +63,7 @@ typedef struct CtrlState
     robinsun_competition current_objective;
     int               current_action_progress;
 	double			  timer, objective_timer, opponent_timer;
+    double            this_objective_timer;
     int               direction;
 } CtrlState;
 
@@ -129,6 +130,9 @@ typedef struct CtrlParam{
 
 		double Ki_astar, Kp_astar;
 	#endif
+
+    // Position control parameters
+    double linsatv, linsatw, angsatv, angsatw, kpangv, kpangw, kdangv, kdangw, kplin, distmin, minspeed, anglev, refangle, xref, yref;
 
 } CtrlParam;
 

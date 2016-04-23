@@ -67,6 +67,23 @@ void HTTPPrint_opponent4(void);
 void HTTPPrint_opponent5(void);
 void HTTPPrint_opponent6(void);
 void HTTPPrint_opponent7(void);
+void HTTPPrint_kdleft(void);
+void HTTPPrint_kdright(void);
+void HTTPPrint_linsatv(void);
+void HTTPPrint_linsatw(void);
+void HTTPPrint_angsatv(void);
+void HTTPPrint_angsatw(void);
+void HTTPPrint_kpangv(void);
+void HTTPPrint_kpangw(void);
+void HTTPPrint_kdangv(void);
+void HTTPPrint_kdangw(void);
+void HTTPPrint_kplin(void);
+void HTTPPrint_distmin(void);
+void HTTPPrint_minspeed(void);
+void HTTPPrint_anglev(void);
+void HTTPPrint_refangle(void);
+void HTTPPrint_x(void);
+void HTTPPrint_y(void);
 
 void HTTPPrint(DWORD callbackID)
 {
@@ -224,6 +241,57 @@ void HTTPPrint(DWORD callbackID)
 			break;
         case 0x00000093:
 			HTTPPrint_opponent7();
+			break;
+        case 0x00000095:
+			HTTPPrint_kdleft();
+			break;
+        case 0x00000096:
+			HTTPPrint_kdright();
+			break;
+        case 0x00000097:
+			HTTPPrint_linsatv();
+			break;
+        case 0x00000098:
+			HTTPPrint_linsatw();
+			break;
+        case 0x00000099:
+			HTTPPrint_angsatv();
+			break;
+        case 0x0000009a:
+			HTTPPrint_angsatw();
+			break;
+        case 0x0000009b:
+			HTTPPrint_kpangv();
+			break;
+        case 0x0000009c:
+			HTTPPrint_kpangw();
+			break;
+        case 0x0000009d:
+			HTTPPrint_kdangv();
+			break;
+        case 0x0000009e:
+			HTTPPrint_kdangw();
+			break;
+        case 0x0000009f:
+			HTTPPrint_kplin();
+			break;
+        case 0x000000a0:
+			HTTPPrint_distmin();
+			break;
+        case 0x000000a1:
+			HTTPPrint_minspeed();
+			break;
+        case 0x000000a2:
+			HTTPPrint_anglev();
+			break;
+        case 0x000000a3:
+			HTTPPrint_refangle();
+			break;
+        case 0x000000a4:
+			HTTPPrint_x();
+			break;
+        case 0x000000a5:
+			HTTPPrint_y();
 			break;
 		default:
 			// Output notification for undefined values

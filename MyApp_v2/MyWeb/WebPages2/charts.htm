@@ -43,7 +43,6 @@
 <div>
 	<h2>Robot state</h2>
 	<h3> Competition state: <span id="competition_state" style="font-weight:normal">-</span> --> <span id="current_progress" style="font-weight:normal">-</span></h3>
-	<h3> Clamp state: <span id="clamp" style="font-weight:normal">-</span></h3>
 </div>
 <br>
 <div id="mapdiv">
@@ -164,8 +163,6 @@ function updateStatus(xmlData) {
 	document.getElementById('time').innerHTML = getXMLValue(xmlData, 'time');
 	document.getElementById('competition_state').innerHTML = getXMLValue(xmlData, 'competition_state');
 	document.getElementById('current_progress').innerHTML = getXMLValue(xmlData, 'current_progress');
-	document.getElementById('clamp').innerHTML = getXMLValue(xmlData, 'clamp');
-
 }
 setTimeout("newAJAXCommand('status.xml', updateStatus, true)",250);
 //-->

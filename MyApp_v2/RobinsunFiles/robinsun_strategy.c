@@ -25,43 +25,53 @@ void robinsun_main(CtrlStruct *cvs) {
             break;
 
         case BLOCKS_FRONT:
+            cvs->state->this_objective_timer = 9;
             blocks_front(cvs);
-
+//            if(cvs->inputs->t - cvs->state->objective_timer > cvs->state->this_objective_timer)
+//                cvs->state->objectives[BLOCKS_FRONT] = DONE1;
             if (cvs->state->objectives[cvs->state->current_objective] == DONE1 | cvs->state->objectives[cvs->state->current_objective] == DELAYED)
                 robinsun_next(cvs);
             break;
 
         case CABINS:
+            cvs->state->this_objective_timer = 15;
             cabins_close(cvs);
-
+//            if(cvs->inputs->t - cvs->state->objective_timer > cvs->state->this_objective_timer)
+//                cvs->state->objectives[CABINS] = DONE1;
             if (cvs->state->objectives[cvs->state->current_objective] == DONE1 | cvs->state->objectives[cvs->state->current_objective] == DELAYED)
                 robinsun_next(cvs);
             break;
 
         case BLOCKS_DUNE_1:
+            cvs->state->this_objective_timer = 25;
             blocks_dune_1(cvs);
-
+//            if(cvs->inputs->t - cvs->state->objective_timer > cvs->state->this_objective_timer)
+//                cvs->state->objectives[BLOCKS_DUNE_1] = DONE1;
             if (cvs->state->objectives[cvs->state->current_objective] == DONE1 | cvs->state->objectives[cvs->state->current_objective] == DELAYED)
                 robinsun_next(cvs);
             break;
 
         case BLOCKS_DUNE_2:
             blocks_dune_2(cvs);
-
             if (cvs->state->objectives[cvs->state->current_objective] == DONE1 | cvs->state->objectives[cvs->state->current_objective] == DELAYED)
                 robinsun_next(cvs);
             break;
 
         case BLOCKS_CABINS:
+            cvs->state->this_objective_timer = 25;
             blocks_cabins(cvs);
-
+//            if(cvs->inputs->t - cvs->state->objective_timer > cvs->state->this_objective_timer)
+//                cvs->state->objectives[BLOCKS_CABINS] = DONE1;
             if (cvs->state->objectives[cvs->state->current_objective] == DONE1 | cvs->state->objectives[cvs->state->current_objective] == DELAYED)
                 robinsun_next(cvs);
             break;
 
         case FISH:
+            cvs->state->this_objective_timer = 25;
             fish_catch(cvs);
-
+            
+//            if(cvs->inputs->t - cvs->state->objective_timer > cvs->state->this_objective_timer)
+//                cvs->state->objectives[FISH] = DONE1;
             if (cvs->state->objectives[cvs->state->current_objective] == DONE1 | cvs->state->objectives[cvs->state->current_objective] == DELAYED)
                 robinsun_next(cvs);
             break;

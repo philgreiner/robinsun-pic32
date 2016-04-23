@@ -82,6 +82,7 @@ typedef struct CtrlIn
 	int nb_opponents; ///< number of opponents
     
     int team_color;     // 1: green team. 0: purple team.
+    int mode; // 1 if homologation, 0 for competition;
     int strategy;       // [1;4]
     int ready_signal;   // If 1, the configuration with the LT24 is done.
 

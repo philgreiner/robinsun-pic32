@@ -7,8 +7,10 @@
 	<odometer_L>~odometer_L~</odometer_L>
 	<kpleft>~kpleft~</kpleft>
 	<kileft>~kileft~</kileft>
+	<kdleft>~kdleft~</kdleft>
 	<kpright>~kpright~</kpright>
 	<kiright>~kiright~</kiright>
+	<kdright>~kdright~</kdright>
 	<refspeed>~refspeed~</refspeed>
 	<buttonL>~buttonL~</buttonL>
 	<buttonR>~buttonR~</buttonR>
@@ -47,6 +49,20 @@
 	<opponentsdetected>~opponentsdetected~</opponentsdetected>
 	<competition_state>~competition_state~</competition_state>
 	<current_progress>~current_progress~</current_progress>
-	<clamp>~clamp~</clamp>
 	<time>~time~</time>
+	<linsatv>~linsatv~</linsatv>
+	<linsatw>~linsatw~</linsatw>
+	<angsatv>~angsatv~</angsatv>
+	<angsatw>~angsatw~</angsatw>
+	<kpangv>~kpangv~</kpangv>
+	<kpangw>~kpangw~</kpangw>
+	<kdangv>~kdangv~</kdangv>
+	<kdangw>~kdangw~</kdangw>
+	<kplin>~kplin~</kplin>
+	<distmin>~distmin~</distmin>
+	<minspeed>~minspeed~</minspeed>
+	<anglev>~anglev~</anglev>
+	<refangle>~refangle~</refangle>
+	<x>~x~</x>
+	<y>~y~</y>
 </response>

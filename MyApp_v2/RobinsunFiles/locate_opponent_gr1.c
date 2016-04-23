@@ -207,16 +207,18 @@ int isMeasureRelevant(CtrlStruct *cvs, double xFound, double yFound)
 	double central_wall_max_x = 0.4;
 	double central_wall_max_y = 0.15;
 
-	 if ((fabs(xFound) > external_walls_max_x) || (fabs(yFound) > external_walls_max_y)) // if the obstacle detected is located beyond the external walls
-	 	return 0;
-	 else if (((xFound < central_wall_max_x) && (xFound > central_wall_min_x)) && (fabs(yFound) < central_wall_max_y)) // if the obstacle detected is the central separation wall
-	 	return 0;
-     else if((cvs->state->position[1]/fabs(cvs->state->position[1]) != yFound/fabs(yFound)) && xFound > -0.3 && xFound < 0.4) // don't look through the central wall
+    if ((fabs(xFound) > external_walls_max_x) || (fabs(yFound) > external_walls_max_y)) // if the obstacle detected is located beyond the external walls
+       return 0;
+    else if (((xFound < central_wall_max_x) && (xFound > central_wall_min_x)) && (fabs(yFound) < central_wall_max_y)) // if the obstacle detected is the central separation wall
+       return 0;
+    else if((cvs->state->position[1]/fabs(cvs->state->position[1]) != yFound/fabs(yFound)) && xFound > -0.3 && xFound < 0.4) // don't look through the central wall
+       return 0;
+    else if(((cvs->state->position[0]+0.25)/fabs(cvs->state->position[1]+0.25) != (xFound+0.25)/fabs(xFound+0.25)) && fabs(yFound) < 0.6) // don't look through the central bar
         return 0;
-     else if(fabs(yFound)<1.4 && fabs(yFound) > 0.75 && xFound < -0.85) // ignore cabins
-        return 0;
-	 else // the obstacle detected is an opponent
-	 	return 1;
+    else if(fabs(yFound)<1.4 && fabs(yFound) > 0.75 && xFound < -0.85) // ignore cabins
+       return 0;
+    else // the obstacle detected is an opponent
+       return 1;
 }
 
 NAMESPACE_CLOSE();

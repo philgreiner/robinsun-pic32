@@ -71,6 +71,7 @@ const char* getProgress(robinsun_competition state, int current_progress)
                case WAIT_FOR_POSITION_BC:   return "Waiting for starting point";
                case CALIBRATE_BC:           return "Calibrate before going to blocks";
                case POSITION_BC:            return "Go to the blocks";
+               case CALIBRATE_X_BC:         return "Calibrating X direction";
                case FORWARD_BC:             return "Forward to blocks";
                case CLAMP_BC:               return "Clamp 'em";
                case BACKWARDS_W1_BC:        return "Going to W1";
