@@ -24,7 +24,7 @@ void locate_opponent(CtrlStruct *cvs)
 	int i;
  	//int nb_opponents = ivs->nb_opponents;
 	int opponents_detected = 0, dirsonar = 0;
-	double opponent_radius = 0.05;        // max distance from a point of the opponent and its center
+	double opponent_radius = 0.00;        // max distance from a point of the opponent and its center
 	double opponents_xpos[4] = {-42.0,-42.0,-42.0,-42.0}; // vector of size 2 since {opponents_detected <= 2}
 	double opponents_ypos[4] = {-42.0,-42.0,-42.0,-42.0};	
 

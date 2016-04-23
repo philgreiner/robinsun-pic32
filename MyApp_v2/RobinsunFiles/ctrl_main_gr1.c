@@ -148,15 +148,27 @@ void controller_loop(CtrlStruct *cvs) {
 
     // Computation of the average speed
     int i, j;
+    int count[6] = {0};
+    double sumyes[6] = {0.0};
     cvs->state->avSpeedR = cvs->state->lastMesR[0];
     cvs->state->avSpeedL = cvs->state->lastMesL[0];
     for (j = 0; j < 6; j++) {
         cvs->state->prevAvSonar[j] = cvs->state->avSonar[j];
         cvs->state->avSonar[j] = cvs->state->lastMesSonar[j][0];
+        if(cvs->state->lastMesSonar[j][0] < 90)
+        {
+            sumyes[j] += cvs->state->lastMesSonar[j][0];
+            count[j]++;
+        }
     }
 
     for (i = 0; i < 9; i++) {
         for (j = 0; j < 6; j++) {
+            if(cvs->state->lastMesSonar[j][i+1] < 90)
+            {
+                sumyes[j] += cvs->state->lastMesSonar[j][i + 1];
+                count[j]++;
+            }
             cvs->state->avSonar[j] += cvs->state->lastMesSonar[j][i + 1];
             cvs->state->lastMesSonar[j][i + 1] = cvs->state->lastMesSonar[j][i];
         }
@@ -168,7 +180,13 @@ void controller_loop(CtrlStruct *cvs) {
     cvs->state->lastMesR[0] = ivs->r_wheel_speed;
     cvs->state->lastMesL[0] = ivs->l_wheel_speed;
     for(i = 0; i < 6; i++)
+    {
+        if(count[j] >= 5)
+            cvs->state->avSonar[j] = sumyes[j]/count[j];
+        else
+            cvs->state->avSonar[j] = 42000;
         cvs->state->lastMesSonar[i][0] = ivs->sonars[i];
+    }
 
     cvs->state->avSpeedR = cvs->state->avSpeedR / 10.0;
     cvs->state->avSpeedL = cvs->state->avSpeedL / 10.0;
@@ -209,12 +227,12 @@ void controller_loop(CtrlStruct *cvs) {
     #endif
 
     /* Locate the opponent */
-    locate_opponent(cvs);
+//    locate_opponent(cvs);
    
         /* Path planning through potential field computation */
         // Choice of the path planning algorithm
             //strategy_objective(cvs);
-    robinsun_main(cvs);
+//    robinsun_main(cvs);
 //        cvs->state->omegaref[R_ID] = cvs->param->refspeed/.0325;
 //        cvs->state->omegaref[L_ID] = cvs->param->refspeed/.0325;
     #ifdef POTENTIAL
@@ -260,19 +278,19 @@ void controller_loop(CtrlStruct *cvs) {
         }
     #endif
 
-//    if(cvs->inputs->start_signal) {
-//            cvs->state->intermediate_goal[0] = cvs->param->xref; 
-//            cvs->state->intermediate_goal[1] = cvs->param->yref; 
-//            cvs->state->intermediate_goal[2] = cvs->param->refangle*M_PI/180.0;
-//            double x = cvs->state->position[0], y = cvs->state->position[1]; 
-//            double wheels[2], d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
-//            double delta_theta = fabs(cvs->state->position[2] - cvs->state->intermediate_goal[2]);
-//            delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
-//            
-//            gotoPoint(cvs,wheels);
-//            cvs->state->omegaref[R_ID] = wheels[R_ID];
-//            cvs->state->omegaref[L_ID] = wheels[L_ID];
-//    }
+    if(cvs->inputs->start_signal) {
+            cvs->state->intermediate_goal[0] = cvs->param->xref; 
+            cvs->state->intermediate_goal[1] = cvs->param->yref; 
+            cvs->state->intermediate_goal[2] = cvs->param->refangle*M_PI/180.0;
+            double x = cvs->state->position[0], y = cvs->state->position[1]; 
+            double wheels[2], d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
+            double delta_theta = fabs(cvs->state->position[2] - cvs->state->intermediate_goal[2]);
+            delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
+            
+            gotoPoint(cvs,wheels);
+            cvs->state->omegaref[R_ID] = wheels[R_ID];
+            cvs->state->omegaref[L_ID] = wheels[L_ID];
+    }
 
     /* Computation of the motor voltages */
     //cvs->state->omegaref[R_ID] = M_PI;

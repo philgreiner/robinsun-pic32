@@ -125,14 +125,15 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
             cvs->inputs->team_color = 0;
         
         // Strategy defined
-        if((lt24 >> 2)%2)
-            cvs->inputs->strategy = 1;
-        else if((lt24 >> 3)%2)
+//        if((lt24 >> 2)%2)
+//            cvs->inputs->strategy = 1;
+//        else 
+        if((lt24 >> 3)%2)
             cvs->inputs->strategy = 2;
-        else if((lt24 >> 4)%2)
-            cvs->inputs->strategy = 3;
-        else
-            cvs->inputs->strategy = 4;
+//        else if((lt24 >> 4)%2)
+//            cvs->inputs->strategy = 3;
+//        else
+//            cvs->inputs->strategy = 4;
         
         // Number of opponents detected
         if((lt24 >> 6)%2)

@@ -111,10 +111,11 @@ void robinsun_next(CtrlStruct *cvs) {
                 return;
             }
         
+        cvs->state->current_objective = PARASOL;
         // IF EVERYTHING IS DONE, TAKE MORE BLOCKS
-        cvs->state->objectives[BLOCKS_DUNE_2] = NOTDONE1;
-        cvs->state->current_objective = BLOCKS_DUNE_2;
-        cvs->state->objective_timer = cvs->inputs->t;
+//        cvs->state->objectives[BLOCKS_DUNE_2] = NOTDONE1;
+//        cvs->state->current_objective = BLOCKS_DUNE_2;
+//        cvs->state->objective_timer = cvs->inputs->t;
     }
 }
 

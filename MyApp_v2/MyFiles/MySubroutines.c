@@ -92,8 +92,11 @@ void gotoPoint(CtrlStruct *cvs, double *wheels)
         x1 = cvs->state->opponent_position[2]; y1 = cvs->state->opponent_position[3];
         
         oppdist = min(sqrt((x-x0)*(x-x0)+(y-y0)*(y-y0)),sqrt((x-x1)*(x-x1)+(y-y1)*(y-y1)));
-        if(oppdist < 0.75 && dist > 0.1)
+        if(oppdist < 0.9)
+        {
             v = 0.0;
+            omega *= 0.5;
+        }
         if(cvs->state->opponent_timer == -42.0)
             cvs->state->opponent_timer = cvs->inputs->t;
     }
@@ -104,8 +107,11 @@ void gotoPoint(CtrlStruct *cvs, double *wheels)
         x3 = cvs->state->opponent_position[6]; y3 = cvs->state->opponent_position[7];
         
         oppdist = min(sqrt((x-x2)*(x-x2)+(y-y2)*(y-y2)),sqrt((x-x3)*(x-x3)+(y-y3)*(y-y3)));
-        if(oppdist < 0.6  && dist > 0.1)
+        if(oppdist < 0.8)
+        {
             v = 0.0;
+            omega *= 0.5;
+        }
         if(cvs->state->opponent_timer == -42.0)
             cvs->state->opponent_timer = cvs->inputs->t;
     }
