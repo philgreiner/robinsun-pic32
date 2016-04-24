@@ -52,15 +52,15 @@ void gotoPoint(CtrlStruct *cvs, double *wheels)
     double kpang = cvs->param->kpangv, kdang = cvs->param->kdangv;
     double kplin = cvs->param->kplin;
     
-    if(dist > 0.035) // Go to point
+    if((dist > 0.035) && ((fabs(delta_theta) < cvs->param->anglev*M_PI/180.0) || (fabs(delta_theta) > (180 - cvs->param->anglev)*M_PI/180.0))) // Go to point
     {
         if(dist < 0.07) dist = 0.07;
-        if(-M_PI_2 <= delta_theta && M_PI_2 >= delta_theta) // Go forward
+        if(fabs(delta_theta) < cvs->param->anglev*M_PI/180.0)
         {
             v = (fabs(delta_theta) > cvs->param->anglev*M_PI/180.0) ? 0.0 : max(-lin_sat, min(lin_sat, (kplin * dist)));
             omega = max(-theta_sat, min(theta_sat, (kpang * delta_theta) + kdang*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
         }
-        else
+        else if(fabs(delta_theta) > (180 - cvs->param->anglev)*M_PI/180.0)
         {
             delta_theta = (delta_theta < 0) ? delta_theta + M_PI : delta_theta - M_PI;
             v = (fabs(delta_theta) > cvs->param->anglev*M_PI/180.0) ? 0.0 : -max(-lin_sat, min(lin_sat, (kplin * dist)));
@@ -71,16 +71,17 @@ void gotoPoint(CtrlStruct *cvs, double *wheels)
     {
         theta_sat = cvs->param->angsatw;
         kpang = cvs->param->kpangw, kdang = cvs->param->kdangw;
-        delta_theta = destination[2] - theta;
-        delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : (delta_theta < -M_PI) ? (delta_theta + 2*M_PI) : delta_theta;
+        if(dist < 0.035) {
+            delta_theta = destination[2] - theta;
+            delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : (delta_theta < -M_PI) ? (delta_theta + 2*M_PI) : delta_theta;
+        }
+        else
+        {
+            if(-M_PI_2 >= delta_theta || M_PI_2 <= delta_theta) // Go forward
+                delta_theta = (delta_theta < 0) ? delta_theta + M_PI : delta_theta - M_PI;
+        }
         v = 0;
-//        omega = 0.3 * delta_theta;
-//        omega = (omega > 0.15*M_PI_2) ? (0.15*M_PI_2) : (omega);
-//        omega = (omega < -0.15*M_PI_2) ? (-0.15*M_PI_2) : (omega);
-//        if(fabs(delta_theta)*180.0/M_PI > 22.5)
-//            omega = max(-theta_sat, min(theta_sat, (0.375 * delta_theta)));
-//        else
-            omega = max(-theta_sat, min(theta_sat, (kpang * delta_theta) + kdang*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
+        omega = max(-theta_sat, min(theta_sat, (kpang * delta_theta) + kdang*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
     }
     
     double oppdist;
@@ -96,6 +97,7 @@ void gotoPoint(CtrlStruct *cvs, double *wheels)
         {
             v = 0.0;
             omega *= 0.5;
+            cvs->state->timer = cvs->inputs->t;
         }
         if(cvs->state->opponent_timer == -42.0)
             cvs->state->opponent_timer = cvs->inputs->t;
@@ -111,6 +113,7 @@ void gotoPoint(CtrlStruct *cvs, double *wheels)
         {
             v = 0.0;
             omega *= 0.5;
+            cvs->state->timer = cvs->inputs->t;
         }
         if(cvs->state->opponent_timer == -42.0)
             cvs->state->opponent_timer = cvs->inputs->t;

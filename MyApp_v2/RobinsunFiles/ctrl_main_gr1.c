@@ -51,16 +51,16 @@ void controller_init(CtrlStruct *cvs) {
     
     cvs->param->linsatv = 0.5;
     cvs->param->linsatw = 0.0;
-    cvs->param->angsatv = 0.09;
+    cvs->param->angsatv = 0.15;
     cvs->param->angsatw = 0.15;
-    cvs->param->kpangv = 0.25;
-    cvs->param->kpangw = 0.5;
-    cvs->param->kdangv = 0.45;
-    cvs->param->kdangw = 0.17;
+    cvs->param->kpangv = 0.5;
+    cvs->param->kpangw = 0.375;
+    cvs->param->kdangv = 0.9;
+    cvs->param->kdangw = 0.15;
     cvs->param->kplin = 1.5;
     cvs->param->distmin = 0.15;
-    cvs->param->minspeed = .30;
-    cvs->param->anglev = 45;
+    cvs->param->minspeed = 0.3;
+    cvs->param->anglev = 10.0;
     cvs->param->refangle = 0;
     cvs->param->xref = -0.16;
     cvs->param->yref = -1.34;
@@ -227,12 +227,12 @@ void controller_loop(CtrlStruct *cvs) {
     #endif
 
     /* Locate the opponent */
-//    locate_opponent(cvs);
+    locate_opponent(cvs);
    
         /* Path planning through potential field computation */
         // Choice of the path planning algorithm
             //strategy_objective(cvs);
-//    robinsun_main(cvs);
+    robinsun_main(cvs);
 //        cvs->state->omegaref[R_ID] = cvs->param->refspeed/.0325;
 //        cvs->state->omegaref[L_ID] = cvs->param->refspeed/.0325;
     #ifdef POTENTIAL
@@ -278,19 +278,19 @@ void controller_loop(CtrlStruct *cvs) {
         }
     #endif
 
-    if(cvs->inputs->start_signal) {
-            cvs->state->intermediate_goal[0] = cvs->param->xref; 
-            cvs->state->intermediate_goal[1] = cvs->param->yref; 
-            cvs->state->intermediate_goal[2] = cvs->param->refangle*M_PI/180.0;
-            double x = cvs->state->position[0], y = cvs->state->position[1]; 
-            double wheels[2], d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
-            double delta_theta = fabs(cvs->state->position[2] - cvs->state->intermediate_goal[2]);
-            delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
-            
-            gotoPoint(cvs,wheels);
-            cvs->state->omegaref[R_ID] = wheels[R_ID];
-            cvs->state->omegaref[L_ID] = wheels[L_ID];
-    }
+//    if(cvs->inputs->start_signal) {
+//            cvs->state->intermediate_goal[0] = cvs->param->xref; 
+//            cvs->state->intermediate_goal[1] = cvs->param->yref; 
+//            cvs->state->intermediate_goal[2] = cvs->param->refangle*M_PI/180.0;
+//            double x = cvs->state->position[0], y = cvs->state->position[1]; 
+//            double wheels[2], d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
+//            double delta_theta = fabs(cvs->state->position[2] - cvs->state->intermediate_goal[2]);
+//            delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
+//            
+//            gotoPoint(cvs,wheels);
+//            cvs->state->omegaref[R_ID] = wheels[R_ID];
+//            cvs->state->omegaref[L_ID] = wheels[L_ID];
+//    }
 
     /* Computation of the motor voltages */
     //cvs->state->omegaref[R_ID] = M_PI;

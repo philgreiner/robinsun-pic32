@@ -128,8 +128,10 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
 //        if((lt24 >> 2)%2)
 //            cvs->inputs->strategy = 1;
 //        else 
-        if((lt24 >> 3)%2)
-            cvs->inputs->strategy = 2;
+        cvs->inputs->strategy_cabins = (lt24 >> 2)%2;
+        cvs->inputs->strategy_fish = (lt24 >> 3)%2;
+        cvs->inputs->strategy_blocksdune = (lt24 >> 4)%2;
+        cvs->inputs->strategy_blockscabins = (lt24 >> 5)%2;
 //        else if((lt24 >> 4)%2)
 //            cvs->inputs->strategy = 3;
 //        else

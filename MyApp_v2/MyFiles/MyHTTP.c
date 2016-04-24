@@ -236,6 +236,8 @@ HTTP_IO_RESULT HTTPExecuteGet(void)
                     cvs->outputs->command_fish_vertical = 0.0;
                     cvs->outputs->command_fish_horizontal = 0.0;
                     cvs->outputs->command_blocks = 0.0;
+                    brakesMotFV((unsigned int) 1);
+                    brakesMotFH((unsigned int) 1);
                     MyCyclone_Write(A_PICtoFPGA, 0x0001 & 1);
                 #endif          
             }
@@ -247,21 +249,25 @@ HTTP_IO_RESULT HTTPExecuteGet(void)
             }
             else if(strcmppgm2ram((char*)ptr,(ROM char*)"fishup") == 0){
                 #ifdef ROBINSUN
+                brakesMotFV((unsigned int) 0);
                     cvs->outputs->command_fish_vertical = -60;
                 #endif
             }
             else if(strcmppgm2ram((char*)ptr,(ROM char*)"fishdown") == 0){
-                #ifdef ROBINSUN
+                #ifdef ROBINSUN                
+                    brakesMotFV((unsigned int) 0);
                     cvs->outputs->command_fish_vertical = 15;
                 #endif
             }
             else if(strcmppgm2ram((char*)ptr,(ROM char*)"fishin") == 0){
                 #ifdef ROBINSUN
+                    brakesMotFH((unsigned int) 0);
                     cvs->outputs->command_fish_horizontal = -55;
                 #endif
             }
             else if(strcmppgm2ram((char*)ptr,(ROM char*)"fishout") == 0){
                 #ifdef ROBINSUN
+                    brakesMotFH((unsigned int) 0);
                     cvs->outputs->command_fish_horizontal = 40;
                 #endif
             }

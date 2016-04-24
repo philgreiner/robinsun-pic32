@@ -106,6 +106,7 @@ void robinsun_next(CtrlStruct *cvs) {
         // IF ALL ARE DONE, TRY TO DO THE OBJECTIVES THAT WERE INTERRUPTED
         for(i = 0; i < 8; i++)
             if(cvs->state->objectives[i] == DELAYED) {
+                cvs->state->objectives[i] = NOTDONE1;
                 cvs->state->current_objective = (robinsun_competition) i;
                 cvs->state->objective_timer = cvs->inputs->t;
                 return;
