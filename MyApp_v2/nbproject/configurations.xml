@@ -37,6 +37,9 @@
         <itemPath>MyIncludes/MyCamera.h</itemPath>
         <itemPath>MyIncludes/MyMiniProject.h</itemPath>
         <itemPath>MyWeb/myprints.h</itemPath>
+        <itemPath>MyI2C.h</itemPath>
+        <itemPath>MyIncludes/Pozyx.h</itemPath>
+        <itemPath>MyIncludes/Pozyx_definitions.h</itemPath>
       </logicalFolder>
       <logicalFolder name="RobinsunFiles"
                      displayName="RobinsunFiles"
@@ -166,6 +169,9 @@
         <itemPath>MyFiles/MyMiniProject.c</itemPath>
         <itemPath>MyFiles/MySubroutines.c</itemPath>
         <itemPath>MyWeb/myprints.c</itemPath>
+        <itemPath>MyI2C.c</itemPath>
+        <itemPath>MyI2C.c</itemPath>
+        <itemPath>MyFiles/Pozyx_lib.c</itemPath>
       </logicalFolder>
       <logicalFolder name="RobinsunFiles"
                      displayName="RobinsunFiles"

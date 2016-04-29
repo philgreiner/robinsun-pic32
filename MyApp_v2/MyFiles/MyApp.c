@@ -85,7 +85,7 @@ int main(void)
     MyFlash_Init();
     //MyTemperature_Init();
     //MyMIWI_Init();
-    MyWIFI_Init();
+//    MyWIFI_Init();
 
     // Configure for multi-vectored mode
     INTConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
@@ -97,36 +97,38 @@ int main(void)
     MyConsole_SendMsg(startMsg);
 
     // Start Wireless and Camera connections
-    //MyMIWI_Start();
-    MyWIFI_Start();
-    //MyCamera_Start();
+//    MyMIWI_Start();
+//    MyWIFI_Start();
+//    MyCamera_Start();
 
     MyMiniProject_Init();
     MyCAN_Task();
 
     CtrlIn *inputs = (CtrlIn*) malloc(sizeof(CtrlIn));
     CtrlOut *outputs = (CtrlOut*) malloc(sizeof(CtrlOut));
-    cvs = init_CtrlStruct(inputs, outputs);
+//    cvs = init_CtrlStruct(inputs, outputs);
     
     MyMiniProject_tStart = (ReadCoreTimer()/(SYS_FREQ/2.0));
-//    cvs->state->competition_start = 210.0;
-//    cvs->state->lastT = -MyMiniProject_tStart - cvs->state->competition_start;
-    MyMiniProject_Update(cvs);
-    controller_init(cvs);
-    
+//    MyMiniProject_Update(cvs);
+//    controller_init(cvs);
+    MyConsole_SendMsg("Attempting I2C begin();\n");
+    int status = begin(0, MODE_INTERRUPT, POZYX_INT_MASK_ALL, POZYX_INT_PIN0);
+    char msg[1024];
+    sprintf(msg, "I2C begin() returned %d\n", status);
+    MyConsole_SendMsg(msg);
     // Execute forever    
     while (1)
     {
         THREAD_START(1);
             MyConsole_Task();
         THREAD_BREAK
-            MyWIFI_Task();
+//            MyWIFI_Task();
         THREAD_END(1);
         THREAD_START(0);
             MyRTCC_Task();            
-            MyMiniProject_Update(cvs);
-            controller_loop(cvs);
-            MyMiniProject_Send(cvs);
+//            MyMiniProject_Update(cvs);
+//            controller_loop(cvs);
+//            MyMiniProject_Send(cvs);
             MyCAN_Task();
         THREAD_END(0);
     }

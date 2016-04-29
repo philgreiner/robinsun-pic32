@@ -25,6 +25,8 @@
 #include "MyMiniProject.h"
 #include "CtrlStruct_gr1.h"
 #include "ctrl_io.h"
+#include "Pozyx.h"
+#include "Pozyx_definitions.h"
 #include "robinsun_strategy.h"
 #include "competition_functions.h"
 
@@ -128,6 +130,11 @@ MyAPP_EXT  int      MyVideo_Counter MyAPP_INIT;
 #define	GetSystemClock() 		(80000000ul)
 #define	GetPeripheralClock()		(GetSystemClock()/(1 << OSCCONbits.PBDIV))
 #define	GetInstructionClock()		(GetSystemClock())
+#define I2C_CLOCK_FREQ              100000
+
+// EEPROM Constants
+#define EEPROM_I2C_BUS              I2C1
+#define EEPROM_ADDRESS              0x50        // 0b1010000 Serial EEPROM address
 
 /*******************************************************************************
 * Functions Prototypes                                                         *
