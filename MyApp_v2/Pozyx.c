@@ -53,7 +53,7 @@ BOOL waitForFlag(uint8_t interrupt_flag, int timeout_ms)
 }
 
 int begin(BOOL print_result, int mode, int interrupts, int interrupt_pin){
-  
+  drvI2CInit();
   int status = POZYX_SUCCESS;
 
   if(print_result){
@@ -77,10 +77,11 @@ int begin(BOOL print_result, int mode, int interrupts, int interrupt_pin){
   uint8_t whoami, selftest;  
   uint8_t regs[3];
   regs[2] = 0x12;
-  
+  MyConsole_SendMsg("Reading whoami\n");
   // we read out the first 3 register values: who_am_i, firmware_version and harware version, respectively.
   if(regRead(POZYX_WHO_AM_I, regs, 3) == POZYX_FAILURE){
     return POZYX_FAILURE;
+    MyConsole_SendMsg("pozyx failure...");
   }  
   whoami = regs[0];
   _sw_version = regs[1];
@@ -94,7 +95,7 @@ int begin(BOOL print_result, int mode, int interrupts, int interrupt_pin){
 	  MyConsole_SendMsg(msg);
 	  sprintf(msg, "HW Version: %d\n", _hw_version);
 	  MyConsole_SendMsg(msg);
-      setLedConfig(0x03, NULL);
+      //setLedConfig(0x03, NULL);
   }
   // verify if the whoami is correct
   if(whoami != 0x43) {    
@@ -165,7 +166,9 @@ int regRead(uint8_t reg_address, uint8_t *pData, int size)
   {
     int offset = i*BUFFER_LENGTH;
     reg = reg_address+offset;    
-    
+    char msg[1024];
+    sprintf(msg,"Run number %d, reg = 0x%X\n", i, reg);
+    MyConsole_SendMsg(msg);
     if(i+1 != n_runs){      
       status &= i2cWriteRead(&reg, 1, pData+offset, BUFFER_LENGTH);
     }else{      
@@ -634,7 +637,7 @@ void drvI2CInit(void) {
 
 
  void I2CIdle(void) {
-    UINT8 t = 255;
+    UINT16 t = 16*255;
     /* Wait until I2C Bus is Inactive */
     while (I2CCONbits.SEN || I2CCONbits.PEN || I2CCONbits.RCEN ||
             I2CCONbits.RSEN || I2CCONbits.ACKEN || I2CSTATbits.TRSTAT || t--);

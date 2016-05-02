@@ -106,16 +106,16 @@ int main(void)
 
     CtrlIn *inputs = (CtrlIn*) malloc(sizeof(CtrlIn));
     CtrlOut *outputs = (CtrlOut*) malloc(sizeof(CtrlOut));
-//    cvs = init_CtrlStruct(inputs, outputs);
+    cvs = init_CtrlStruct(inputs, outputs);
     
     MyMiniProject_tStart = (ReadCoreTimer()/(SYS_FREQ/2.0));
-//    MyMiniProject_Update(cvs);
-//    controller_init(cvs);
-    MyConsole_SendMsg("Attempting I2C begin();\n");
-    int status = begin(0, MODE_INTERRUPT, POZYX_INT_MASK_ALL, POZYX_INT_PIN0);
-    char msg[1024];
-    sprintf(msg, "I2C begin() returned %d\n", status);
-    MyConsole_SendMsg(msg);
+    MyMiniProject_Update(cvs);
+    controller_init(cvs);
+//    MyConsole_SendMsg("Attempting I2C begin();\n");
+//    int status = begin(0, MODE_INTERRUPT, POZYX_INT_MASK_ALL, POZYX_INT_PIN0);
+//    char msg[1024];
+//    sprintf(msg, "I2C begin() returned %d\n", status);
+//    MyConsole_SendMsg(msg);
     // Execute forever    
     while (1)
     {
@@ -126,9 +126,9 @@ int main(void)
         THREAD_END(1);
         THREAD_START(0);
             MyRTCC_Task();            
-//            MyMiniProject_Update(cvs);
-//            controller_loop(cvs);
-//            MyMiniProject_Send(cvs);
+            MyMiniProject_Update(cvs);
+            controller_loop(cvs);
+            MyMiniProject_Send(cvs);
             MyCAN_Task();
         THREAD_END(0);
     }

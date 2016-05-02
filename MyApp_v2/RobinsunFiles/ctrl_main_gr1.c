@@ -124,6 +124,8 @@ void controller_init(CtrlStruct *cvs) {
     cvs->state->last_astarPos[1] = (cvs->inputs->team_color) ? (1.0) : (-1.0);
     
     cvs->param->gotoPointSpeed = 0;
+    
+    cvs->state->i_save = 0;
 }
 
 /*! \brief controller loop (called eveiry timestep)
@@ -315,6 +317,28 @@ void controller_loop(CtrlStruct *cvs) {
 //    }
         
     cvs->state->lastT = ivs->t;
+    
+    // Save data during the game
+    if(cvs->inputs->start_signal && cvs->state->i_save < 4000)
+    {
+        cvs->state->mes_speed[R_ID][cvs->state->i_save] = ivs->r_wheel_speed;
+        cvs->state->mes_speed[L_ID][cvs->state->i_save] = ivs->l_wheel_speed;
+        cvs->state->ref_speed[R_ID][cvs->state->i_save] = cvs->state->omegaref[R_ID];
+        cvs->state->ref_speed[L_ID][cvs->state->i_save] = cvs->state->omegaref[L_ID];
+        
+        cvs->state->est_pos[0][cvs->state->i_save] = cvs->state->position[0];
+        cvs->state->est_pos[1][cvs->state->i_save] = cvs->state->position[1];
+        cvs->state->est_pos[2][cvs->state->i_save] = cvs->state->position[2];
+        
+        cvs->state->i_save++;
+    }
+    
+    // Save to SD card at the end
+    if((cvs->state->current_objective == PARASOL || cvs->state->current_objective == STOP) && cvs->state->i_save != 4001)
+    {
+        cvs->state->i_save = 4001;
+        MyDataSave(cvs);
+    }
 }
 
 /*! \brief last controller operations (called once)

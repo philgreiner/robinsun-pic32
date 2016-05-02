@@ -170,8 +170,8 @@
         <itemPath>MyFiles/MySubroutines.c</itemPath>
         <itemPath>MyWeb/myprints.c</itemPath>
         <itemPath>MyI2C.c</itemPath>
-        <itemPath>MyI2C.c</itemPath>
         <itemPath>MyFiles/Pozyx_lib.c</itemPath>
+        <itemPath>Pozyx.c</itemPath>
       </logicalFolder>
       <logicalFolder name="RobinsunFiles"
                      displayName="RobinsunFiles"

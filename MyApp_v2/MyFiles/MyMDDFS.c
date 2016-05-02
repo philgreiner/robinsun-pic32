@@ -269,6 +269,100 @@ void MyMDDFS_Test (void)
    MyMDDFS_RestoreSPI();
 }
 
+void MyDataSave(CtrlStruct *cvs)
+{
+   FSFILE * pointer;
+
+   MyMDDFS_SaveSPI();
+
+   if (!MDD_MediaDetect()) {
+       MyMDDFS_RestoreSPI();
+       MyConsole_SendMsg("MyMDDFS - Error MDD_MediaDetect\n>");
+       return;
+   }
+
+   // Initialize the library
+   if (!FSInit()) {
+       MyMDDFS_RestoreSPI();
+       MyConsole_SendMsg("MyMDDFS - Error FSInit\n>");
+       return;
+   }
+
+   // Create a file
+   pointer = FSfopen ("messpeedR.TXT", "w");
+   if (pointer == NULL)
+      MyConsole_SendMsg("MyMDDFS - Error FSfopen\n>");
+   // Write i_save 8-byte objects from messpeed into the file
+   if (FSfwrite (&cvs->state->mes_speed[R_ID][0], 8, cvs->state->i_save, pointer) != cvs->state->i_save)
+      MyConsole_SendMsg("MyMDDFS - Error FSfwrite\n>");
+   // Close the file
+   if (FSfclose (pointer))
+      MyConsole_SendMsg("MyMDDFS - Error FSfclose\n>");
+
+   // Create a second file
+   pointer = FSfopen ("messpeedL.TXT", "w");
+   if (pointer == NULL)
+      MyConsole_SendMsg("MyMDDFS - Error FSfopen\n>");
+   if (FSfwrite (&cvs->state->mes_speed[L_ID][0], 8, cvs->state->i_save, pointer) != cvs->state->i_save)
+      MyConsole_SendMsg("MyMDDFS - Error FSfwrite\n>");   
+   // Close the file
+   if (FSfclose (pointer))
+      MyConsole_SendMsg("MyMDDFS - Error FSfclose\n>");
+
+   // Create a second file
+   pointer = FSfopen ("refspeedR.TXT", "w");
+   if (pointer == NULL)
+      MyConsole_SendMsg("MyMDDFS - Error FSfopen\n>");
+   if (FSfwrite (&cvs->state->ref_speed[R_ID][0], 8, cvs->state->i_save, pointer) != cvs->state->i_save)
+      MyConsole_SendMsg("MyMDDFS - Error FSfwrite\n>");   
+   // Close the file
+   if (FSfclose (pointer))
+      MyConsole_SendMsg("MyMDDFS - Error FSfclose\n>");
+   
+   // Create a second file
+   pointer = FSfopen ("refspeedL.TXT", "w");
+   if (pointer == NULL)
+      MyConsole_SendMsg("MyMDDFS - Error FSfopen\n>");
+   if (FSfwrite (&cvs->state->ref_speed[L_ID][0], 8, cvs->state->i_save, pointer) != cvs->state->i_save)
+      MyConsole_SendMsg("MyMDDFS - Error FSfwrite\n>");   
+   // Close the file
+   if (FSfclose (pointer))
+      MyConsole_SendMsg("MyMDDFS - Error FSfclose\n>");
+
+   // Create a second file
+   pointer = FSfopen ("positionX.TXT", "w");
+   if (pointer == NULL)
+      MyConsole_SendMsg("MyMDDFS - Error FSfopen\n>");
+   if (FSfwrite (&cvs->state->est_pos[0][0], 8, cvs->state->i_save, pointer) != cvs->state->i_save)
+      MyConsole_SendMsg("MyMDDFS - Error FSfwrite\n>");   
+   // Close the file
+   if (FSfclose (pointer))
+      MyConsole_SendMsg("MyMDDFS - Error FSfclose\n>");
+
+   // Create a second file
+   pointer = FSfopen ("positionY.TXT", "w");
+   if (pointer == NULL)
+      MyConsole_SendMsg("MyMDDFS - Error FSfopen\n>");
+   if (FSfwrite (&cvs->state->est_pos[1][0], 8, cvs->state->i_save, pointer) != cvs->state->i_save)
+      MyConsole_SendMsg("MyMDDFS - Error FSfwrite\n>");   
+   // Close the file
+   if (FSfclose (pointer))
+      MyConsole_SendMsg("MyMDDFS - Error FSfclose\n>");
+
+   // Create a second file
+   pointer = FSfopen ("positionTheta.TXT", "w");
+   if (pointer == NULL)
+      MyConsole_SendMsg("MyMDDFS - Error FSfopen\n>");
+   if (FSfwrite (&cvs->state->est_pos[2][0], 8, cvs->state->i_save, pointer) != cvs->state->i_save)
+      MyConsole_SendMsg("MyMDDFS - Error FSfwrite\n>");   
+   // Close the file
+   if (FSfclose (pointer))
+      MyConsole_SendMsg("MyMDDFS - Error FSfclose\n>");
+   
+   MyConsole_SendMsg("MyMDDFS - Save Data OK\n>");
+   MyMDDFS_RestoreSPI();
+}
+
 
 
 

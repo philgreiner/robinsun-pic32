@@ -4,7 +4,7 @@
 
 #ifndef MyFDDFS_H_
 #define MyFDDFS_H_
-
+#include "MyApp.h"
 /*******************************************************************************
 * Constants                                                                    *
 *******************************************************************************/
@@ -17,5 +17,6 @@
 
 void MyFDDFS_Test(void);
 
+void MyDataSave(CtrlStruct *cvs);
 
 #endif /* MyFDDFS_H_ */
