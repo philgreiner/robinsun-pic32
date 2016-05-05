@@ -51,16 +51,16 @@ void controller_init(CtrlStruct *cvs) {
     
     cvs->param->linsatv = 0.5;
     cvs->param->linsatw = 0.0;
-    cvs->param->angsatv = 0.15;
+    cvs->param->angsatv = 0.3;
     cvs->param->angsatw = 0.15;
-    cvs->param->kpangv = 0.5;
-    cvs->param->kpangw = 0.375;
-    cvs->param->kdangv = 0.9;
+    cvs->param->kpangv = 0.4;
+    cvs->param->kpangw = 0.4;
+    cvs->param->kdangv = 5.0;
     cvs->param->kdangw = 0.15;
-    cvs->param->kplin = 1.5;
+    cvs->param->kplin = 5;
     cvs->param->distmin = 0.15;
     cvs->param->minspeed = 0.3;
-    cvs->param->anglev = 10.0;
+    cvs->param->anglev = 25.0;
     cvs->param->refangle = 0;
     cvs->param->xref = -0.16;
     cvs->param->yref = -1.34;
@@ -228,75 +228,110 @@ void controller_loop(CtrlStruct *cvs) {
         triangulation(cvs);
     #endif
 
-    /* Locate the opponent */
-    locate_opponent(cvs);
-   
-        /* Path planning through potential field computation */
-        // Choice of the path planning algorithm
-            //strategy_objective(cvs);
-    robinsun_main(cvs);
-//        cvs->state->omegaref[R_ID] = cvs->param->refspeed/.0325;
-//        cvs->state->omegaref[L_ID] = cvs->param->refspeed/.0325;
-    #ifdef POTENTIAL
-        potential_Field(cvs);
-    #endif
-    #ifdef ASTAR
-        if (cvs->param->ready_start_astar == 1) // If objective
+        if(cvs->param->refspeed == 0.0)
         {
-            if (!cvs->param->Astar_path_active)
-                Astar_get_path(cvs);
-            if(cvs->param->Astar_path_active)
-                Astar_read_path(cvs);
+        /* Locate the opponent */
+        locate_opponent(cvs);
+
+            /* Path planning through potential field computation */
+            // Choice of the path planning algorithm
+                //strategy_objective(cvs);
+        
+        robinsun_main(cvs);
+    //        cvs->state->omegaref[R_ID] = cvs->param->refspeed/.0325;
+    //        cvs->state->omegaref[L_ID] = cvs->param->refspeed/.0325;
+        #ifdef POTENTIAL
+            potential_Field(cvs);
+        #endif
+        #ifdef ASTAR
+            if (cvs->param->ready_start_astar == 1) // If objective
+            {
+                if (!cvs->param->Astar_path_active)
+                    Astar_get_path(cvs);
+                if(cvs->param->Astar_path_active)
+                    Astar_read_path(cvs);
+            }
+        #endif
+
+        // Constant speed references for wheel calibrations
+        #ifdef TEST_ROBINSUN
+            cvs->state->omegaref[R_ID] = (ivs->t > 5) ? .30 / .0325 : 0;
+            cvs->state->omegaref[L_ID] = (ivs->t > 5) ? .30 / .0325 : 0;
+        #endif
+        #ifdef TEST_MINIBOT
+            cvs->state->omegaref[R_ID] = 4 * M_PI * sin(M_PI * ivs->t);
+            cvs->state->omegaref[L_ID] = 4 * M_PI * cos(M_PI * ivs->t);
+        #endif
+
+        // Tests to calibrate the odometry
+        //#define TEST_ODO
+        #ifdef TEST_ODO
+            //        if((cvs->state->position_odo[1]<1.85) && (ivs->t > 5.0)){
+            //            cvs->state->omegaref[R_ID] = 3*M_PI;
+            //            cvs->state->omegaref[L_ID] = 3*M_PI;
+            //        }
+            //        else {
+            //            cvs->state->omegaref[R_ID] = 0;
+            //            cvs->state->omegaref[L_ID] = 0;
+            //        }
+            if ((cvs->state->position_odo[2]> -M_PI_2) && (ivs->t > 5.0)) {
+                cvs->state->omegaref[R_ID] = -2 * M_PI;
+                cvs->state->omegaref[L_ID] = 2 * M_PI;
+            } else {
+                cvs->state->omegaref[R_ID] = 0;
+                cvs->state->omegaref[L_ID] = 0;
+            }
+        #endif
+
+    //    if(cvs->inputs->start_signal) {
+    //            cvs->state->intermediate_goal[0] = cvs->param->xref; 
+    //            cvs->state->intermediate_goal[1] = cvs->param->yref; 
+    //            cvs->state->intermediate_goal[2] = cvs->param->refangle*M_PI/180.0;
+    //            double x = cvs->state->position[0], y = cvs->state->position[1]; 
+    //            double wheels[2], d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
+    //            double delta_theta = fabs(cvs->state->position[2] - cvs->state->intermediate_goal[2]);
+    //            delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
+    //            
+    //            gotoPoint(cvs,wheels);
+    //            cvs->state->omegaref[R_ID] = wheels[R_ID];
+    //            cvs->state->omegaref[L_ID] = wheels[L_ID];
+    //    }
         }
-    #endif
-
-    // Constant speed references for wheel calibrations
-    #ifdef TEST_ROBINSUN
-        cvs->state->omegaref[R_ID] = (ivs->t > 5) ? .30 / .0325 : 0;
-        cvs->state->omegaref[L_ID] = (ivs->t > 5) ? .30 / .0325 : 0;
-    #endif
-    #ifdef TEST_MINIBOT
-        cvs->state->omegaref[R_ID] = 4 * M_PI * sin(M_PI * ivs->t);
-        cvs->state->omegaref[L_ID] = 4 * M_PI * cos(M_PI * ivs->t);
-    #endif
-
-    // Tests to calibrate the odometry
-    //#define TEST_ODO
-    #ifdef TEST_ODO
-        //        if((cvs->state->position_odo[1]<1.85) && (ivs->t > 5.0)){
-        //            cvs->state->omegaref[R_ID] = 3*M_PI;
-        //            cvs->state->omegaref[L_ID] = 3*M_PI;
-        //        }
-        //        else {
-        //            cvs->state->omegaref[R_ID] = 0;
-        //            cvs->state->omegaref[L_ID] = 0;
-        //        }
-        if ((cvs->state->position_odo[2]> -M_PI_2) && (ivs->t > 5.0)) {
-            cvs->state->omegaref[R_ID] = -2 * M_PI;
-            cvs->state->omegaref[L_ID] = 2 * M_PI;
-        } else {
-            cvs->state->omegaref[R_ID] = 0;
-            cvs->state->omegaref[L_ID] = 0;
+        else
+        {
+            if(cvs->param->refspeed == 1.0 || cvs->param->refspeed == 2.0)
+            {
+                cvs->state->intermediate_goal[0] = cvs->param->xref; 
+                cvs->state->intermediate_goal[1] = cvs->param->yref; 
+            }
+            else 
+            {
+                cvs->state->intermediate_goal[0] = cvs->state->position[0]; 
+                cvs->state->intermediate_goal[1] = cvs->state->position[1]; 
+            }
+            if(cvs->param->refspeed == 1.0 || cvs->param->refspeed == 3.0)
+                cvs->state->intermediate_goal[2] = cvs->param->refangle*M_PI/180.0;
+            else
+                cvs->state->intermediate_goal[2] = cvs->state->position[2];
+                double wheels[2];
+                gotoPoint(cvs,wheels);
+                cvs->state->omegaref[R_ID] = wheels[R_ID];
+                cvs->state->omegaref[L_ID] = wheels[L_ID];
         }
-    #endif
-
-//    if(cvs->inputs->start_signal) {
-//            cvs->state->intermediate_goal[0] = cvs->param->xref; 
-//            cvs->state->intermediate_goal[1] = cvs->param->yref; 
-//            cvs->state->intermediate_goal[2] = cvs->param->refangle*M_PI/180.0;
-//            double x = cvs->state->position[0], y = cvs->state->position[1]; 
-//            double wheels[2], d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
-//            double delta_theta = fabs(cvs->state->position[2] - cvs->state->intermediate_goal[2]);
-//            delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : delta_theta;
-//            
-//            gotoPoint(cvs,wheels);
-//            cvs->state->omegaref[R_ID] = wheels[R_ID];
-//            cvs->state->omegaref[L_ID] = wheels[L_ID];
-//    }
 
     /* Computation of the motor voltages */
     //cvs->state->omegaref[R_ID] = M_PI;
     //cvs->state->omegaref[L_ID] = M_PI;
+    
+//        if(cvs->inputs->start_signal)
+//        {
+//            cvs->state->omegaref[R_ID] = (ivs->t > 5 && ivs->t < 7.5) ? .30 / .0325 : 0;
+//            cvs->state->omegaref[L_ID] = (ivs->t > 5 && ivs->t < 7.5) ? .30 / .0325 : 0;
+////            char msg[1024];
+////            sprintf(msg, "%.3f %.3f %.3f %.3f\n", cvs->state->omegaref[L_ID], cvs->inputs->l_wheel_speed, cvs->state->omegaref[R_ID], cvs->inputs->r_wheel_speed);
+////            MyConsole_SendMsg(msg);
+//        }
+        
     double wheels[2];
     if(ivs->t != 0.0)
     {
@@ -319,25 +354,28 @@ void controller_loop(CtrlStruct *cvs) {
     cvs->state->lastT = ivs->t;
     
     // Save data during the game
-    if(cvs->inputs->start_signal && cvs->state->i_save < 4000)
+    if(cvs->inputs->start_signal && cvs->state->i_save < 150)
     {
-        cvs->state->mes_speed[R_ID][cvs->state->i_save] = ivs->r_wheel_speed;
-        cvs->state->mes_speed[L_ID][cvs->state->i_save] = ivs->l_wheel_speed;
-        cvs->state->ref_speed[R_ID][cvs->state->i_save] = cvs->state->omegaref[R_ID];
-        cvs->state->ref_speed[L_ID][cvs->state->i_save] = cvs->state->omegaref[L_ID];
+//        cvs->state->mes_speed[R_ID][cvs->state->i_save] = ivs->r_wheel_speed;
+//        cvs->state->mes_speed[L_ID][cvs->state->i_save] = ivs->l_wheel_speed;
+//        cvs->state->ref_speed[R_ID][cvs->state->i_save] = cvs->state->omegaref[R_ID];
+//        cvs->state->ref_speed[L_ID][cvs->state->i_save] = cvs->state->omegaref[L_ID];
+//        sprintf(&cvs->state->mes_speed[R_ID][0],"%s %.3f",&cvs->state->mes_speed[R_ID][0],ivs->r_wheel_speed);
         
-        cvs->state->est_pos[0][cvs->state->i_save] = cvs->state->position[0];
-        cvs->state->est_pos[1][cvs->state->i_save] = cvs->state->position[1];
-        cvs->state->est_pos[2][cvs->state->i_save] = cvs->state->position[2];
-        
+//        cvs->state->est_pos[0][cvs->state->i_save] = cvs->state->position[0];
+//        cvs->state->est_pos[1][cvs->state->i_save] = cvs->state->position[1];
+//        cvs->state->est_pos[2][cvs->state->i_save] = cvs->state->position[2];
+//        MyConsole_SendMsg("Saving data\n");
         cvs->state->i_save++;
     }
+    else
+//        MyConsole_SendMsg("Waiting for start to save\n");
     
     // Save to SD card at the end
-    if((cvs->state->current_objective == PARASOL || cvs->state->current_objective == STOP) && cvs->state->i_save != 4001)
+    if(cvs->state->i_save > 149 && cvs->state->i_save != 4001)
     {
         cvs->state->i_save = 4001;
-        MyDataSave(cvs);
+//        MyDataSave(cvs);
     }
 }
 

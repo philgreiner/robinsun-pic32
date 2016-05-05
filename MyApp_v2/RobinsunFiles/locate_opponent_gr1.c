@@ -213,8 +213,8 @@ int isMeasureRelevant(CtrlStruct *cvs, double xFound, double yFound)
        return 0;
     else if((cvs->state->position[1]/fabs(cvs->state->position[1]) != yFound/fabs(yFound)) && xFound > -0.3 && xFound < 0.4) // don't look through the central wall
        return 0;
-    else if(((cvs->state->position[0]+0.25)/fabs(cvs->state->position[1]+0.25) != (xFound+0.25)/fabs(xFound+0.25)) && fabs(yFound) < 0.6) // don't look through the central bar
-        return 0;
+//    else if(((cvs->state->position[0]+0.2)/fabs(cvs->state->position[1]+0.25) != (xFound+0.25)/fabs(xFound+0.25)) && fabs(yFound) < 0.6) // don't look through the central bar
+//        return 0;
     else if(fabs(yFound)<1.4 && fabs(yFound) > 0.75 && xFound < -0.85) // ignore cabins
        return 0;
     else // the obstacle detected is an opponent

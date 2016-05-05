@@ -83,7 +83,8 @@ typedef struct CtrlIn
     
     int team_color;     // 1: green team. 0: purple team.
     int mode; // 1 if homologation, 0 for competition;
-    int strategy_cabins, strategy_fish, strategy_blocksdune, strategy_blockscabins;       // [1;4]
+    int strategy_cabins, strategy_fish, strategy_blockscabins;       // [1;4]
+    int mobility;
     int ready_signal;   // If 1, the configuration with the LT24 is done.
 
 	#ifdef SIMU_PROJECT
@@ -132,9 +133,8 @@ typedef struct CtrlIn
     
     int sonars[6];
     
-    double speed_blocks;
-    double speed_fish_horizontal;
-    double speed_fish_vertical;
+    int fish_startIN;
+    int fish_fullIN;
     
     double irR, irL;
 #endif

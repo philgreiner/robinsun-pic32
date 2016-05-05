@@ -35,9 +35,9 @@
 	<h3> 4) <span id="sonar4" style="font-weight:normal">-</span> [cm]; 5) <span id="sonar5" style="font-weight:normal">-</span> [cm]; 6) <span id="sonar6" style="font-weight:normal">-</span> [cm] </h3><br>
 	<h2> IR Sensors </h2>
 	<h3> Left: <span id="irL" style="font-weight:normal">-</span> [cm]; Right: <span id="irR" style="font-weight:normal">-</span> [cm] </h3><br>
-	<h3> Blocks: <span id="speed_blocks" style="font-weight:normal">-</span> [cm/s] - Command: <span id="command_blocks" style="font-weight:normal">-</span> [/100] </h3><br>
-	<h3> Fish horizontal: <span id="speed_fish_horizontal" style="font-weight:normal">-</span> [cm/s] - Command: <span id="command_fish_horizontal" style="font-weight:normal">-</span> [/100] </h3><br>
-	<h3> Fish vertical: <span id="speed_fish_vertical" style="font-weight:normal">-</span> [cm/s] - Command: <span id="command_fish_vertical" style="font-weight:normal">-</span> [/100] </h3><br>
+	<h3> Blocks Command: <span id="command_blocks" style="font-weight:normal">-</span> [/100] </h3><br>
+	<h3> Fish horizontal: StartIn: <span id="speed_fish_vertical" style="font-weight:normal">-</span> - FullIn <span id="speed_fish_horizontal" style="font-weight:normal">-</span> - Command: <span id="command_fish_horizontal" style="font-weight:normal">-</span> [/100] </h3><br>
+	<h3> Fish vertical Command: <span id="command_fish_vertical" style="font-weight:normal">-</span> [/100] </h3><br>
 </div>
 
 <div>
@@ -87,12 +87,12 @@ setInterval(function() {
 		
 	// Light blue: 153, 204, 204
 	// Robinsun: 79, 124, 164
-	var rightwheel = new SmoothieChart({millisPerPixel:25,grid:{fillStyle:'#ffffff',strokeStyle:'#000000',sharpLines:true,millisPerLine:5000,verticalSections:6},labels:{fillStyle:'#000000',fontSize:14},yRangeFunction:constantrange,timestampFormatter:SmoothieChart.timeFormatter});
+	var rightwheel = new SmoothieChart({millisPerPixel:8,grid:{fillStyle:'#ffffff',strokeStyle:'#000000',sharpLines:true,millisPerLine:500,verticalSections:10},labels:{fillStyle:'#000000',fontSize:14},yRangeFunction:constantrange/*,timestampFormatter:SmoothieChart.timeFormatter*/});
 	rightwheel.addTimeSeries(rightwheelspeed, { strokeStyle: 'rgb(0, 114, 189)', lineWidth: 3 });
 	rightwheel.addTimeSeries(omegaref_R, { strokeStyle: 'rgb(217, 83, 25)', lineWidth: 3 });
 	rightwheel.streamTo(document.getElementById("rightwheel"), 250);
 
-	var leftwheel = new SmoothieChart({millisPerPixel:25,grid:{fillStyle:'#ffffff',strokeStyle:'#000000',sharpLines:true,millisPerLine:5000,verticalSections:6},labels:{fillStyle:'#000000',fontSize:14},yRangeFunction:constantrange,timestampFormatter:SmoothieChart.timeFormatter});
+	var leftwheel = new SmoothieChart({millisPerPixel:8,grid:{fillStyle:'#ffffff',strokeStyle:'#000000',sharpLines:true,millisPerLine:500,verticalSections:10},labels:{fillStyle:'#000000',fontSize:14},yRangeFunction:constantrange/*,timestampFormatter:SmoothieChart.timeFormatter*/});
 	leftwheel.addTimeSeries(leftwheelspeed, { strokeStyle: 'rgb(0, 114, 189)', lineWidth: 3 });
 	leftwheel.addTimeSeries(omegaref_L, { strokeStyle: 'rgb(217, 83, 25)', lineWidth: 3 });
 	leftwheel.streamTo(document.getElementById("leftwheel"), 250);
@@ -150,12 +150,11 @@ function updateStatus(xmlData) {
 	document.getElementById('irR').innerHTML = getXMLValue(xmlData, 'irR');	
 	
 	// Block speeds
-	document.getElementById('speed_blocks').innerHTML = getXMLValue(xmlData, 'speed_blocks');
 	document.getElementById('command_blocks').innerHTML = getXMLValue(xmlData, 'command_blocks');
 	
 	// Fish
-	document.getElementById('speed_fish_horizontal').innerHTML = getXMLValue(xmlData, 'speed_fish_horizontal');
-	document.getElementById('speed_fish_vertical').innerHTML = getXMLValue(xmlData, 'speed_fish_vertical');
+	document.getElementById('speed_fish_horizontal').innerHTML = getXMLValue(xmlData, 'speed_fish_horizontal'); // FULL IN
+	document.getElementById('speed_fish_vertical').innerHTML = getXMLValue(xmlData, 'speed_fish_vertical'); // START IN
 	document.getElementById('command_fish_horizontal').innerHTML = getXMLValue(xmlData, 'command_fish_horizontal');
 	document.getElementById('command_fish_vertical').innerHTML = getXMLValue(xmlData, 'command_fish_vertical');
 	

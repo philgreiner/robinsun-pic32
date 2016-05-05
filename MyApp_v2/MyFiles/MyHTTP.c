@@ -1664,21 +1664,21 @@ void HTTPPrint_sonar6(void)
 void HTTPPrint_speed_blocks(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%.2f", cvs->inputs->speed_blocks);
+    sprintf(theStr, "%.2f", 42.0);
     TCPPutString(sktHTTP, theStr);
 }
 
 void HTTPPrint_speed_fish_horizontal(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%.2f", cvs->inputs->speed_fish_horizontal);
+    sprintf(theStr, "%d", cvs->inputs->fish_fullIN);
     TCPPutString(sktHTTP, theStr);
 }
 
 void HTTPPrint_speed_fish_vertical(void)
 {
     BYTE theStr[64];
-    sprintf(theStr, "%.2f", cvs->inputs->speed_fish_vertical);
+    sprintf(theStr, "%d", cvs->inputs->fish_startIN);
     TCPPutString(sktHTTP, theStr);
 }
 

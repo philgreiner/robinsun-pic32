@@ -85,7 +85,7 @@ int main(void)
     MyFlash_Init();
     //MyTemperature_Init();
     //MyMIWI_Init();
-//    MyWIFI_Init();
+    MyWIFI_Init();
 
     // Configure for multi-vectored mode
     INTConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
@@ -98,7 +98,7 @@ int main(void)
 
     // Start Wireless and Camera connections
 //    MyMIWI_Start();
-//    MyWIFI_Start();
+    MyWIFI_Start();
 //    MyCamera_Start();
 
     MyMiniProject_Init();
@@ -106,8 +106,10 @@ int main(void)
 
     CtrlIn *inputs = (CtrlIn*) malloc(sizeof(CtrlIn));
     CtrlOut *outputs = (CtrlOut*) malloc(sizeof(CtrlOut));
+    MyConsole_SendMsg("Before ctrlstruct init\n");
     cvs = init_CtrlStruct(inputs, outputs);
-    
+        MyConsole_SendMsg("After ctrlstruct init\n");
+
     MyMiniProject_tStart = (ReadCoreTimer()/(SYS_FREQ/2.0));
     MyMiniProject_Update(cvs);
     controller_init(cvs);
@@ -122,7 +124,7 @@ int main(void)
         THREAD_START(1);
             MyConsole_Task();
         THREAD_BREAK
-//            MyWIFI_Task();
+            MyWIFI_Task();
         THREAD_END(1);
         THREAD_START(0);
             MyRTCC_Task();            

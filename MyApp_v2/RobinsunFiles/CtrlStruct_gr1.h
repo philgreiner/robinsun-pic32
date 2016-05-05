@@ -65,11 +65,11 @@ typedef struct CtrlState
 	double			  timer, objective_timer, opponent_timer;
     double            this_objective_timer;
     int               direction;
-    
+        
     // Saving outputs to a file
-    double mes_speed[2][4000]; // R_ID and L_ID
-    double ref_speed[2][4000]; // R_ID and L_ID
-    double est_pos[3][4000];   // x, y and theta
+//    char mes_speed[2][1425]; // R_ID and L_ID
+//    char ref_speed[2][1425]; // R_ID and L_ID
+//    double est_pos[3][400];   // x, y and theta
     int i_save;
 } CtrlState;
 

@@ -40,6 +40,19 @@ void gotoPoint(CtrlStruct *cvs, double *wheels)
     destination[2] = cvs->state->intermediate_goal[2];
     if(cvs->inputs->mode)
         cvs->param->gotoPointSpeed = 1;
+  
+    double linsatv = cvs->param->ready_start_astar ? cvs->param->linsatv : 0.5;
+    double linsatw = cvs->param->ready_start_astar ? cvs->param->linsatw : 0.0;
+    double angsatv = cvs->param->ready_start_astar ? cvs->param->angsatv : 0.15;
+    double angsatw = cvs->param->ready_start_astar ? cvs->param->angsatw : 0.15;
+    double kpangv = cvs->param->ready_start_astar ? cvs->param->kpangv : 0.5;
+    double kpangw = cvs->param->ready_start_astar ? cvs->param->kpangw : 0.375;
+    double kdangv = cvs->param->ready_start_astar ? cvs->param->kdangv : 0.9;
+    double kdangw = cvs->param->ready_start_astar ? cvs->param->kdangw : 0.15;
+    double kplin = cvs->param->ready_start_astar ? cvs->param->kplin : 1.5;
+    double distmin = cvs->param->ready_start_astar ? cvs->param->distmin : 0.15;
+    double minspeed = cvs->param->ready_start_astar ? cvs->param->minspeed : 0.3;
+    double anglev = cvs->param->ready_start_astar ? cvs->param->anglev : 10.0;
     
     double v, omega;
     delta_x = destination[0] - x;
@@ -48,29 +61,28 @@ void gotoPoint(CtrlStruct *cvs, double *wheels)
     delta_theta = (delta_theta > M_PI) ? delta_theta - 2*M_PI : (delta_theta < -M_PI) ? delta_theta + 2*M_PI : delta_theta;
     dist = sqrt((delta_x*delta_x) + (delta_y*delta_y));
 
-    double lin_sat = cvs->param->linsatv, theta_sat = cvs->param->angsatv;
-    double kpang = cvs->param->kpangv, kdang = cvs->param->kdangv;
-    double kplin = cvs->param->kplin;
+    double lin_sat = linsatv, theta_sat = angsatv;
+    double kpang = kpangv, kdang = kdangv;
     
-    if((dist > 0.035) && ((fabs(delta_theta) < cvs->param->anglev*M_PI/180.0) || (fabs(delta_theta) > (180 - cvs->param->anglev)*M_PI/180.0))) // Go to point
+    if((dist > 0.035) && ((fabs(delta_theta) < anglev*M_PI/180.0) || (fabs(delta_theta) > (180 - anglev)*M_PI/180.0))) // Go to point
     {
         if(dist < 0.07) dist = 0.07;
-        if(fabs(delta_theta) < cvs->param->anglev*M_PI/180.0)
+        if(fabs(delta_theta) < anglev*M_PI/180.0)
         {
-            v = (fabs(delta_theta) > cvs->param->anglev*M_PI/180.0) ? 0.0 : max(-lin_sat, min(lin_sat, (kplin * dist)));
+            v = (fabs(delta_theta) > anglev*M_PI/180.0) ? 0.0 : max(-lin_sat, min(lin_sat, (kplin * dist)));
             omega = max(-theta_sat, min(theta_sat, (kpang * delta_theta) + kdang*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
         }
-        else if(fabs(delta_theta) > (180 - cvs->param->anglev)*M_PI/180.0)
+        else if(fabs(delta_theta) > (180 - anglev)*M_PI/180.0)
         {
             delta_theta = (delta_theta < 0) ? delta_theta + M_PI : delta_theta - M_PI;
-            v = (fabs(delta_theta) > cvs->param->anglev*M_PI/180.0) ? 0.0 : -max(-lin_sat, min(lin_sat, (kplin * dist)));
+            v = (fabs(delta_theta) > anglev*M_PI/180.0) ? 0.0 : -max(-lin_sat, min(lin_sat, (kplin * dist)));
             omega = max(-theta_sat, min(theta_sat, (kpang * delta_theta) + kdang*(delta_theta - cvs->state->errorAngle)/(cvs->inputs->t - cvs->state->lastT)));
         }
     }
     else    // Orientation to objective
     {
-        theta_sat = cvs->param->angsatw;
-        kpang = cvs->param->kpangw, kdang = cvs->param->kdangw;
+        theta_sat = angsatw;
+        kpang = kpangw, kdang = kdangw;
         if(dist < 0.035) {
             delta_theta = destination[2] - theta;
             delta_theta = (delta_theta > M_PI) ? (delta_theta - 2*M_PI) : (delta_theta < -M_PI) ? (delta_theta + 2*M_PI) : delta_theta;
@@ -93,7 +105,7 @@ void gotoPoint(CtrlStruct *cvs, double *wheels)
         x1 = cvs->state->opponent_position[2]; y1 = cvs->state->opponent_position[3];
         
         oppdist = min(sqrt((x-x0)*(x-x0)+(y-y0)*(y-y0)),sqrt((x-x1)*(x-x1)+(y-y1)*(y-y1)));
-        if(oppdist < 0.4)
+        if(oppdist < 0.7)
         {
             v = 0.0;
             omega *= 0.5;
@@ -109,7 +121,7 @@ void gotoPoint(CtrlStruct *cvs, double *wheels)
         x3 = cvs->state->opponent_position[6]; y3 = cvs->state->opponent_position[7];
         
         oppdist = min(sqrt((x-x2)*(x-x2)+(y-y2)*(y-y2)),sqrt((x-x3)*(x-x3)+(y-y3)*(y-y3)));
-        if(oppdist < 0.3)
+        if(oppdist < 0.5)
         {
             v = 0.0;
             omega *= 0.5;

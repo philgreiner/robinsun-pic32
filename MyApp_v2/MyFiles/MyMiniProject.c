@@ -128,10 +128,14 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
 //        if((lt24 >> 2)%2)
 //            cvs->inputs->strategy = 1;
 //        else 
+        if(lt24 == 41)
+            MyCyclone_Write(A_PICtoFPGA, 0x0001 & 1);
         cvs->inputs->strategy_cabins = (lt24 >> 2)%2;
         cvs->inputs->strategy_fish = (lt24 >> 3)%2;
-        cvs->inputs->strategy_blocksdune = (lt24 >> 4)%2;
+        cvs->inputs->mobility = (lt24 >> 4)%2;
         cvs->inputs->strategy_blockscabins = (lt24 >> 5)%2;
+        cvs->inputs->fish_fullIN = (lt24 >> 14)%2;
+        cvs->inputs->fish_startIN = (lt24 >> 13)%2;
 //        else if((lt24 >> 4)%2)
 //            cvs->inputs->strategy = 3;
 //        else
@@ -159,10 +163,6 @@ void    MyMiniProject_Update(CtrlStruct *cvs)
         cvs->inputs->sonars[5] = (sonar56 & 0x00ff);
         
         //locate_opponent(cvs);
-        
-        int speedClamp = MyCyclone_Read(A_speedB);
-        speedClamp = ((speedClamp >> 15) == 1)? speedClamp-65535 : speedClamp;
-        cvs->inputs->speed_blocks = (double) -speedClamp*2*M_PI/(4096.0*0.025);
     #endif
     cvs->inputs->t = (ReadCoreTimer()/(SYS_FREQ/2.0)) - MyMiniProject_tStart; // time in seconds
     while (cvs->inputs->t < cvs->state->lastT) cvs->inputs->t += 107.3741823075;
