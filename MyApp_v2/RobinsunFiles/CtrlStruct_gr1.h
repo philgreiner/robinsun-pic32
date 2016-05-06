@@ -22,7 +22,7 @@
 
 NAMESPACE_INIT(ctrlGr1);
 
-typedef enum {CALIBRATE, WAIT_FOR_START1, BLOCKS_FRONT, CABINS, BLOCKS_CABINS, FISH, BLOCKS_DUNE_1, BLOCKS_DUNE_2, PARASOL, STOP} robinsun_competition;
+typedef enum {CALIBRATE, WAIT_FOR_START1, BLOCKS_FRONT, CABINS, BLOCKS_CABINS, FISH, BLOCKS_DUNE_2, BLOCKS_DUNE_1, PARASOL, STOP} robinsun_competition;
 typedef enum {NOTDONE1, DELAYED, DONE1} state;
 
 typedef struct CtrlState
@@ -45,7 +45,7 @@ typedef struct CtrlState
     double intermediate_goal[3];
 
 	//Potential field & Astar orientation error
-	double errorAngle;
+	double errorAngle, errorDist;
     double prev_theta;
 	double lastT_pot;
 	double lastT_astar;
@@ -83,9 +83,11 @@ typedef struct CtrlParam{
 	// Non-deterministic parameters of the motor drive and the wheel-floor interaction
 	double kr;
 	double kl;
+    double tEnd;
 
 	// Wheel controller parameters
 	double Ki[2], Kp[2], Kd[2];
+    double kphi;
 	#ifdef POTENTIAL
 	    double Ki_pot, Kp_pot;
 		double obstacle_center[100];    // Coordinates of the central obstacle

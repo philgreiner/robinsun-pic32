@@ -38,28 +38,29 @@ void controller_init(CtrlStruct *cvs) {
     // Controller parameters
     #ifdef ROBINSUN
         //                  Right: 5.975 kg     Left: 4.6 kg
-        cvs->param->Kp[L_ID] = -0.0631;
-        cvs->param->Ki[L_ID] = 2.1572;
+        cvs->param->Kp[L_ID] = 0.1487;
+        cvs->param->Ki[L_ID] = 2.0111;
         cvs->param->Kd[L_ID] = 0.008;
-        cvs->param->Kp[R_ID] = -0.0487;
-        cvs->param->Ki[R_ID] = 2.4439;
+        cvs->param->Kp[R_ID] = 0.1381;
+        cvs->param->Ki[R_ID] = 2.2223;
         cvs->param->Kd[R_ID] = 0.001;
     #else
         cvs->param->Kp = -0.031;
         cvs->param->Ki = 2.1729;
     #endif
-    
-    cvs->param->linsatv = 0.5;
-    cvs->param->linsatw = 0.0;
-    cvs->param->angsatv = 0.3;
-    cvs->param->angsatw = 0.15;
-    cvs->param->kpangv = 0.4;
-    cvs->param->kpangw = 0.4;
-    cvs->param->kdangv = 5.0;
-    cvs->param->kdangw = 0.15;
+
+    cvs->param->kphi = 0.003962;
+    cvs->param->linsatv = 0.75;
+    cvs->param->linsatw = 1.5;
+    cvs->param->angsatv = 0.45;
+    cvs->param->angsatw = 0.45;
+    cvs->param->kpangv = 10;
+    cvs->param->kpangw = 0.8;
+    cvs->param->kdangv = 5;
+    cvs->param->kdangw = 0.275;
     cvs->param->kplin = 5;
-    cvs->param->distmin = 0.15;
-    cvs->param->minspeed = 0.3;
+    cvs->param->distmin = 0.7;
+    cvs->param->minspeed = 0.5;
     cvs->param->anglev = 25.0;
     cvs->param->refangle = 0;
     cvs->param->xref = -0.16;
@@ -115,6 +116,7 @@ void controller_init(CtrlStruct *cvs) {
     cvs->state->current_action_progress = 0;
     cvs->param->refspeed = 0.0;
     cvs->state->errorAngle = 0.0;
+    cvs->state->errorDist = 0.0;
     cvs->inputs->u_switch[R_ID] = 1;
     cvs->inputs->u_switch[L_ID] = 1;
     cvs->state->opponent_timer = -42.0;
@@ -126,6 +128,7 @@ void controller_init(CtrlStruct *cvs) {
     cvs->param->gotoPointSpeed = 0;
     
     cvs->state->i_save = 0;
+    cvs->param->tEnd = 120.0;
 }
 
 /*! \brief controller loop (called eveiry timestep)
@@ -423,8 +426,8 @@ void motors_control(CtrlStruct *cvs, double * wheels) {
     cvs->state->errorIntL = (cvs->state->errorIntL * cvs->param->Ki[L_ID]<-Valim) ? (-Valim / (cvs->param->Ki[L_ID])) : (cvs->state->errorIntL);
 
     // PI controller
-    UconsigneR = (omegaref[R_ID] - rspeed) * cvs->param->Kp[R_ID] + cvs->state->errorIntR * cvs->param->Ki[R_ID] - cvs->param->Kd[R_ID]*(rspeed - cvs->state->lastMesR[0])/(ivs->t - cvs->state->lastT);
-    UconsigneL = (omegaref[L_ID] - lspeed) * cvs->param->Kp[L_ID] + cvs->state->errorIntL * cvs->param->Ki[L_ID] - cvs->param->Kd[L_ID]*(lspeed - cvs->state->lastMesL[0])/(ivs->t - cvs->state->lastT);
+    UconsigneR = (omegaref[R_ID] - rspeed) * cvs->param->Kp[R_ID] + cvs->state->errorIntR * cvs->param->Ki[R_ID] - cvs->param->Kd[R_ID]*(rspeed - cvs->state->lastMesR[0])/(ivs->t - cvs->state->lastT) + cvs->param->kphi*rspeed;
+    UconsigneL = (omegaref[L_ID] - lspeed) * cvs->param->Kp[L_ID] + cvs->state->errorIntL * cvs->param->Ki[L_ID] - cvs->param->Kd[L_ID]*(lspeed - cvs->state->lastMesL[0])/(ivs->t - cvs->state->lastT) + cvs->param->kphi*lspeed;
 
     if (UconsigneR > 0.9 * 24) {
         float delta = 0.9 * 24 - UconsigneR;

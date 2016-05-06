@@ -63,7 +63,23 @@ const char* getProgress(robinsun_competition state, int current_progress)
                case MOVE_BACK_BD1_END:      return "Move backwards (last)";
                default:                     return "Unknown progression";
            }
-       case BLOCKS_DUNE_2:  return "NOT IMPLEMENTED LOL";
+       case BLOCKS_DUNE_2:
+           switch((blocks_dune2_t) current_progress)
+           {
+               case GOTO_BCo:                return "Going to starting point...";
+               case WAIT_FOR_POSITION_BCo:   return "Waiting for starting point";
+               case CALIBRATE_BCo:           return "Calibrate before going to blocks";
+               case POSITION_BCo:            return "Go to the blocks";
+               case CALIBRATE_X_BCo:         return "Calibrating X direction";
+               case FORWARD_BCo:             return "Forward to blocks";
+               case CLAMP_BCo:               return "Clamp 'em";
+               case BACKWARDS_W1_BCo:        return "Going to W1";
+               case BACKWARDS_W2_BCo:        return "Going to W2";
+               case BRING_BCo:               return "Bring them back";
+               case UNCLAMP_BCo:             return "Unclamp the blocks";
+               case MOVE_BACK_BCo:           return "Move backwards (last)";
+               default:                     return "Unknown progression";
+           }
        case BLOCKS_CABINS:
            switch((blocks_cabins_t) current_progress)
            {
