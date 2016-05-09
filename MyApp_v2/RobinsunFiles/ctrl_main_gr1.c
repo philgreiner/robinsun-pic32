@@ -336,6 +336,16 @@ void controller_loop(CtrlStruct *cvs) {
 ////            MyConsole_SendMsg(msg);
 //        }
         
+    if(cvs->inputs->start_signal && cvs->inputs->t > 5.5 && cvs->inputs->t < 7.5)
+    {
+        cvs->state->omegaref[R_ID] = 0.3/0.0325;
+        cvs->state->omegaref[L_ID] = 0.3/0.0325;
+    }
+    else
+    {
+        cvs->state->omegaref[R_ID] = 0.0;
+        cvs->state->omegaref[L_ID] = 0.0;
+    }
     double wheels[2];
     if(ivs->t != 0.0)
     {
@@ -354,10 +364,11 @@ void controller_loop(CtrlStruct *cvs) {
 //        ovs->wheel_commands[R_ID] = 0.0;
 //        ovs->wheel_commands[L_ID] = 0.0;
 //    }
+    
         
     cvs->state->lastT = ivs->t;
     // Save data during the game
-    if(cvs->inputs->start_signal && cvs->state->i_save < 270 && (((ReadCoreTimer()/(SYS_FREQ/2.0)) - cvs->state->saveTimer) > 0.025) && (cvs->inputs->t < 60.0))
+    if(cvs->inputs->start_signal && cvs->state->i_save < 270 && (((ReadCoreTimer()/(SYS_FREQ/2.0)) - cvs->state->saveTimer) > 0.01) && (cvs->inputs->t < 10.0))
     {
         cvs->state->mes_speed[R_ID][cvs->state->i_save] = ivs->r_wheel_speed;
         cvs->state->mes_speed[L_ID][cvs->state->i_save] = ivs->l_wheel_speed;
@@ -369,10 +380,7 @@ void controller_loop(CtrlStruct *cvs) {
         cvs->state->i_save++;
         cvs->state->saveTimer = (ReadCoreTimer()/(SYS_FREQ/2.0));
     }
-    else
-    
-    // Save to SD card at the end
-    if(cvs->state->i_save > 269)
+    else if(cvs->state->i_save > 269)
     {
         cvs->state->i_save = 0;
         char msg[1024];
