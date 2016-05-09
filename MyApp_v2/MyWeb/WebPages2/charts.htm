@@ -161,7 +161,10 @@ function updateStatus(xmlData) {
 	// Global
 	document.getElementById('time').innerHTML = getXMLValue(xmlData, 'time');
 	document.getElementById('competition_state').innerHTML = getXMLValue(xmlData, 'competition_state');
-	document.getElementById('current_progress').innerHTML = getXMLValue(xmlData, 'current_progress');
+	document.getElementById('current_progress').innerHTML = getXMLValue(xmlData, 'current_progress');		
+	
+	console.log(document.getElementById('time').innerHTML + " " + document.getElementById('omegaref_R').innerHTML + " " + document.getElementById('r_wheel_speed').innerHTML + " " + document.getElementById('omegaref_L').innerHTML + " " + document.getElementById('l_wheel_speed').innerHTML);
+
 }
 setTimeout("newAJAXCommand('status.xml', updateStatus, true)",250);
 //-->

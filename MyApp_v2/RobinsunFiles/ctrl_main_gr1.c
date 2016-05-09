@@ -363,12 +363,15 @@ void controller_loop(CtrlStruct *cvs) {
 //        cvs->state->mes_speed[L_ID][cvs->state->i_save] = ivs->l_wheel_speed;
 //        cvs->state->ref_speed[R_ID][cvs->state->i_save] = cvs->state->omegaref[R_ID];
 //        cvs->state->ref_speed[L_ID][cvs->state->i_save] = cvs->state->omegaref[L_ID];
-//        sprintf(&cvs->state->mes_speed[R_ID][0],"%s %.3f",&cvs->state->mes_speed[R_ID][0],ivs->r_wheel_speed);
-        
+        sprintf(&cvs->state->mes_speed[R_ID][0],"%s %.3f",&cvs->state->mes_speed[R_ID][0],ivs->r_wheel_speed);
+        sprintf(&cvs->state->mes_speed[R_ID][0],"%s %.3f",&cvs->state->mes_speed[L_ID][0],ivs->r_wheel_speed);
+        sprintf(&cvs->state->mes_speed[R_ID][0],"%s %.3f",&cvs->state->ref_speed[R_ID][0],cvs->state->omegaref[R_ID]);
+        sprintf(&cvs->state->mes_speed[R_ID][0],"%s %.3f",&cvs->state->ref_speed[L_ID][0],cvs->state->omegaref[L_ID]);
+
 //        cvs->state->est_pos[0][cvs->state->i_save] = cvs->state->position[0];
 //        cvs->state->est_pos[1][cvs->state->i_save] = cvs->state->position[1];
 //        cvs->state->est_pos[2][cvs->state->i_save] = cvs->state->position[2];
-//        MyConsole_SendMsg("Saving data\n");
+        MyConsole_SendMsg("Saving data\n");
         cvs->state->i_save++;
     }
     else
@@ -378,7 +381,7 @@ void controller_loop(CtrlStruct *cvs) {
     if(cvs->state->i_save > 149 && cvs->state->i_save != 4001)
     {
         cvs->state->i_save = 4001;
-//        MyDataSave(cvs);
+        MyDataSave(cvs);
     }
 }
 
