@@ -357,16 +357,17 @@ void controller_loop(CtrlStruct *cvs) {
     cvs->state->lastT = ivs->t;
     
     // Save data during the game
-    if(cvs->inputs->start_signal && cvs->state->i_save < 150)
+    if(cvs->inputs->start_signal && cvs->state->i_save < 250)
     {
-//        cvs->state->mes_speed[R_ID][cvs->state->i_save] = ivs->r_wheel_speed;
-//        cvs->state->mes_speed[L_ID][cvs->state->i_save] = ivs->l_wheel_speed;
-//        cvs->state->ref_speed[R_ID][cvs->state->i_save] = cvs->state->omegaref[R_ID];
-//        cvs->state->ref_speed[L_ID][cvs->state->i_save] = cvs->state->omegaref[L_ID];
-        sprintf(&cvs->state->mes_speed[R_ID][0],"%s %.3f",&cvs->state->mes_speed[R_ID][0],ivs->r_wheel_speed);
-        sprintf(&cvs->state->mes_speed[R_ID][0],"%s %.3f",&cvs->state->mes_speed[L_ID][0],ivs->r_wheel_speed);
-        sprintf(&cvs->state->mes_speed[R_ID][0],"%s %.3f",&cvs->state->ref_speed[R_ID][0],cvs->state->omegaref[R_ID]);
-        sprintf(&cvs->state->mes_speed[R_ID][0],"%s %.3f",&cvs->state->ref_speed[L_ID][0],cvs->state->omegaref[L_ID]);
+        cvs->state->mes_speed[R_ID][cvs->state->i_save] = ivs->r_wheel_speed;
+        cvs->state->mes_speed[L_ID][cvs->state->i_save] = ivs->l_wheel_speed;
+        cvs->state->ref_speed[R_ID][cvs->state->i_save] = cvs->state->omegaref[R_ID];
+        cvs->state->ref_speed[L_ID][cvs->state->i_save] = cvs->state->omegaref[L_ID];
+        cvs->state->theTime[cvs->state->i_save] = cvs->inputs->t;
+//        sprintf(&(cvs->state->mes_speed[R_ID][0]),"%s %.3f",&(cvs->state->mes_speed[R_ID][0]),ivs->r_wheel_speed);
+//        sprintf(&(cvs->state->mes_speed[R_ID][0]),"%s %.3f",&(cvs->state->mes_speed[L_ID][0]),ivs->r_wheel_speed);
+//        sprintf(&(cvs->state->mes_speed[R_ID][0]),"%s %.3f",&(cvs->state->ref_speed[R_ID][0]),cvs->state->omegaref[R_ID]);
+//        sprintf(&(cvs->state->mes_speed[R_ID][0]),"%s %.3f",&(cvs->state->ref_speed[L_ID][0]),cvs->state->omegaref[L_ID]);
 
 //        cvs->state->est_pos[0][cvs->state->i_save] = cvs->state->position[0];
 //        cvs->state->est_pos[1][cvs->state->i_save] = cvs->state->position[1];
@@ -378,10 +379,15 @@ void controller_loop(CtrlStruct *cvs) {
 //        MyConsole_SendMsg("Waiting for start to save\n");
     
     // Save to SD card at the end
-    if(cvs->state->i_save > 149 && cvs->state->i_save != 4001)
+    if(cvs->state->i_save > 249 && cvs->state->i_save != 4001)
     {
         cvs->state->i_save = 4001;
+        char msg[1024];
+        sprintf(msg,"time = %.3f", cvs->inputs->t);
+        MyConsole_SendMsg(msg);
         MyDataSave(cvs);
+        sprintf(msg,"time = %.3f", cvs->inputs->t);
+        MyConsole_SendMsg(msg);
     }
 }
 

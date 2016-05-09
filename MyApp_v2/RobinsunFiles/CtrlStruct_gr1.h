@@ -67,8 +67,9 @@ typedef struct CtrlState
     int               direction;
         
     // Saving outputs to a file
-    char mes_speed[2][1425]; // R_ID and L_ID
-    char ref_speed[2][1425]; // R_ID and L_ID
+    float mes_speed[2][250]; // R_ID and L_ID
+    float ref_speed[2][250]; // R_ID and L_ID
+    float theTime[250];
 //    double est_pos[3][400];   // x, y and theta
     int i_save;
 } CtrlState;
