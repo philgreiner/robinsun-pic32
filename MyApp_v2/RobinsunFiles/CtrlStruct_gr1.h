@@ -32,6 +32,7 @@ typedef struct CtrlState
 	double lastMesR[10], lastMesL[10];
     double avSpeedR, avSpeedL;
 	double lastT;
+    double saveTimer;
     double avSonar[6];
     double prevAvSonar[6];
     double lastMesSonar[6][10];
@@ -67,9 +68,9 @@ typedef struct CtrlState
     int               direction;
         
     // Saving outputs to a file
-    float mes_speed[2][250]; // R_ID and L_ID
-    float ref_speed[2][250]; // R_ID and L_ID
-    float theTime[250];
+    float mes_speed[2][270]; // R_ID and L_ID
+    float ref_speed[2][270]; // R_ID and L_ID
+    float theTime[270];
 //    double est_pos[3][400];   // x, y and theta
     int i_save;
 } CtrlState;

@@ -287,127 +287,36 @@ void MyDataSave(CtrlStruct *cvs)
        MyConsole_SendMsg("MyMDDFS - Error FSInit\n>");
        return;
    }
-   char msg[1024];
-   sprintf(msg,"%.3f \n",cvs->state->mes_speed[R_ID][1]);
-   MyConsole_SendMsg(msg);
    
-   char theStr[32];
+   char theStr[1024];
    // Create a file
-   pointer = FSfopen ("MESR.TXT", "w");
+   pointer = FSfopen ("SPEED1.TXT", "w");
    if (pointer == NULL)
       MyConsole_SendMsg("MyMDDFS - Error FSfopen\n>");
    // Write i_save 8-byte objects from messpeed into the file
    int i;
-   for(i = 0; i < 250 ; i++) {
-       sprintf(theStr, "%.3f \n", cvs->state->mes_speed[R_ID][i]);
-       FSfwrite(theStr, strlen(theStr), 1, pointer);
+   for(i = 0; i < 270 ; i = i+10) {
+       sprintf(theStr, "%.3f %.3f %.3f %.3f %.3f; %.3f %.3f %.3f %.3f %.3f; %.3f %.3f %.3f %.3f %.3f; %.3f %.3f %.3f %.3f %.3f; %.3f %.3f %.3f %.3f %.3f; %.3f %.3f %.3f %.3f %.3f; %.3f %.3f %.3f %.3f %.3f; %.3f %.3f %.3f %.3f %.3f; %.3f %.3f %.3f %.3f %.3f; %.3f %.3f %.3f %.3f %.3f;\n", cvs->state->mes_speed[R_ID][i], cvs->state->mes_speed[L_ID][i], cvs->state->ref_speed[R_ID][i], cvs->state->ref_speed[L_ID][i], cvs->state->theTime[i], cvs->state->mes_speed[R_ID][i+1], cvs->state->mes_speed[L_ID][i+1], cvs->state->ref_speed[R_ID][i+1], cvs->state->ref_speed[L_ID][i+1], cvs->state->theTime[i+1], cvs->state->mes_speed[R_ID][i+2], cvs->state->mes_speed[L_ID][i+2], cvs->state->ref_speed[R_ID][i+2], cvs->state->ref_speed[L_ID][i+2], cvs->state->theTime[i+2], cvs->state->mes_speed[R_ID][i+3], cvs->state->mes_speed[L_ID][i+3], cvs->state->ref_speed[R_ID][i+3], cvs->state->ref_speed[L_ID][i+3], cvs->state->theTime[i+3], cvs->state->mes_speed[R_ID][i+4], cvs->state->mes_speed[L_ID][i+4], cvs->state->ref_speed[R_ID][i+4], cvs->state->ref_speed[L_ID][i+4], cvs->state->theTime[i+4],cvs->state->mes_speed[R_ID][i+5], cvs->state->mes_speed[L_ID][i+5], cvs->state->ref_speed[R_ID][i+5], cvs->state->ref_speed[L_ID][i+5], cvs->state->theTime[i+5], cvs->state->mes_speed[R_ID][i+6], cvs->state->mes_speed[L_ID][i+6], cvs->state->ref_speed[R_ID][i+6], cvs->state->ref_speed[L_ID][i+6], cvs->state->theTime[i+6], cvs->state->mes_speed[R_ID][i+7], cvs->state->mes_speed[L_ID][i+7], cvs->state->ref_speed[R_ID][i+7], cvs->state->ref_speed[L_ID][i+7], cvs->state->theTime[i+7], cvs->state->mes_speed[R_ID][i+8], cvs->state->mes_speed[L_ID][i+8], cvs->state->ref_speed[R_ID][i+8], cvs->state->ref_speed[L_ID][i+8], cvs->state->theTime[i+8], cvs->state->mes_speed[R_ID][i+9], cvs->state->mes_speed[L_ID][i+9], cvs->state->ref_speed[R_ID][i+9], cvs->state->ref_speed[L_ID][i+9], cvs->state->theTime[i+9]);
+       FSfwrite(theStr, 1, strlen(theStr), pointer);
    }
-   //if (FSfwrite(&cvs->state->mes_speed[R_ID][0], 1, 1425, pointer) != 1425)
-      //MyConsole_SendMsg("MyMDDFS - Error FSfwrite\n>");
    // Close the file
    if (FSfclose (pointer))
       MyConsole_SendMsg("MyMDDFS - Error FSfclose\n>");
 
    // Create a second file
-   pointer = FSfopen ("MESL.TXT", "w");
-   if (pointer == NULL)
-      MyConsole_SendMsg("MyMDDFS - Error FSfopen\n>");
-    for(i = 0; i < 250 ; i++) {
-       sprintf(theStr, "%.3f \n", cvs->state->mes_speed[L_ID][i]);
-       FSfwrite(theStr, strlen(theStr), 1, pointer);
-   }
-   //if (FSfwrite (&cvs->state->mes_speed[L_ID][0], 1, 1425, pointer) != 1425)
-      //MyConsole_SendMsg("MyMDDFS - Error FSfwrite\n>");   
-   // Close the file
-   if (FSfclose (pointer))
-      MyConsole_SendMsg("MyMDDFS - Error FSfclose\n>");
-   
-   pointer = FSfopen ("REFR.TXT", "w");
-   if (pointer == NULL)
-        MyConsole_SendMsg("MyMDDFS - Error FSfopen\n>");
-   for(i = 0; i < 250 ; i++) {
-       sprintf(theStr, "%.3f \n", cvs->state->ref_speed[R_ID][i]);
-       FSfwrite(theStr, strlen(theStr), 1, pointer);
-   }
-   
-   // Close the file
-   if (FSfclose (pointer))
-      MyConsole_SendMsg("MyMDDFS - Error FSfclose\n>");
-   
-   pointer = FSfopen ("REFL.TXT", "w");
-   if (pointer == NULL)
-        MyConsole_SendMsg("MyMDDFS - Error FSfopen\n>");
-   for(i = 0; i < 250 ; i++) {
-       sprintf(theStr, "%.3f \n", cvs->state->ref_speed[L_ID][i]);
-       FSfwrite(theStr, strlen(theStr), 1, pointer);
-   }
-   
-   // Close the file
-   if (FSfclose (pointer))
-      MyConsole_SendMsg("MyMDDFS - Error FSfclose\n>");
-   
-   pointer = FSfopen ("TIME.TXT", "w");
-   if (pointer == NULL)
-        MyConsole_SendMsg("MyMDDFS - Error FSfopen\n>");
-   for(i = 0; i < 250 ; i++) {
-       sprintf(theStr, "%.3f \n", cvs->state->theTime[i]);
-       FSfwrite(theStr, strlen(theStr), 1, pointer);
-   }
-   
-   // Close the file
-   if (FSfclose (pointer))
-      MyConsole_SendMsg("MyMDDFS - Error FSfclose\n>");
-//   // Create a second file
-//   pointer = FSfopen ("refspeedR.TXT", "w");
+//   pointer = FSfopen ("MESL.TXT", "w");
 //   if (pointer == NULL)
 //      MyConsole_SendMsg("MyMDDFS - Error FSfopen\n>");
-//   if (FSfwrite (&cvs->state->ref_speed[R_ID][0], 8, cvs->state->i_save, pointer) != cvs->state->i_save)
-//      MyConsole_SendMsg("MyMDDFS - Error FSfwrite\n>");   
+//    for(i = 0; i < 40 ; i++) {
+//       sprintf(theStr, "%.3f \n", cvs->state->mes_speed[L_ID][i]);
+//       FSfwrite(theStr, strlen(theStr), 1, pointer);
+//   }
+//   //if (FSfwrite (&cvs->state->mes_speed[L_ID][0], 1, 1425, pointer) != 1425)
+//      //MyConsole_SendMsg("MyMDDFS - Error FSfwrite\n>");   
 //   // Close the file
 //   if (FSfclose (pointer))
 //      MyConsole_SendMsg("MyMDDFS - Error FSfclose\n>");
-//   
-//   // Create a second file
-//   pointer = FSfopen ("refspeedL.TXT", "w");
-//   if (pointer == NULL)
-//      MyConsole_SendMsg("MyMDDFS - Error FSfopen\n>");
-//   if (FSfwrite (&cvs->state->ref_speed[L_ID][0], 8, cvs->state->i_save, pointer) != cvs->state->i_save)
-//      MyConsole_SendMsg("MyMDDFS - Error FSfwrite\n>");   
-//   // Close the file
-//   if (FSfclose (pointer))
-//      MyConsole_SendMsg("MyMDDFS - Error FSfclose\n>");
-//
-//   // Create a second file
-//   pointer = FSfopen ("positionX.TXT", "w");
-//   if (pointer == NULL)
-//      MyConsole_SendMsg("MyMDDFS - Error FSfopen\n>");
-//   if (FSfwrite (&cvs->state->est_pos[0][0], 8, cvs->state->i_save, pointer) != cvs->state->i_save)
-//      MyConsole_SendMsg("MyMDDFS - Error FSfwrite\n>");   
-//   // Close the file
-//   if (FSfclose (pointer))
-//      MyConsole_SendMsg("MyMDDFS - Error FSfclose\n>");
-//
-//   // Create a second file
-//   pointer = FSfopen ("positionY.TXT", "w");
-//   if (pointer == NULL)
-//      MyConsole_SendMsg("MyMDDFS - Error FSfopen\n>");
-//   if (FSfwrite (&cvs->state->est_pos[1][0], 8, cvs->state->i_save, pointer) != cvs->state->i_save)
-//      MyConsole_SendMsg("MyMDDFS - Error FSfwrite\n>");   
-//   // Close the file
-//   if (FSfclose (pointer))
-//      MyConsole_SendMsg("MyMDDFS - Error FSfclose\n>");
-//
-//   // Create a second file
-//   pointer = FSfopen ("positionTheta.TXT", "w");
-//   if (pointer == NULL)
-//      MyConsole_SendMsg("MyMDDFS - Error FSfopen\n>");
-//   if (FSfwrite (&cvs->state->est_pos[2][0], 8, cvs->state->i_save, pointer) != cvs->state->i_save)
-//      MyConsole_SendMsg("MyMDDFS - Error FSfwrite\n>");   
-//   // Close the file
-//   if (FSfclose (pointer))
-//      MyConsole_SendMsg("MyMDDFS - Error FSfclose\n>");
-   
-   MyConsole_SendMsg("MyMDDFS - Save Data OK\n>");
+   //MyConsole_SendMsg("MyMDDFS - Save Data OK\n>");
    MyMDDFS_RestoreSPI();
 }
 
