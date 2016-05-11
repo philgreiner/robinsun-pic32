@@ -129,7 +129,7 @@ void controller_init(CtrlStruct *cvs) {
     
     cvs->state->i_save = 0;
     cvs->state->saveTimer = (ReadCoreTimer()/(SYS_FREQ/2.0));
-    cvs->param->tEnd = 120.0;
+    cvs->param->tEnd = 90.0;
     cvs->state->first_save = 1;
 }
 
@@ -415,7 +415,7 @@ void controller_loop(CtrlStruct *cvs) {
         
     cvs->state->lastT = ivs->t;
     // Save data during the game
-    if(/*cvs->inputs->start_signal &&*/ cvs->state->i_save < 270 && (((ReadCoreTimer()/(SYS_FREQ/2.0)) - cvs->state->saveTimer) > 0.075) && (cvs->inputs->t > 9))
+    if(cvs->inputs->start_signal && cvs->state->i_save < 270 && (((ReadCoreTimer()/(SYS_FREQ/2.0)) - cvs->state->saveTimer) > 0.35) /*&& (cvs->inputs->t > 9)*/)
     {
         double x = cvs->state->position[0], y = cvs->state->position[1];
         double d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
@@ -424,9 +424,9 @@ void controller_loop(CtrlStruct *cvs) {
         
         cvs->state->mes_speed[R_ID][cvs->state->i_save] = cvs->state->position[0]; //ivs->r_wheel_speed;
         cvs->state->mes_speed[L_ID][cvs->state->i_save] = cvs->state->position[1]; //ivs->l_wheel_speed;
-        cvs->state->ref_speed[R_ID][cvs->state->i_save] = cvs->state->position[2];
-        cvs->state->ref_speed[L_ID][cvs->state->i_save] = (cvs->state->omegaref[R_ID] + cvs->state->omegaref[L_ID])/2.0;
-        cvs->state->theTime[cvs->state->i_save] = cvs->inputs->t;
+        cvs->state->ref_speed[R_ID][cvs->state->i_save] = cvs->state->intermediate_goal[0]; //cvs->state->position[2];
+        cvs->state->ref_speed[L_ID][cvs->state->i_save] = cvs->state->intermediate_goal[1]; //(cvs->state->omegaref[R_ID] + cvs->state->omegaref[L_ID])/2.0;
+        cvs->state->theTime[cvs->state->i_save] = cvs->state->position[2]; //cvs->inputs->t;
         
         //MyConsole_SendMsg("Saving data\n");
         cvs->state->i_save++;

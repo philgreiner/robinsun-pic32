@@ -245,7 +245,7 @@ HTTP_IO_RESULT HTTPExecuteGet(void)
                 cvs->outputs->command_blocks = -25;
             }
             else if(strcmppgm2ram((char*)ptr,(ROM char*)"close") == 0){
-                cvs->outputs->command_blocks = 50;
+                cvs->outputs->command_blocks = 75;
             }
             else if(strcmppgm2ram((char*)ptr,(ROM char*)"fishup") == 0){
                 #ifdef ROBINSUN
