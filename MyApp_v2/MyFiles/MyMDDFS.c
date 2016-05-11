@@ -269,7 +269,7 @@ void MyMDDFS_Test (void)
    MyMDDFS_RestoreSPI();
 }
 
-void MyDataSave(CtrlStruct *cvs)
+void MyDataSave(CtrlStruct *cvs, int save_first)
 {
    FSFILE * pointer;
 
@@ -290,10 +290,13 @@ void MyDataSave(CtrlStruct *cvs)
    
    char theStr[1024];
    // Create a file
-   pointer = FSfopen ("SPEED1.TXT", "w");
+   pointer = FSfopen ("SAVE.TXT", "w");
    if (pointer == NULL)
       MyConsole_SendMsg("MyMDDFS - Error FSfopen\n>");
    // Write i_save 8-byte objects from messpeed into the file
+   if(!save_first)
+    if (FSfseek(pointer, 1, SEEK_END))
+       MyConsole_SendMsg("MyMDDFS - Error FSfseek\n>");
    int i;
    for(i = 0; i < 270 ; i = i+10) {
        sprintf(theStr, "%.3f %.3f %.3f %.3f %.3f; %.3f %.3f %.3f %.3f %.3f; %.3f %.3f %.3f %.3f %.3f; %.3f %.3f %.3f %.3f %.3f; %.3f %.3f %.3f %.3f %.3f; %.3f %.3f %.3f %.3f %.3f; %.3f %.3f %.3f %.3f %.3f; %.3f %.3f %.3f %.3f %.3f; %.3f %.3f %.3f %.3f %.3f; %.3f %.3f %.3f %.3f %.3f;\n", cvs->state->mes_speed[R_ID][i], cvs->state->mes_speed[L_ID][i], cvs->state->ref_speed[R_ID][i], cvs->state->ref_speed[L_ID][i], cvs->state->theTime[i], cvs->state->mes_speed[R_ID][i+1], cvs->state->mes_speed[L_ID][i+1], cvs->state->ref_speed[R_ID][i+1], cvs->state->ref_speed[L_ID][i+1], cvs->state->theTime[i+1], cvs->state->mes_speed[R_ID][i+2], cvs->state->mes_speed[L_ID][i+2], cvs->state->ref_speed[R_ID][i+2], cvs->state->ref_speed[L_ID][i+2], cvs->state->theTime[i+2], cvs->state->mes_speed[R_ID][i+3], cvs->state->mes_speed[L_ID][i+3], cvs->state->ref_speed[R_ID][i+3], cvs->state->ref_speed[L_ID][i+3], cvs->state->theTime[i+3], cvs->state->mes_speed[R_ID][i+4], cvs->state->mes_speed[L_ID][i+4], cvs->state->ref_speed[R_ID][i+4], cvs->state->ref_speed[L_ID][i+4], cvs->state->theTime[i+4],cvs->state->mes_speed[R_ID][i+5], cvs->state->mes_speed[L_ID][i+5], cvs->state->ref_speed[R_ID][i+5], cvs->state->ref_speed[L_ID][i+5], cvs->state->theTime[i+5], cvs->state->mes_speed[R_ID][i+6], cvs->state->mes_speed[L_ID][i+6], cvs->state->ref_speed[R_ID][i+6], cvs->state->ref_speed[L_ID][i+6], cvs->state->theTime[i+6], cvs->state->mes_speed[R_ID][i+7], cvs->state->mes_speed[L_ID][i+7], cvs->state->ref_speed[R_ID][i+7], cvs->state->ref_speed[L_ID][i+7], cvs->state->theTime[i+7], cvs->state->mes_speed[R_ID][i+8], cvs->state->mes_speed[L_ID][i+8], cvs->state->ref_speed[R_ID][i+8], cvs->state->ref_speed[L_ID][i+8], cvs->state->theTime[i+8], cvs->state->mes_speed[R_ID][i+9], cvs->state->mes_speed[L_ID][i+9], cvs->state->ref_speed[R_ID][i+9], cvs->state->ref_speed[L_ID][i+9], cvs->state->theTime[i+9]);

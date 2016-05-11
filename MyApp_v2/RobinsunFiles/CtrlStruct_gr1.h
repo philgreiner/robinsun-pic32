@@ -73,6 +73,7 @@ typedef struct CtrlState
     float theTime[270];
 //    double est_pos[3][400];   // x, y and theta
     int i_save;
+    int first_save;
 } CtrlState;
 
 typedef struct CtrlParam{

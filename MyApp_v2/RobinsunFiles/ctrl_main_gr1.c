@@ -38,12 +38,12 @@ void controller_init(CtrlStruct *cvs) {
     // Controller parameters
     #ifdef ROBINSUN
         //                  Right: 5.975 kg     Left: 4.6 kg
-        cvs->param->Kp[L_ID] = 0.1487;
-        cvs->param->Ki[L_ID] = 2.0111;
-        cvs->param->Kd[L_ID] = 0.008;
-        cvs->param->Kp[R_ID] = 0.1381;
-        cvs->param->Ki[R_ID] = 2.2223;
-        cvs->param->Kd[R_ID] = 0.001;
+        cvs->param->Kp[L_ID] = 0.2723; //0.1487;
+        cvs->param->Ki[L_ID] = 4.6523; //2.0111;
+        cvs->param->Kd[L_ID] = 0.0025; //0.008;
+        cvs->param->Kp[R_ID] = 0.2723; //0.1381;
+        cvs->param->Ki[R_ID] = 4.6523; //2.2223;
+        cvs->param->Kd[R_ID] = 0.0025; //0.001;
     #else
         cvs->param->Kp = -0.031;
         cvs->param->Ki = 2.1729;
@@ -83,7 +83,7 @@ void controller_init(CtrlStruct *cvs) {
     cvs->state->lastT = cvs->inputs->t;
 
     cvs->state->position[0] = (cvs->inputs->team_color) ? (-0.09) : (-0.16);
-    cvs->state->position[1] = (cvs->inputs->team_color) ? (1.34) : (-1.34);
+    cvs->state->position[1] = (cvs->inputs->team_color) ? (1.34) : (-1.1);
     cvs->state->position[2] = (cvs->inputs->team_color) ? (-M_PI) : (0);
     cvs->state->prev_theta = 0;
 
@@ -130,6 +130,7 @@ void controller_init(CtrlStruct *cvs) {
     cvs->state->i_save = 0;
     cvs->state->saveTimer = (ReadCoreTimer()/(SYS_FREQ/2.0));
     cvs->param->tEnd = 120.0;
+    cvs->state->first_save = 1;
 }
 
 /*! \brief controller loop (called eveiry timestep)
@@ -235,7 +236,7 @@ void controller_loop(CtrlStruct *cvs) {
         if(cvs->param->refspeed == 0.0)
         {
         /* Locate the opponent */
-        locate_opponent(cvs);
+//        locate_opponent(cvs);
 
             /* Path planning through potential field computation */
             // Choice of the path planning algorithm
@@ -248,13 +249,13 @@ void controller_loop(CtrlStruct *cvs) {
             potential_Field(cvs);
         #endif
         #ifdef ASTAR
-            if (cvs->param->ready_start_astar == 1) // If objective
-            {
-                if (!cvs->param->Astar_path_active)
-                    Astar_get_path(cvs);
-                if(cvs->param->Astar_path_active)
-                    Astar_read_path(cvs);
-            }
+//            if (cvs->param->ready_start_astar == 1) // If objective
+//            {
+//                if (!cvs->param->Astar_path_active)
+//                    Astar_get_path(cvs);
+//                if(cvs->param->Astar_path_active)
+//                    Astar_read_path(cvs);
+//            }
         #endif
 
         // Constant speed references for wheel calibrations
@@ -317,11 +318,29 @@ void controller_loop(CtrlStruct *cvs) {
                 cvs->state->intermediate_goal[2] = cvs->param->refangle*M_PI/180.0;
             else
                 cvs->state->intermediate_goal[2] = cvs->state->position[2];
-                double wheels[2];
-                gotoPoint(cvs,wheels);
-                cvs->state->omegaref[R_ID] = wheels[R_ID];
-                cvs->state->omegaref[L_ID] = wheels[L_ID];
+            double wheels[2];
+            gotoPoint(cvs,wheels);
+            cvs->state->omegaref[R_ID] = wheels[R_ID];
+            cvs->state->omegaref[L_ID] = wheels[L_ID];
         }
+        
+    if(cvs->inputs->t > 2 && cvs->inputs->t < 5)
+    {
+            cvs->state->goal_position[0] = 0.1;
+            cvs->state->goal_position[1] = 1.1;
+            cvs->state->goal_position[2] = 0;    
+            cvs->param->Astar_path_active = 0;
+            cvs->param->ready_start_astar = 1;
+    }
+    if (!cvs->param->Astar_path_active && cvs->inputs->t >5 && cvs->param->ready_start_astar)
+        Astar_get_path(cvs);
+    if(cvs->param->Astar_path_active && cvs->inputs->t > 10)
+        Astar_read_path(cvs);
+    else
+    {
+        cvs->state->omegaref[R_ID] = 0.0;
+        cvs->state->omegaref[L_ID] = 0.0;
+    }
 
     /* Computation of the motor voltages */
     //cvs->state->omegaref[R_ID] = M_PI;
@@ -336,16 +355,44 @@ void controller_loop(CtrlStruct *cvs) {
 ////            MyConsole_SendMsg(msg);
 //        }
         
-    if(cvs->inputs->start_signal && cvs->inputs->t > 5.5 && cvs->inputs->t < 7.5)
-    {
-        cvs->state->omegaref[R_ID] = 0.3/0.0325;
-        cvs->state->omegaref[L_ID] = 0.3/0.0325;
-    }
-    else
-    {
-        cvs->state->omegaref[R_ID] = 0.0;
-        cvs->state->omegaref[L_ID] = 0.0;
-    }
+//        if(cvs->inputs->start_signal && cvs->inputs->t > 5)
+//        {
+//            cvs->state->intermediate_goal[0] = cvs->state->position[0]; 
+//            cvs->state->intermediate_goal[1] = cvs->state->position[1]; 
+//            cvs->state->intermediate_goal[2] = cvs->param->refangle*M_PI/180.0;
+//            double wheels[2];
+//            gotoPoint(cvs,wheels);
+//            cvs->state->omegaref[R_ID] = wheels[R_ID];
+//            cvs->state->omegaref[L_ID] = wheels[L_ID];
+//        }
+//        else
+//        {
+//            cvs->state->omegaref[R_ID] = 0.0;
+//            cvs->state->omegaref[L_ID] = 0.0;
+//        }
+        
+        
+        
+//    if(cvs->inputs->start_signal && cvs->inputs->t > 5 && cvs->inputs->t < 6)
+//    {
+//        cvs->state->omegaref[R_ID] = (cvs->inputs->t - 5) * 0.3/0.0325;
+//        cvs->state->omegaref[L_ID] = (cvs->inputs->t - 5) * 0.3/0.0325;
+//    }
+//    else if(cvs->inputs->start_signal && cvs->inputs->t >= 6 && cvs->inputs->t < 7)
+//    {
+//        cvs->state->omegaref[R_ID] = 0.3/0.0325;
+//        cvs->state->omegaref[L_ID] = 0.3/0.0325;
+//    }
+//    else if(cvs->inputs->start_signal && cvs->inputs->t >= 7 && cvs->inputs->t < 8)
+//    {
+//        cvs->state->omegaref[R_ID] = 0.3/0.0325 - (cvs->inputs->t - 7) * 0.3/0.0325;
+//        cvs->state->omegaref[L_ID] = 0.3/0.0325 - (cvs->inputs->t - 7) * 0.3/0.0325;
+//    }
+//    else
+//    {
+//        cvs->state->omegaref[R_ID] = 0.0;
+//        cvs->state->omegaref[L_ID] = 0.0;
+//    }
     double wheels[2];
     if(ivs->t != 0.0)
     {
@@ -368,12 +415,17 @@ void controller_loop(CtrlStruct *cvs) {
         
     cvs->state->lastT = ivs->t;
     // Save data during the game
-    if(cvs->inputs->start_signal && cvs->state->i_save < 270 && (((ReadCoreTimer()/(SYS_FREQ/2.0)) - cvs->state->saveTimer) > 0.01) && (cvs->inputs->t < 10.0))
+    if(/*cvs->inputs->start_signal &&*/ cvs->state->i_save < 270 && (((ReadCoreTimer()/(SYS_FREQ/2.0)) - cvs->state->saveTimer) > 0.075) && (cvs->inputs->t > 9))
     {
-        cvs->state->mes_speed[R_ID][cvs->state->i_save] = ivs->r_wheel_speed;
-        cvs->state->mes_speed[L_ID][cvs->state->i_save] = ivs->l_wheel_speed;
-        cvs->state->ref_speed[R_ID][cvs->state->i_save] = cvs->state->omegaref[R_ID];
-        cvs->state->ref_speed[L_ID][cvs->state->i_save] = cvs->state->omegaref[L_ID];
+        double x = cvs->state->position[0], y = cvs->state->position[1];
+        double d = sqrt((x - cvs->state->intermediate_goal[0])*(x - cvs->state->intermediate_goal[0]) + (y - cvs->state->intermediate_goal[1])*(y - cvs->state->intermediate_goal[1]));
+        double delta_theta = atan2(y - cvs->state->intermediate_goal[1],x - cvs->state->intermediate_goal[0]) - cvs->state->position[2];
+        delta_theta = (delta_theta > M_PI) ? delta_theta - 2*M_PI : (delta_theta < -M_PI) ? delta_theta + 2*M_PI : delta_theta;
+        
+        cvs->state->mes_speed[R_ID][cvs->state->i_save] = cvs->state->position[0]; //ivs->r_wheel_speed;
+        cvs->state->mes_speed[L_ID][cvs->state->i_save] = cvs->state->position[1]; //ivs->l_wheel_speed;
+        cvs->state->ref_speed[R_ID][cvs->state->i_save] = cvs->state->position[2];
+        cvs->state->ref_speed[L_ID][cvs->state->i_save] = (cvs->state->omegaref[R_ID] + cvs->state->omegaref[L_ID])/2.0;
         cvs->state->theTime[cvs->state->i_save] = cvs->inputs->t;
         
         //MyConsole_SendMsg("Saving data\n");
@@ -383,12 +435,13 @@ void controller_loop(CtrlStruct *cvs) {
     else if(cvs->state->i_save > 269)
     {
         cvs->state->i_save = 0;
-        char msg[1024];
+//        char msg[1024];
         //sprintf(msg,"time = %.5f \n", (ReadCoreTimer()/(SYS_FREQ/2.0)));
         //MyConsole_SendMsg(msg);
-        MyDataSave(cvs);
-        sprintf(msg,"time = %.5f \n", (ReadCoreTimer()/(SYS_FREQ/2.0)));
-        MyConsole_SendMsg(msg);
+        MyDataSave(cvs, cvs->state->first_save);
+        cvs->state->first_save = 0;
+//        sprintf(msg,"time = %.5f \n", (ReadCoreTimer()/(SYS_FREQ/2.0)));
+//        MyConsole_SendMsg(msg);
     }
 }
 
@@ -436,8 +489,8 @@ void motors_control(CtrlStruct *cvs, double * wheels) {
     cvs->state->errorIntL = (cvs->state->errorIntL * cvs->param->Ki[L_ID]<-Valim) ? (-Valim / (cvs->param->Ki[L_ID])) : (cvs->state->errorIntL);
 
     // PI controller
-    UconsigneR = (omegaref[R_ID] - rspeed) * cvs->param->Kp[R_ID] + cvs->state->errorIntR * cvs->param->Ki[R_ID] - cvs->param->Kd[R_ID]*(rspeed - cvs->state->lastMesR[0])/(ivs->t - cvs->state->lastT) + cvs->param->kphi*rspeed;
-    UconsigneL = (omegaref[L_ID] - lspeed) * cvs->param->Kp[L_ID] + cvs->state->errorIntL * cvs->param->Ki[L_ID] - cvs->param->Kd[L_ID]*(lspeed - cvs->state->lastMesL[0])/(ivs->t - cvs->state->lastT) + cvs->param->kphi*lspeed;
+    UconsigneR = (omegaref[R_ID] - rspeed) * cvs->param->Kp[R_ID] + cvs->state->errorIntR * cvs->param->Ki[R_ID] - cvs->param->Kd[R_ID]*(rspeed - cvs->state->lastMesR[0])/(ivs->t - cvs->state->lastT) + 19*cvs->param->kphi*omegaref[R_ID];
+    UconsigneL = (omegaref[L_ID] - lspeed) * cvs->param->Kp[L_ID] + cvs->state->errorIntL * cvs->param->Ki[L_ID] - cvs->param->Kd[L_ID]*(lspeed - cvs->state->lastMesL[0])/(ivs->t - cvs->state->lastT) + 19*cvs->param->kphi*omegaref[L_ID];
 
     if (UconsigneR > 0.9 * 24) {
         float delta = 0.9 * 24 - UconsigneR;

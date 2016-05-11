@@ -17,6 +17,6 @@
 
 void MyFDDFS_Test(void);
 
-void MyDataSave(CtrlStruct *cvs);
+void MyDataSave(CtrlStruct *cvs, int save_first);
 
 #endif /* MyFDDFS_H_ */

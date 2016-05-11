@@ -6,6 +6,7 @@
 #include "Astar_gr1.h"
 #include <limits.h>
 #include <string.h>
+#include "MDD File System/FSIO.h"
 
 NAMESPACE_INIT(ctrlGr1);
 
@@ -139,30 +140,69 @@ void Astar_get_path(CtrlStruct *cvs)
 	*	3.2 Save the mother node in the stack and check for his mother node until reaching starting node
 	*
 	*/
-    int prev_direction = -10, direction = 0;
+    int prev_direction = -10, direction = -10;
 	int check_node = goal_node;     // = top of the stack
-	int x_check_node, y_check_node;
+	int x_check_node, y_check_node, prev_check_node;
     int prev_check_x = check_node % 42, prev_check_y = (check_node - prev_check_x) / 42;
 	cvs->param->index_path = -1;
+    int nodes_temp[150], tempcnt = 0;
+    
 
 	while (check_node != starting_node)
 	{
-        if(direction != prev_direction) {
-            cvs->param->index_path++;
-            cvs->param->path[cvs->param->index_path] = check_node;		// save the check_node in the Stack
-        }
+        nodes_temp[tempcnt] = check_node;
+        tempcnt++;
         prev_check_x = x_check_node;
         prev_check_y = y_check_node;
-		x_check_node = check_node % 42;
+        x_check_node = check_node % 42;
 		y_check_node = (check_node - x_check_node) / 42;
         
         prev_direction = direction;
-        direction = (x_check_node - prev_check_x + 1) * 3 + (y_check_node - prev_check_y + 1);
-        
-		check_node = astar_parent_table[x_check_node][y_check_node]; // new node to check is the mother node
+        prev_check_node = check_node;
+        check_node = astar_parent_table[x_check_node][y_check_node]; // new node to check is the mother node
+        direction = (check_node % 42 - x_check_node + 1) * 3 + (((check_node - x_check_node) / 42) - y_check_node + 1);
+        if(direction != prev_direction) {
+            cvs->param->index_path++;
+            cvs->param->path[cvs->param->index_path] = prev_check_node;		// save the check_node in the Stack
+        }
 	}
+    cvs->param->index_path++;
 	cvs->param->path[cvs->param->index_path] = check_node;		// put the intial starting_node in the path array
-                
+    
+    FSFILE * pointer;
+
+   MyMDDFS_SaveSPI();
+
+   if (!MDD_MediaDetect()) {
+       MyMDDFS_RestoreSPI();
+       MyConsole_SendMsg("MyMDDFS - Error MDD_MediaDetect\n>");
+   }
+   else {
+        // Initialize the library
+        if (!FSInit()) {
+            MyMDDFS_RestoreSPI();
+            MyConsole_SendMsg("MyMDDFS - Error FSInit\n>");
+        }
+        else
+        {
+            char theStr[12];
+            // Create a file
+            pointer = FSfopen ("ASTAR.TXT", "w");
+            if (pointer == NULL)
+               MyConsole_SendMsg("MyMDDFS - Error FSfopen\n>");
+            // Write i_save 8-byte objects from messpeed into the file
+            int i;
+            for(i = 0; i <= tempcnt; i = i+1) {
+                sprintf(theStr, "%d %d;\n", (i<cvs->param->index_path)? cvs->param->path[i] : 0, nodes_temp[i]);
+                FSfwrite(theStr, 1, strlen(theStr), pointer);
+            }
+            // Close the file
+            if (FSfclose (pointer))
+               MyConsole_SendMsg("MyMDDFS - Error FSfclose\n>");
+        }
+   }
+      MyMDDFS_RestoreSPI();
+
     cvs->param->Astar_path_active = 1; // A path was found and saved
 	//cvs->param->index_path -= 1;
 }//end function
