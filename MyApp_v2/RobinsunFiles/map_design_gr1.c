@@ -18,8 +18,6 @@ NAMESPACE_INIT(ctrlGr1);
  * \param[out] game_map[][]
  */
 
-// To do : Check if not necessary to add the robot radius to the edge of the table as an obstacle zone
-
 void game_map_drawing(CtrlStruct *cvs)
 {
 	#ifdef ASTAR

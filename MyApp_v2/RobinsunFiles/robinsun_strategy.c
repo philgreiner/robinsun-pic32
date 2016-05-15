@@ -6,9 +6,12 @@
 
 NAMESPACE_INIT(ctrlGr1);
 
+/* Main strategy FSM */
 void robinsun_main(CtrlStruct *cvs) {
+    // Automatically go to Parasol state if end of match
     if(cvs->inputs->t >= cvs->param->tEnd && cvs->inputs->start_signal && cvs->state->objectives[PARASOL] != DONE1)
         cvs->state->current_objective = PARASOL;
+    
     switch (cvs->state->current_objective) {
         case CALIBRATE:
             calibrate(cvs);
@@ -89,12 +92,14 @@ void robinsun_main(CtrlStruct *cvs) {
     }
 }
 
+/* Next state logic */
 void robinsun_next(CtrlStruct *cvs) {
     cvs->state->current_action_progress = 0;
     if(cvs->inputs->t > cvs->param->tEnd - 1)
         cvs->state->current_objective = PARASOL;
     else {
         int i; 
+        /* First 5 objectives */
         // FIRST DO THE NOTDONE OBJECTIVES
         for(i = 0; i <= 5; i++)
             if(cvs->state->objectives[i] == NOTDONE1) {
@@ -112,6 +117,7 @@ void robinsun_next(CtrlStruct *cvs) {
                 return;
             }
         
+        /* All objectives */
         for(i = 0; i <= 8; i++)
             if(cvs->state->objectives[i] == NOTDONE1) {
                 cvs->state->current_objective = (robinsun_competition) i;
@@ -129,10 +135,6 @@ void robinsun_next(CtrlStruct *cvs) {
             }
         
         cvs->state->current_objective = PARASOL;
-        // IF EVERYTHING IS DONE, TAKE MORE BLOCKS
-//        cvs->state->objectives[BLOCKS_DUNE_2] = NOTDONE1;
-//        cvs->state->current_objective = BLOCKS_DUNE_2;
-//        cvs->state->objective_timer = cvs->inputs->t;
     }
 }
 

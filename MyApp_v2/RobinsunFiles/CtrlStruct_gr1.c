@@ -8,8 +8,8 @@ NAMESPACE_INIT(ctrlGr1);
 
 /*! \brief initialize the controller structure
  *
- * \param[in] inputs inputs of the controller
- * \param[in] outputs outputs of the controller
+ * \param[in] inputs of the controller
+ * \param[in] outputs of the controller
  * \return controller main structure
  */
 CtrlStruct* init_CtrlStruct(CtrlIn *inputs, CtrlOut *outputs)
@@ -26,9 +26,6 @@ CtrlStruct* init_CtrlStruct(CtrlIn *inputs, CtrlOut *outputs)
         cvs->param = param;
     #else
         cvs->param = &param; // to store in the heap memory instead of in the stack
-//        CtrlParam *param;
-//        param = (CtrlParam*) malloc(sizeof(CtrlParam));
-//        cvs->param = param;
     #endif
 
 	cvs->inputs  = inputs;

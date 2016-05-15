@@ -29,6 +29,7 @@ void    DutyToInf(double duty, unsigned *MSB, unsigned *LSB)
             *LSB = 3;
 }
 
+/* Position controller */
 void gotoPoint(CtrlStruct *cvs, double *wheels)
 {
     double destination[3], x, y, theta, delta_theta, delta_x, delta_y, dist;
@@ -41,6 +42,7 @@ void gotoPoint(CtrlStruct *cvs, double *wheels)
     if(cvs->inputs->mode)
         cvs->param->gotoPointSpeed = 1;
   
+    /* Take parameters from main structure */
     int astaroff = 0;
     if(!cvs->param->ready_start_astar)
     {
@@ -74,6 +76,7 @@ void gotoPoint(CtrlStruct *cvs, double *wheels)
     double lin_sat = linsatv, theta_sat = angsatv;
     double kpang = kpangv, kdang = kdangv;
     
+    // Position Control
     if((dist > 0.035) && ((fabs(delta_theta) < anglev*M_PI/180.0) || (fabs(delta_theta) > (180 - anglev)*M_PI/180.0))) // Go to point
     {
         if(fabs(delta_theta) < anglev*M_PI/180.0)
@@ -159,6 +162,8 @@ void gotoPoint(CtrlStruct *cvs, double *wheels)
     cvs->state->errorDist = dist;
     cvs->state->prev_theta = theta;
 }
+
+/* Activate and deactivate brakes on all motors */
 
 void brakesMotFH(unsigned int onoff)
 {

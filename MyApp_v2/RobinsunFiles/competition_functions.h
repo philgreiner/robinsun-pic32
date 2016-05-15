@@ -13,6 +13,8 @@
 
 NAMESPACE_INIT(ctrlGr1);
 
+/* Functions and enums for all the competition functions */
+
 void calibrate(CtrlStruct *cvs);
 void wait(CtrlStruct *cvs);
 
